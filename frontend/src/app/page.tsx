@@ -41,13 +41,15 @@ export default function Home({ }: Props) {
       </div>
       <div className="container fill-screen flex justify-start items-center mb-8">
         <div className="flex flex-col">
+          <div className="ms-2 h-10 w-2 rounded bg-slate-800"></div>
+          <div className="h-4"></div>
           {
             history.map((value, index) => (
-              <div className="flex flex-row justify-start items-start">
+              <div className="flex flex-row justify-start items-start" key={value.title}>
                 <div>
                   <div className="h-6 w-6 rounded-full bg-blue-600 me-6 mt-2"></div>
                   <div className="h-4"></div>
-                  <div className={"ms-2 mt-2 h-20 w-2 rounded bg-slate-800"}></div>
+                  <div className="ms-2 mt-2 h-20 w-2 rounded bg-slate-800"></div>
                   <div className="h-4"></div>
                 </div>
                 <div className="flex flex-col gap-2">
