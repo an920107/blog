@@ -8,21 +8,27 @@ export default function Home({ }: Props) {
   const [tags, setTags] = useState<string[]>([...selfTags]);
   const [tagsVisible, setTagsVisible] = useState<boolean>(false);
 
+  const isTagsElementInViewport = () => {
+    const rect = document.getElementById("tags")!.getBoundingClientRect();
+    return rect.bottom > 0;
+  }
+
   useEffect(() => {
     setInterval(() => {
-      setTags(
-        selfTags.map(value => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(value => value.value)
-      )
+      if (!isTagsElementInViewport()) return;
+      setTagsVisible(false);
+      setTimeout(() => {
+        setTags(
+          selfTags.map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(value => value.value)
+        )
+      }, 600);
     }, 4500);
   }, [])
 
   useEffect(() => {
-    setTagsVisible(prev => true);
-    setTimeout(() => {
-      setTagsVisible(prev => false);
-    }, 3900);
+    setTagsVisible(true);
   }, [tags])
 
   return (
@@ -31,7 +37,7 @@ export default function Home({ }: Props) {
         <div className="w-screen flex flex-col gap-10">
           <h2>Hello 大家好！</h2>
           <h1>我是 <mark>Squid</mark> 魷魚</h1>
-          <div className={`relative my-2 h-6 max-w-[50rem] transition-opacity duration-500 ${tagsVisible ? "opacity-100" : "opacity-0"}`}>
+          <div id="tags" className={`relative my-2 h-6 max-w-[50rem] transition-opacity duration-500 ${tagsVisible ? "opacity-100" : "opacity-0"}`}>
             <p className="absolute start-0 end-0 top-0 bottom-0 text-slate-500 font-serif overflow-hidden">{
               tags.map((value, index) => `# ${value} `)
             }</p>
@@ -66,9 +72,14 @@ export default function Home({ }: Props) {
           }
         </div>
       </div>
-      {/* <div className="container fill-screen flex justify-start items-center mb-8">
-        123
-      </div> */}
+      <div className="container fill-screen flex justify-center items-center mb-8">
+        <div className="relative">
+          <div className="space-y-8">
+            <h2>Keep <mark>Learning</mark></h2>
+            <h2 className="ms-8"><mark>Keep</mark> Progressing</h2>
+          </div>
+        </div>
+      </div>
     </>
   )
 }
