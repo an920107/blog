@@ -4,6 +4,6 @@ A complete blog system for myself.
 
 ## Framework
 
-- **Frontend**: React
+- **Frontend**: Next.js
 
 - **Backend**: Python FastAPI + MongoDB (Expected)

@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
+
+h1 {
+    @apply max-md:text-5xl text-7xl text-slate-800 font-bold;
+}
+
+h2 {
+    @apply max-md:text-4xl text-5xl text-slate-800 font-bold;
+}
+
+h3 {
+    @apply text-3xl text-slate-800 font-bold;
+}
+
+h4 {
+    @apply text-2xl text-slate-800 font-bold;
+}
+
+h5 {
+    @apply text-xl text-slate-800 font-bold;
+}
+
+h5 {
+    @apply text-slate-800 font-bold;
+}
+
+p {
+    @apply text-slate-700;
+}
+
+a {
+    @apply text-slate-700 font-semibold;
+}
+
+mark {
+    @apply px-1 text-slate-100 bg-blue-600 rounded-lg;
+}
+
+.container {
+    @apply mx-auto px-4 max-w-7xl;
+}
+
+.fill-screen {
+    /* 4rem is the height of the header. */
+    min-height: calc(100vh - 4rem);
+}
+  
