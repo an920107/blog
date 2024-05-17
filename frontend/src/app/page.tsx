@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react'
 
@@ -9,7 +9,8 @@ export default function HomePage({ }: Props) {
   const [tagsVisible, setTagsVisible] = useState<boolean>(false);
 
   const isTagsElementInViewport = () => {
-    const rect = document.getElementById("tags")!.getBoundingClientRect();
+    const rect = document.getElementById("tags")?.getBoundingClientRect();
+    if (rect === undefined) return false;
     return rect.bottom > 0;
   }
 
