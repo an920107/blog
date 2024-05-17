@@ -11,7 +11,7 @@ export default function Header({ }: Props) {
         </a>
         <div className="flex gap-6">
           <a href="/">首頁</a>
-          <a href="/blog">文章</a>
+          <a href="/post">文章</a>
         </div>
       </div>
     </header>

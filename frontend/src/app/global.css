@@ -9,7 +9,7 @@ h1 {
 }
 
 h2 {
-    @apply max-md:text-4xl text-5xl text-slate-800 font-bold;
+    @apply max-md:text-4xl text-6xl text-slate-800 font-bold;
 }
 
 h3 {
@@ -48,4 +48,11 @@ mark {
     /* 4rem is the height of the header. */
     min-height: calc(100vh - 4rem);
 }
-  
+
+.image-overlay {
+    @apply absolute bg-gradient-to-t from-black to-50% opacity-0 inset-0 transition-opacity duration-300;
+}
+
+.image-container:hover .image-overlay {
+    @apply opacity-50;
+}

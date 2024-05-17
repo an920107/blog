@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 type Props = {}
 
-export default function Home({ }: Props) {
+export default function HomePage({ }: Props) {
   const [tags, setTags] = useState<string[]>([...selfTags]);
   const [tagsVisible, setTagsVisible] = useState<boolean>(false);
 
@@ -128,7 +128,7 @@ const history: HistoryEvent[] = [
     description: "朋友創業成立了公司，邀請我擔任資訊長一職，協助技術整合與前端軟體開發。",
   },
   {
-    title: "重寫網站",
+    title: "重新設計網站",
     date: new Date(2024, 3),
     description: "過去使用 Wordpress 放置個人內容與教學文章，但現今已有自行撰寫網站的能力了，因此決定也當作練習，以 Next.js 開發新的個人網站。",
   },
