@@ -6,4 +6,4 @@ A complete blog system for myself.
 
 - **Frontend**: Next.js
 
-- **Backend**: Python FastAPI + MongoDB (Expected)
+- **Backend**: Python FastAPI + SQLite
