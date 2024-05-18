@@ -1,3 +1,13 @@
+export type PostInfo = {
+    id: string;
+    title: string;
+    description: string;
+    tags: string[];
+    previewImage: string;
+    createdTime: Date;
+    updatedTime: Date;
+}
+
 export type Post = {
     id: string;
     title: string;
@@ -8,3 +18,4 @@ export type Post = {
     createdTime: Date;
     updatedTime: Date;
 }
+
