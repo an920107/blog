@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
-
 h1 {
     @apply max-md:text-5xl text-7xl text-slate-800 font-bold;
 }

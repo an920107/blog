@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Noto Sans TC"', 'sans-serif'],
-        serif: ['"Noto Serif TC"', 'sans-serif'],
+        sans: ['--font-sans', 'sans-serif'],
+        serif: ['--font-serif', 'sans-serif'],
       }
     }
   },

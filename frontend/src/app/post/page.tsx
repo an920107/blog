@@ -5,6 +5,7 @@ import { PostInfo } from '@/@types/post';
 import { format } from 'date-fns';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {}
 
@@ -29,7 +30,9 @@ export default function PostPage({ }: Props) {
               <Link key={post.id} href={`/post/${post.id}`} className="font-normal">
                 <div className="rounded-xl shadow-md transition-shadow duration-300 hover:shadow-xl image-container">
                   <div className="relative">
-                    <img src={post.previewImage} className="rounded-xl aspect-video object-cover" />
+                    <div className="aspect-video">
+                      <Image src={post.previewImage} className="rounded-xl object-cover" alt="" fill={true} />
+                    </div>
                     <div className="image-overlay rounded-xl"></div>
                   </div>
                   <div className="grid grid-cols-1 gap-y-2 p-4">
