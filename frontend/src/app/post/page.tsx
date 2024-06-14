@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faHashtag, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { Post } from '@/@types/post';
+import { PostInfo } from '@/@types/post';
 import { format } from 'date-fns';
 import React from 'react';
 import Link from 'next/link';
@@ -11,15 +11,15 @@ type Props = {}
 export default function PostPage({ }: Props) {
   return (
     <>
-      <div className="container">
+      <div className="container mb-10 md:mb-24">
         <div className="flex flex-row justify-between items-center">
           <h2 className="my-8 md:my-14">文章</h2>
           <p>
             <button className="mx-2 md:mx-4">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="h-6 w-6 md:h-8 md:w-8" />
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="h-6 w-6" />
             </button>
             <button className="mx-2 md:mx-4">
-              <FontAwesomeIcon icon={faFilter} className="h-6 w-6 md:h-8 md:w-8" />
+              <FontAwesomeIcon icon={faFilter} className="h-6 w-6" />
             </button>
           </p>
         </div>
@@ -58,13 +58,12 @@ export default function PostPage({ }: Props) {
   )
 }
 
-const posts: Post[] = [
+const posts: PostInfo[] = [
   {
     id: "1",
     title: "Hello World",
     description: "Hello World Hello World Hello World Hello World Hello World Hello World. Hello World Hello World Hello World Hello World Hello World Hello World.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://www.alleycat.org/wp-content/uploads/2019/03/FELV-cat.jpg",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
@@ -74,7 +73,6 @@ const posts: Post[] = [
     title: "Hello World",
     description: "Hello World Hello World Hello World Hello World Hello World Hello World.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://cdn.britannica.com/36/234736-050-4AC5B6D5/Scottish-fold-cat.jpg",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
@@ -84,7 +82,6 @@ const posts: Post[] = [
     title: "Hello World",
     description: "Hello World Hello World Hello.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://i.natgeofe.com/n/9135ca87-0115-4a22-8caf-d1bdef97a814/75552.jpg",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
@@ -94,7 +91,6 @@ const posts: Post[] = [
     title: "Hello World",
     description: "Hello World Hello World Hello World Hello World Hello World Hello World.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://static.scientificamerican.com/sciam/cache/file/F1E90F3D-1FFD-4BA9-9DFA98AE647FA7D4_source.jpg?w=1200",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
@@ -104,7 +100,6 @@ const posts: Post[] = [
     title: "Hello World",
     description: "Hello World Hello World Hello World Hello World Hello World Hello World.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://static.scientificamerican.com/sciam/cache/file/2AE14CDD-1265-470C-9B15F49024186C10_source.jpg?w=1200",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
@@ -114,7 +109,6 @@ const posts: Post[] = [
     title: "Hello World",
     description: "Hello World Hello World Hello World Hello World Hello World Hello World.",
     tags: ["hello", "tech", "coding"],
-    content: "Hello World Hello World Hello World Hello World.",
     previewImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1200px-Cat_August_2010-4.jpg",
     createdTime: new Date(2024, 0, 1),
     updatedTime: new Date(2024, 0, 1),
