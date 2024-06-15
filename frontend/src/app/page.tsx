@@ -40,7 +40,7 @@ export default function HomePage({ }: Props) {
           <h1>我是 <mark>Squid</mark> 魷魚</h1>
           <div id="tags" className={`relative my-2 h-6 max-w-[50rem] transition-opacity duration-500 ${tagsVisible ? "opacity-100" : "opacity-0"}`}>
             <p className="absolute start-0 end-0 top-0 bottom-0 text-slate-500 font-serif overflow-hidden">{
-              tags.map((value, index) => `# ${value} `)
+              tags.map((value) => `# ${value} `)
             }</p>
             <div className="absolute end-0 w-36 top-0 bottom-0 bg-gradient-to-r from-transparent to-white"></div>
           </div>
