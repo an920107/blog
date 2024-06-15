@@ -3,7 +3,7 @@ FROM node:alpine3.20
 WORKDIR /app
 COPY . .
 
-RUN yarn install && yarn run build
+RUN yarn install && yarn cache clean && yarn run build
 
 EXPOSE 3000
 
