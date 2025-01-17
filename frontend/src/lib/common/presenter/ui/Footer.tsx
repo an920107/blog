@@ -1,11 +1,8 @@
 import { faGithub, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 
-type Props = {};
-
-export default function Footer({}: Props) {
+export default function Footer() {
   return (
     <div className="border-t border-gray-300">
       <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-center gap-4 px-4 py-12 md:flex-row md:px-6">

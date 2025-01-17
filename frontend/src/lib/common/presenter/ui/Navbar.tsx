@@ -1,11 +1,7 @@
-import React from "react";
-
-type Props = {};
-
-export default function Navbar({}: Props) {
+export default function Navbar() {
   return (
     <div className="border-b border-gray-300">
-      <div className="mx-auto flex h-16 max-w-screen-xl flex-row items-center justify-between px-4 md:px-6">
+      <div className="mx-auto flex h-[--tool-bar-height] max-w-screen-xl flex-row items-center justify-between px-4 md:px-6">
         <a className="text-2xl font-black text-gray-800" href="/">
           魚之魷魂
         </a>
