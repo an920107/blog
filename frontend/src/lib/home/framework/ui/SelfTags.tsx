@@ -9,12 +9,12 @@ import { tagStartedAction, tagStoppedAction } from "../../presenter/tagSlice";
 export default function SelfTags() {
   return (
     <Provider store={tagStore}>
-      <_SelfTags />
+      <SelfTagsProvided />
     </Provider>
   );
 }
 
-function _SelfTags() {
+function SelfTagsProvided() {
   const tags = useTagSelector((state) => state.tag.tags);
   const dispatch = useTagDispatch();
 
@@ -26,7 +26,7 @@ function _SelfTags() {
       dispatch(tagStoppedAction());
       setIsTagsVisible(false);
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (tags.length === 0) return;
