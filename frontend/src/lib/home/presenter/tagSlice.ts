@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import tagStore from "./tagStore";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+import tagStore from "@/lib/home/presenter/tagStore";
 import shuffleArray from "@/lib/util/shuffleArray";
 
 export interface TagState {

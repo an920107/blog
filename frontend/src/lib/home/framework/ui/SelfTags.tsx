@@ -1,10 +1,11 @@
 "use client";
 
-import { Provider } from "react-redux";
-import tagStore from "../../presenter/tagStore";
-import { useTagDispatch, useTagSelector } from "../../presenter/tagHooks";
 import { useEffect, useState } from "react";
-import { tagStartedAction, tagStoppedAction } from "../../presenter/tagSlice";
+import { Provider } from "react-redux";
+
+import { useTagDispatch, useTagSelector } from "@/lib/home/presenter/tagHooks";
+import { tagStartedAction, tagStoppedAction } from "@/lib/home/presenter/tagSlice";
+import tagStore from "@/lib/home/presenter/tagStore";
 
 export default function SelfTags() {
   return (

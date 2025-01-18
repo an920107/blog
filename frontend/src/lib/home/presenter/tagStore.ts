@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import tagReducer from "./tagSlice";
+
+import tagReducer from "@/lib/home/presenter/tagSlice";
 
 const tagStore = configureStore({
   reducer: {

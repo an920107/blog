@@ -17,13 +17,8 @@ export default function Navbar() {
 
 function Action(props: { label: string; link: string; isSelected: boolean }) {
   return (
-    <div
-      className={`rounded px-1.5 ${props.isSelected ? "bg-blue-600" : "bg-transparent"}`}
-    >
-      <Link
-        className={`font-extrabold ${props.isSelected ? "text-white" : "text-gray-800"}`}
-        href={props.link}
-      >
+    <div className={`rounded px-1.5 ${props.isSelected ? "bg-blue-600" : "bg-transparent"}`}>
+      <Link className={`font-extrabold ${props.isSelected ? "text-white" : "text-gray-800"}`} href={props.link}>
         {props.label}
       </Link>
     </div>
