@@ -1,11 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import tagReducer from "@/lib/home/presenter/tagSlice";
+import tagReducer, { TagAction, TagState } from "@/lib/home/presenter/tagReducer";
 
-const tagStore = configureStore({
-  reducer: {
-    tag: tagReducer,
-  },
+export default configureStore<TagState, TagAction>({
+  reducer: tagReducer,
 });
-
-export default tagStore;

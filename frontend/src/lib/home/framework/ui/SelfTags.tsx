@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Provider } from "react-redux";
 
-import { useTagDispatch, useTagSelector } from "@/lib/home/presenter/tagHooks";
-import { tagStartedAction, tagStoppedAction } from "@/lib/home/presenter/tagSlice";
+import { useTagDispatch, useTagSelector } from "@/lib/home/presenter/tagHook";
+import { tagShuffledAction } from "@/lib/home/presenter/tagReducer";
 import tagStore from "@/lib/home/presenter/tagStore";
 
 export default function SelfTags() {
@@ -16,25 +16,35 @@ export default function SelfTags() {
 }
 
 function SelfTagsProvided() {
-  const tags = useTagSelector((state) => state.tag.tags);
+  const tags = useTagSelector((state) => state.tags);
   const dispatch = useTagDispatch();
 
+  // Initialize with placeholder to prevent flickering
+  const [tagsToShow, setTagsToShow] = useState<string[]>([""]);
   const [isTagsVisible, setIsTagsVisible] = useState(false);
 
+  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  // On mount
   useEffect(() => {
-    dispatch(tagStartedAction({ interval: 4000 }));
+    timer.current = setInterval(() => {
+      dispatch(tagShuffledAction());
+    }, 4000);
+
     return () => {
-      dispatch(tagStoppedAction());
-      setIsTagsVisible(false);
+      clearInterval(timer.current);
+      timer.current = undefined;
     };
   }, [dispatch]);
 
+  // On tags changed
   useEffect(() => {
-    if (tags.length === 0) return;
-    setIsTagsVisible(true);
+    setIsTagsVisible(false);
+
     setTimeout(() => {
-      setIsTagsVisible(false);
-    }, 3500);
+      setTagsToShow(tags);
+      setIsTagsVisible(true);
+    }, 500);
   }, [tags]);
 
   return (
@@ -43,7 +53,7 @@ function SelfTagsProvided() {
     >
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-60% to-white" />
       <div className="flex flex-row items-center gap-x-2 overflow-hidden">
-        {tags.map((tag) => (
+        {tagsToShow.map((tag) => (
           <Hashtag key={tag} tag={tag} />
         ))}
       </div>
