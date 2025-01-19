@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_Mono, Noto_Sans_TC } from "next/font/google";
+import localFont from "next/font/local";
 
 import Footer from "@/lib/common/presenter/ui/Footer";
 import Navbar from "@/lib/common/presenter/ui/Navbar";
 
 import "./globals.css";
 
-const inter = Inter({
+const notoSansTc = Noto_Sans_TC({
+  variable: "--font-noto-sans-tc",
   subsets: ["latin"],
+});
+
+const notoSansMono = Noto_Sans_Mono({
+  variable: "--font-noto-sans-mono",
+  subsets: ["latin"],
+});
+
+const hackNerdMono = localFont({
+  src: "./HackNerdMono.woff2",
+  variable: "--font-hack-nerd-mono",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${notoSansTc.variable} ${notoSansMono.variable} ${hackNerdMono.variable} antialiased`}>
         <div className="min-h-screen">
           <Navbar />
           {children}

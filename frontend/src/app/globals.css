@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white text-base font-normal text-gray-600;
+  @apply bg-white font-sans text-base font-normal text-gray-600;
 
   --tool-bar-height: 4rem;
   --content-height: calc(100vh - var(--tool-bar-height));
