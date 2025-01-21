@@ -1,0 +1,20 @@
+name: PR Title Check
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  pr-title-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title
+        run: |
+          title="${{ gitea.event.pull_request.title }}"
+          echo "Checking PR title: $title"
+          echo "$title" | grep -qE '^(BLOG-[0-9]+|NO-ISSUE) [A-Z].+$' \
+            && echo 'Pass' \
+            || (echo 'The title is not meet the format `BLOG-XXX Title title title`'; exit 1)

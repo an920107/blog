@@ -33,6 +33,5 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: "The title is meet the format `'BLOG-XXX Title title title'`"
         - label: A milestone is set
         - label: The related issuse has been linked to this branch
