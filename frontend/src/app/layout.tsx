@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Noto_Sans_Mono, Noto_Sans_TC } from "next/font/google";
 import localFont from "next/font/local";
 
-import Footer from "@/lib/common/presenter/ui/Footer";
-import Navbar from "@/lib/common/presenter/ui/Navbar";
+import Footer from "@/lib/common/framework/ui/Footer";
+import Navbar from "@/lib/common/framework/ui/Navbar";
 
 import "./globals.css";
 
@@ -18,13 +18,27 @@ const notoSansMono = Noto_Sans_Mono({
 });
 
 const hackNerdMono = localFont({
-  src: "./HackNerdMono.woff2",
+  src: "./_font/HackNerdMono.woff2",
   variable: "--font-hack-nerd-mono",
 });
 
 export const metadata: Metadata = {
   title: "魚之魷魂 SquidSpirit",
   description: "程式、科技、教學、分享",
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/icon/logo-light.svg",
+        href: "/icon/logo-light.svg",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/icon/logo-dark.svg",
+        href: "/icon/logo-dark.svg",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
