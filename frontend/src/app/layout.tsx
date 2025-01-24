@@ -48,6 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant">
+      <head>
+        <meta name="app-version" content={process.env.APP_VERSION} />
+      </head>
       <body className={`${notoSansTc.variable} ${notoSansMono.variable} ${hackNerdMono.variable} antialiased`}>
         <div className="min-h-screen">
           <Navbar />
