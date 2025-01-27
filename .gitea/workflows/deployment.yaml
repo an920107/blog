@@ -29,6 +29,6 @@ jobs:
         with:
           push: true
           context: ./frontend
-          tags:
-            - ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:latest
-            - ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:${{ gitea.event.release.tag_name }}
+          tags: |
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:latest
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:${{ gitea.event.release.tag_name }}
