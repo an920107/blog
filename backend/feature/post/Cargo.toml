@@ -1,0 +1,12 @@
+[package]
+name = "post"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+async-trait.workspace = true
+chrono.workspace = true
+log.workspace = true
+serde.workspace = true
+sqlx.workspace = true

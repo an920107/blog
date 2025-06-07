@@ -3,7 +3,7 @@
 ## Development
 
 - Frontend: Next.js
-- Backend: Go (gin)
+- Backend: Rust actix-web
 
 Despite Next.js being a full-stack framework, I still decided to adopt a separate front-end and back-end architecture for this blog project. I believe that this separation makes the project cleaner, reduces coupling, and aligns with modern development practices.  Furthermore, I wanted to practice developing a purely back-end API.
 

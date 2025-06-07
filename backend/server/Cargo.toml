@@ -1,0 +1,12 @@
+[package]
+name = "server"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+dotenv.workspace = true
+env_logger.workspace = true
+sqlx.workspace = true
+
+post.workspace = true
