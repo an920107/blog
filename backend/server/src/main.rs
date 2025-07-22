@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
     let db_pool = init_database().await;
 
     HttpServer::new(move || create_app(db_pool.clone()))
-        .bind(("127.0.0.1", 8080))?
+        .bind(("0.0.0.0", 8080))?
         .run()
         .await
 }

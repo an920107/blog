@@ -24,7 +24,7 @@ jobs:
           username: ${{ vars.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and push
+      - name: Build and push (Frontend)
         uses: docker/build-push-action@v6
         with:
           push: true
@@ -33,3 +33,13 @@ jobs:
           tags: |
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:latest
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:${{ gitea.event.release.tag_name }}
+
+      - name: Build and push (Backend)
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          provenance: false
+          context: ./backend
+          tags: |
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:latest
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:${{ gitea.event.release.tag_name }}
