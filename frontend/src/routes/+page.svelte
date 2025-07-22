@@ -7,5 +7,5 @@
 <div>
 	<TitleScreen />
 	<Terminal />
-    <Motto />
+	<Motto />
 </div>

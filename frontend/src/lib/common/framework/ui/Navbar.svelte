@@ -5,7 +5,7 @@
 
 <div class="border-b border-gray-300">
 	<div
-		class="h-toolbar-height mx-auto flex max-w-screen-xl flex-row items-center justify-between px-4 md:px-6"
+		class="mx-auto flex h-toolbar-height max-w-screen-xl flex-row items-center justify-between px-4 md:px-6"
 	>
 		<a class="flex flex-row items-center gap-x-2" href="/">
 			<img class="mt-1 size-10" src="/icon/logo-light.svg" alt="SquidSpirit" />
