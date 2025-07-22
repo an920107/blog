@@ -22,14 +22,9 @@
 			}, 50);
 		}, 300);
 
+		timeText = dateToLocaleString(new Date());
 		timeUpdateInterval = setInterval(() => {
-			const now = new Date();
-			timeText = now.toLocaleTimeString('en-US', {
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit',
-				hour12: false
-			});
+			timeText = dateToLocaleString(new Date());
 		}, 1000);
 	});
 
@@ -43,6 +38,15 @@
 			timeUpdateInterval = null;
 		}
 	});
+
+	function dateToLocaleString(date: Date): string {
+		return date.toLocaleString('en-US', {
+			hour12: false,
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		});
+	}
 </script>
 
 <div class="flex w-full flex-col pt-1.5 leading-5 md:pt-2.5 md:leading-7">
