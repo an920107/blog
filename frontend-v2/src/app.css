@@ -1,2 +1,14 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/typography';
+@font-face {
+  font-family: 'HackNerdMono';
+  src: url('/font/HackNerdMono.woff2') format('woff2');
+}
+
+:root {
+  --font-noto-sans-tc: 'Noto Sans TC', sans-serif;
+  --font-noto-sans-mono: 'Noto Sans Mono', monospace;
+  --font-hack-nerd-mono: 'HackNerdMono', monospace;
+}
+
+body {
+  font-family: var(--font-noto-sans-tc);
+}
