@@ -18,8 +18,8 @@ pub struct Container {
 }
 
 impl Container {
-    pub fn new(db_pool: Arc<Pool<Postgres>>) -> Self {
-        let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool));
+    pub fn new(db_pool: Pool<Postgres>) -> Self {
+        let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool.clone()));
 
         let post_repository = Arc::new(PostRepositoryImpl::new(post_db_service.clone()));
 

@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use actix_web::{HttpResponse, Responder, web};
 
 use crate::{
@@ -8,12 +6,15 @@ use crate::{
 };
 
 pub fn configure_post_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::resource("/post_info").route(web::get().to(get_all_post_info)));
-    cfg.service(web::resource("/post/{id}").route(web::get().to(get_full_post)));
+    cfg.service(
+        web::scope("/post")
+            .route("/all", web::get().to(get_all_post_info_handler))
+            .route("/{id}", web::get().to(get_full_post_handler)),
+    );
 }
 
-async fn get_all_post_info(
-    post_controller: web::Data<Arc<dyn PostController>>,
+async fn get_all_post_info_handler(
+    post_controller: web::Data<dyn PostController>,
     query: web::Query<PostQueryDto>,
 ) -> impl Responder {
     let is_published_only = query.is_published_only.unwrap_or_else(|| true);
@@ -28,8 +29,8 @@ async fn get_all_post_info(
     }
 }
 
-async fn get_full_post(
-    post_controller: web::Data<Arc<dyn PostController>>,
+async fn get_full_post_handler(
+    post_controller: web::Data<dyn PostController>,
     path: web::Path<i32>,
 ) -> impl Responder {
     let id = path.into_inner();

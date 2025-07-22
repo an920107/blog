@@ -1,4 +1,4 @@
-use std::{collections::HashMap, sync::Arc};
+use std::collections::HashMap;
 
 use async_trait::async_trait;
 use chrono::{DateTime, Utc};
@@ -16,11 +16,11 @@ use super::{
 };
 
 pub struct PostDbServiceImpl {
-    db_pool: Arc<Pool<Postgres>>,
+    db_pool: Pool<Postgres>,
 }
 
 impl PostDbServiceImpl {
-    pub fn new(db_pool: Arc<Pool<Postgres>>) -> Self {
+    pub fn new(db_pool: Pool<Postgres>) -> Self {
         Self { db_pool }
     }
 }
@@ -58,7 +58,7 @@ impl PostDbService for PostDbServiceImpl {
 
         let records = query_builder
             .build_query_as::<PostInfoWithLabelRecord>()
-            .fetch_all(&*self.db_pool)
+            .fetch_all(&self.db_pool)
             .await
             .map_err(|err| PostError::DatabaseError(err.to_string()))?;
 
@@ -121,7 +121,7 @@ impl PostDbService for PostDbServiceImpl {
 
         let records = query_builder
             .build_query_as::<PostWithLabelRecord>()
-            .fetch_all(&*self.db_pool)
+            .fetch_all(&self.db_pool)
             .await
             .map_err(|err| PostError::DatabaseError(err.to_string()))?;
 

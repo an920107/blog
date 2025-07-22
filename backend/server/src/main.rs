@@ -7,7 +7,7 @@ use actix_web::{
 use post::framework::web::post_web_routes::configure_post_routes;
 use server::container::Container;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
-use std::{env, sync::Arc};
+use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -22,7 +22,7 @@ async fn main() -> std::io::Result<()> {
         .await
 }
 
-async fn init_database() -> Arc<Pool<Postgres>> {
+async fn init_database() -> Pool<Postgres> {
     let database_url = env::var("DATABASE_URL")
         .unwrap_or_else(|_| "postgres://postgres@localhost:5432/postgres".to_string());
 
@@ -37,11 +37,11 @@ async fn init_database() -> Arc<Pool<Postgres>> {
         .await
         .expect("Failed to run database migrations");
 
-    Arc::new(db_pool)
+    db_pool
 }
 
 fn create_app(
-    db_pool: Arc<Pool<Postgres>>,
+    db_pool: Pool<Postgres>,
 ) -> App<
     impl ServiceFactory<
         ServiceRequest,
@@ -51,10 +51,9 @@ fn create_app(
         Error = Error,
     >,
 > {
-    let container = Container::new(db_pool.clone());
+    let container = Container::new(db_pool);
 
     App::new()
-        .app_data(web::Data::new(db_pool))
-        .app_data(web::Data::new(container.post_controller))
+        .app_data(web::Data::from(container.post_controller))
         .configure(configure_post_routes)
 }
