@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+@font-face {
+	font-family: 'HackNerdMono';
+	src: url('/font/HackNerdMono.woff2') format('woff2');
+}
+
+@theme {
+	--font-sans: 'Noto Sans TC', sans-serif;
+	--font-mono: 'HackNerdMono', 'Noto Sans Mono', monospace;
+
+	--color-true-gray-50: #fafafa;
+	--color-true-gray-100: #f5f5f5;
+	--color-true-gray-200: #e5e5e5;
+	--color-true-gray-300: #d4d4d4;
+	--color-true-gray-400: #a3a3a3;
+	--color-true-gray-500: #737373;
+	--color-true-gray-600: #525252;
+	--color-true-gray-700: #404040;
+	--color-true-gray-800: #262626;
+	--color-true-gray-900: #171717;
+
+	--spacing-toolbar-height: 4rem;
+	--spacing-content-height: calc(100vh - var(--spacing-toolbar-height));
+}
+
+body {
+	@apply bg-white font-sans text-base font-normal text-gray-600;
+}
+
+pre,
+code,
+kbd,
+samp {
+	@apply font-mono;
+}
+
+.toolbar {
+	@apply h-[--tool-bar-height];
+}

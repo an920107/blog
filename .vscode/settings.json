@@ -1,12 +1,3 @@
 {
-    "cSpell.words": [
-        "actix",
-        "chrono",
-        "dotenv",
-        "rustls",
-        "serde",
-        "sqlx",
-        "squidspirit"
-    ]
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
-
