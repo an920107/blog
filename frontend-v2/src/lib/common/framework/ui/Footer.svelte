@@ -1,6 +1,3 @@
-<script lang="ts">
-</script>
-
 <div class="border-t border-gray-300">
 	<div
 		class="mx-auto flex max-w-screen-xl flex-col items-center justify-center gap-4 px-4 py-12 md:flex-row md:px-6"
