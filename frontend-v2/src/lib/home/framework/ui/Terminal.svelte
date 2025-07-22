@@ -21,7 +21,7 @@
 	let observer: IntersectionObserver | null = null;
 
 	onMount(() => {
-		if (element == null) {
+		if (!element) {
 			return;
 		}
 
