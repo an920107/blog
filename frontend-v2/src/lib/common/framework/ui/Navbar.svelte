@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Action from '$lib/common/framework/ui/Action.svelte';
+	import NavbarAction from '$lib/common/framework/ui/NavbarAction.svelte';
 </script>
 
 <div class="border-b border-gray-300">
@@ -12,7 +12,7 @@
 			<span class="text-2xl font-black text-gray-800">魚之魷魂</span>
 		</a>
 		<div class="flex flex-row items-center gap-x-6">
-			<Action label="首頁" link="/" isSelected={page.url.pathname === '/'} />
+			<NavbarAction label="首頁" link="/" isSelected={page.url.pathname === '/'} />
 		</div>
 	</div>
 </div>

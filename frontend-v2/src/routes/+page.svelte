@@ -1,7 +1,9 @@
 <script>
-	import FirstView from '$lib/home/framework/ui/FirstView.svelte';
+	import Terminal from '$lib/home/framework/ui/Terminal.svelte';
+	import TitleScreen from '$lib/home/framework/ui/TitleScreen.svelte';
 </script>
 
 <div>
-	<FirstView />
+	<TitleScreen />
+	<Terminal />
 </div>
