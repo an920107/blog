@@ -1,13 +1,14 @@
 use std::collections::HashMap;
 
 use async_trait::async_trait;
-use chrono::{DateTime, Utc};
 use sqlx::{Pool, Postgres};
 
 use crate::{
-    adapter::gateway::post_db_service::PostDbService,
+    adapter::gateway::{
+        color_mapper::ColorMapper, label_mapper::LabelMapper, post_db_service::PostDbService,
+        post_info_mapper::PostInfoMapper, post_mapper::PostMapper,
+    },
     application::error::post_error::PostError,
-    domain::entity::{label::Label, post::Post, post_info::PostInfo},
 };
 
 use super::{
@@ -27,7 +28,10 @@ impl PostDbServiceImpl {
 
 #[async_trait]
 impl PostDbService for PostDbServiceImpl {
-    async fn get_all_post_info(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError> {
+    async fn get_all_post_info(
+        &self,
+        is_published_only: bool,
+    ) -> Result<Vec<PostInfoMapper>, PostError> {
         let mut query_builder = sqlx::QueryBuilder::new(
             r#"
                 SELECT
@@ -62,37 +66,37 @@ impl PostDbService for PostDbServiceImpl {
             .await
             .map_err(|err| PostError::DatabaseError(err.to_string()))?;
 
-        let mut post_info_map = HashMap::<i32, PostInfo>::new();
+        let mut post_info_mappers_map = HashMap::<i32, PostInfoMapper>::new();
 
         for record in records {
-            let post_info = post_info_map
+            let post_info = post_info_mappers_map
                 .entry(record.post_id)
-                .or_insert_with(|| PostInfo {
+                .or_insert_with(|| PostInfoMapper {
                     id: record.post_id,
                     title: record.title,
                     description: record.description,
                     preview_image_url: record.preview_image_url,
                     labels: Vec::new(),
-                    published_time: record
-                        .published_time
-                        .map(|dt| DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc)),
+                    published_time: record.published_time,
                 });
 
             if let (Some(label_id), Some(label_name), Some(label_color)) =
                 (record.label_id, record.label_name, record.label_color)
             {
-                post_info.labels.push(Label {
+                post_info.labels.push(LabelMapper {
                     id: label_id,
                     name: label_name,
-                    color: label_color as u32,
+                    color: ColorMapper {
+                        value: label_color as u32,
+                    },
                 });
             }
         }
 
-        Ok(post_info_map.into_values().collect())
+        Ok(post_info_mappers_map.into_values().collect())
     }
 
-    async fn get_full_post(&self, id: i32) -> Result<Post, PostError> {
+    async fn get_full_post(&self, id: i32) -> Result<PostMapper, PostError> {
         let mut query_builder = sqlx::QueryBuilder::new(
             r#"
                 SELECT
@@ -129,36 +133,38 @@ impl PostDbService for PostDbServiceImpl {
             return Err(PostError::NotFound);
         }
 
-        let mut post_map = HashMap::<i32, Post>::new();
+        let mut post_mappers_map = HashMap::<i32, PostMapper>::new();
 
         for record in records {
-            let post = post_map.entry(record.post_id).or_insert_with(|| Post {
-                id: record.post_id,
-                info: PostInfo {
+            let post = post_mappers_map
+                .entry(record.post_id)
+                .or_insert_with(|| PostMapper {
                     id: record.post_id,
-                    title: record.title,
-                    description: record.description,
-                    preview_image_url: record.preview_image_url,
-                    labels: Vec::new(),
-                    published_time: record
-                        .published_time
-                        .map(|dt| DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc)),
-                },
-                content: record.content,
-            });
+                    info: PostInfoMapper {
+                        id: record.post_id,
+                        title: record.title,
+                        description: record.description,
+                        preview_image_url: record.preview_image_url,
+                        labels: Vec::new(),
+                        published_time: record.published_time,
+                    },
+                    content: record.content,
+                });
 
             if let (Some(label_id), Some(label_name), Some(label_color)) =
                 (record.label_id, record.label_name, record.label_color)
             {
-                post.info.labels.push(Label {
+                post.info.labels.push(LabelMapper {
                     id: label_id,
                     name: label_name,
-                    color: label_color as u32,
+                    color: ColorMapper {
+                        value: label_color as u32,
+                    },
                 });
             }
         }
 
-        let post = post_map.into_values().next();
+        let post = post_mappers_map.into_values().next();
 
         match post {
             Some(v) => Ok(v),

@@ -53,11 +53,11 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-screen-xl flex-col items-center justify-center gap-y-2.5 px-4 py-32 md:gap-y-8 md:px-24 md:py-32"
+	class="container flex flex-col items-center justify-center gap-y-2.5 py-32 md:gap-y-8 md:px-24 md:py-32"
 >
 	<div
 		bind:this={element}
-		class="flex w-full flex-col gap-y-1.5 rounded-2xl border-4 border-true-gray-800 bg-true-gray-700 p-4 pb-28 font-mono font-medium text-gray-50 shadow-lg transition-opacity duration-300 md:gap-y-2.5 md:rounded-3xl md:border-8 md:p-8 md:pb-32 md:text-xl md:shadow-xl {isReady
+		class="flex w-full flex-col gap-y-1.5 rounded-2xl border-4 border-true-gray-800 bg-true-gray-700 p-4 pb-28 font-mono font-medium text-gray-50 shadow-lg transition-opacity duration-300 md:gap-y-2.5 md:rounded-3xl md:border-8 md:p-8 md:pb-32 md:text-lg md:shadow-xl {isReady
 			? 'opacity-100'
 			: 'opacity-0'}"
 	>

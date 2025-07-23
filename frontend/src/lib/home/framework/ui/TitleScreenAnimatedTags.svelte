@@ -4,6 +4,7 @@
 	const tagsCollection = [
 		'APP',
 		'C++',
+		'Clean Architecture',
 		'Design Pattern',
 		'Docker',
 		'Flutter',
@@ -12,7 +13,10 @@
 		'LINER',
 		'Linux',
 		'Python',
+		'React',
+		'Rust',
 		'Squid',
+		'Svelte',
 		'TypeScript',
 		'中央大學',
 		'全端',
@@ -20,9 +24,7 @@
 		'前端',
 		'後端',
 		'教學',
-		'暴肝',
 		'知識',
-		'碼農',
 		'科技',
 		'科普',
 		'程式設計',
@@ -64,7 +66,8 @@
 </script>
 
 <div
-	class={`relative w-full max-w-screen-md transition-opacity duration-500 ${isTagsVisible ? 'opacity-100' : 'opacity-0'}`}
+	class="relative w-full max-w-screen-md transition-opacity duration-500
+		{isTagsVisible ? 'opacity-100' : 'opacity-0'}"
 >
 	<div
 		class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-60% to-white"

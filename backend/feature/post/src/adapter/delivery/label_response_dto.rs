@@ -1,12 +1,14 @@
 use serde::Serialize;
 
-use crate::domain::entity::label::Label;
+use crate::{
+    adapter::delivery::color_response_dto::ColorResponseDto, domain::entity::label::Label,
+};
 
 #[derive(Serialize)]
 pub struct LabelResponseDto {
     pub id: i32,
     pub name: String,
-    pub color: String,
+    pub color: ColorResponseDto,
 }
 
 impl From<Label> for LabelResponseDto {
@@ -14,7 +16,7 @@ impl From<Label> for LabelResponseDto {
         Self {
             id: entity.id,
             name: entity.name,
-            color: format!("#{:08X}", entity.color),
+            color: ColorResponseDto::from(entity.color),
         }
     }
 }

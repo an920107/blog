@@ -13,6 +13,11 @@
 		</a>
 		<div class="flex flex-row items-center gap-x-6">
 			<NavbarAction label="首頁" link="/" isSelected={page.url.pathname === '/'} />
+			<NavbarAction
+				label="文章"
+				link="/post"
+				isSelected={page.url.pathname === '/post' || page.url.pathname.startsWith('/post/')}
+			/>
 		</div>
 	</div>
 </div>

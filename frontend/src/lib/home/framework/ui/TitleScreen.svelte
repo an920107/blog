@@ -2,9 +2,7 @@
 	import TitleScreenAnimatedTags from '$lib/home/framework/ui/TitleScreenAnimatedTags.svelte';
 </script>
 
-<div
-	class="mx-auto flex min-h-content-height max-w-screen-xl flex-col justify-center gap-y-2.5 px-4 md:gap-y-8 md:px-6"
->
+<div class="container flex min-h-content-height flex-col justify-center gap-y-2.5 md:gap-y-8">
 	<h2 class="text-3xl font-bold text-gray-800 md:text-6xl">Hello 大家好！</h2>
 	<h1 class="flex flex-row items-center gap-x-2 text-4xl font-extrabold text-gray-800 md:text-7xl">
 		<span>我是</span>

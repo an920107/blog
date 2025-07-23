@@ -22,10 +22,21 @@ impl PostRepositoryImpl {
 #[async_trait]
 impl PostRepository for PostRepositoryImpl {
     async fn get_all_post_info(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError> {
-        self.post_db_service.get_all_post_info(is_published_only).await
+        self.post_db_service
+            .get_all_post_info(is_published_only)
+            .await
+            .map(|mappers| {
+                mappers
+                    .into_iter()
+                    .map(|mapper| mapper.to_entity())
+                    .collect::<Vec<PostInfo>>()
+            })
     }
 
     async fn get_full_post(&self, id: i32) -> Result<Post, PostError> {
-        self.post_db_service.get_full_post(id).await
+        self.post_db_service
+            .get_full_post(id)
+            .await
+            .map(|mapper| mapper.to_entity())
     }
 }
