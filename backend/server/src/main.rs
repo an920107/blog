@@ -16,15 +16,28 @@ async fn main() -> std::io::Result<()> {
 
     let db_pool = init_database().await;
 
+    let host = env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
+    let port = env::var("PORT")
+        .unwrap_or_else(|_| "8080".to_string())
+        .parse::<u16>()
+        .unwrap();
+
     HttpServer::new(move || create_app(db_pool.clone()))
-        .bind(("0.0.0.0", 8080))?
+        .bind((host, port))?
         .run()
         .await
 }
 
 async fn init_database() -> Pool<Postgres> {
-    let database_url = env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://postgres@localhost:5432/postgres".to_string());
+    let host = env::var("DATABASE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
+    let port = env::var("DATABASE_PORT").unwrap_or_else(|_| "5432".to_string());
+    let user = env::var("DATABASE_USER").unwrap_or_else(|_| "postgres".to_string());
+    let password = env::var("DATABASE_PASSWORD").unwrap_or_else(|_| "".to_string());
+    let dbname = env::var("DATABASE_NAME").unwrap_or_else(|_| "postgres".to_string());
+    let database_url = format!(
+        "postgres://{}:{}@{}:{}/{}",
+        user, password, host, port, dbname
+    );
 
     let db_pool = PgPoolOptions::new()
         .max_connections(5)

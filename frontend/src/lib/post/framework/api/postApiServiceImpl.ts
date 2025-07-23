@@ -4,8 +4,7 @@ import { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseD
 
 export class PostApiServiceImpl implements PostApiService {
 	async getAllPosts(): Promise<PostInfoResponseDto[]> {
-		const url = new URL(Environment.API_BASE_URL);
-		url.pathname += '/post/all';
+		const url = new URL('post/all', Environment.API_BASE_URL);
 
 		const response = await fetch(url.href);
 
