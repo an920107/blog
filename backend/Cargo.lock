@@ -1789,6 +1789,7 @@ dependencies = [
  "actix-web",
  "dotenv",
  "env_logger",
+ "percent-encoding",
  "post",
  "sqlx",
 ]

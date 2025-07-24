@@ -1,4 +1,7 @@
-import { ColorViewModel } from '$lib/post/adapter/presenter/colorViewModel';
+import {
+	ColorViewModel,
+	type DehydratedColorProps
+} from '$lib/post/adapter/presenter/colorViewModel';
 import type { Label } from '$lib/post/domain/entity/label';
 
 export class LabelViewModel {
@@ -19,4 +22,26 @@ export class LabelViewModel {
 			color: ColorViewModel.fromEntity(label.color)
 		});
 	}
+
+	static rehydrate(props: DehydratedLabelProps): LabelViewModel {
+		return new LabelViewModel({
+			id: props.id,
+			name: props.name,
+			color: ColorViewModel.rehydrate(props.color)
+		});
+	}
+
+	dehydrate(): DehydratedLabelProps {
+		return {
+			id: this.id,
+			name: this.name,
+			color: this.color.dehydrate()
+		};
+	}
+}
+
+export interface DehydratedLabelProps {
+	id: number;
+	name: string;
+	color: DehydratedColorProps;
 }

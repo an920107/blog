@@ -56,6 +56,10 @@ export class ColorViewModel {
 		});
 	}
 
+	static rehydrate(props: DehydratedColorProps): ColorViewModel {
+		return new ColorViewModel(props);
+	}
+
 	get hex(): string {
 		const toHex = (value: number) => value.toString(16).padStart(2, '0');
 		return `#${toHex(this.red)}${toHex(this.green)}${toHex(this.blue)}${toHex(this.alpha)}`;
@@ -105,10 +109,26 @@ export class ColorViewModel {
 	darken(amount: number): ColorViewModel {
 		return this.lighten(-amount);
 	}
+
+	dehydrate(): DehydratedColorProps {
+		return {
+			red: this.red,
+			green: this.green,
+			blue: this.blue,
+			alpha: this.alpha
+		};
+	}
 }
 
 interface Hsl {
 	h: number;
 	s: number;
 	l: number;
+}
+
+export interface DehydratedColorProps {
+	red: number;
+	green: number;
+	blue: number;
+	alpha: number;
 }

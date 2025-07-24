@@ -7,6 +7,7 @@ edition.workspace = true
 actix-web.workspace = true
 dotenv.workspace = true
 env_logger.workspace = true
+percent-encoding.workspace = true
 sqlx.workspace = true
 
 post.workspace = true

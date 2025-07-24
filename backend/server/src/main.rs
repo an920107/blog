@@ -34,9 +34,13 @@ async fn init_database() -> Pool<Postgres> {
     let user = env::var("DATABASE_USER").unwrap_or_else(|_| "postgres".to_string());
     let password = env::var("DATABASE_PASSWORD").unwrap_or_else(|_| "".to_string());
     let dbname = env::var("DATABASE_NAME").unwrap_or_else(|_| "postgres".to_string());
+
+    let encoded_password =
+        percent_encoding::utf8_percent_encode(&password, percent_encoding::NON_ALPHANUMERIC)
+            .to_string();
     let database_url = format!(
         "postgres://{}:{}@{}:{}/{}",
-        user, password, host, port, dbname
+        user, encoded_password, host, port, dbname
     );
 
     let db_pool = PgPoolOptions::new()

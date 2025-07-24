@@ -1,4 +1,7 @@
-import { LabelViewModel } from '$lib/post/adapter/presenter/labelViewModel';
+import {
+	LabelViewModel,
+	type DehydratedLabelProps
+} from '$lib/post/adapter/presenter/labelViewModel';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export class PostInfoViewModel {
@@ -35,4 +38,39 @@ export class PostInfoViewModel {
 			publishedTime: postInfo.publishedTime
 		});
 	}
+
+	static rehydrate(props: DehydratedPostInfoProps): PostInfoViewModel {
+		return new PostInfoViewModel({
+			id: props.id,
+			title: props.title,
+			description: props.description,
+			previewImageUrl: new URL(props.previewImageUrl),
+			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
+			publishedTime: new Date(props.publishedTime)
+		});
+	}
+
+	get formattedPublishedTime(): string {
+		return this.publishedTime.toISOString().slice(0, 10);
+	}
+
+	dehydrate(): DehydratedPostInfoProps {
+		return {
+			id: this.id,
+			title: this.title,
+			description: this.description,
+			previewImageUrl: this.previewImageUrl.href,
+			labels: this.labels.map((label) => label.dehydrate()),
+			publishedTime: this.publishedTime.getTime()
+		};
+	}
+}
+
+export interface DehydratedPostInfoProps {
+	id: number;
+	title: string;
+	description: string;
+	previewImageUrl: string;
+	labels: DehydratedLabelProps[];
+	publishedTime: number;
 }

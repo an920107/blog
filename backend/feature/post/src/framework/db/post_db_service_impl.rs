@@ -68,21 +68,23 @@ impl PostDbService for PostDbServiceImpl {
 
         let mut post_info_mappers_map = HashMap::<i32, PostInfoMapper>::new();
 
-        for record in records {
+        for record in &records {
             let post_info = post_info_mappers_map
                 .entry(record.post_id)
                 .or_insert_with(|| PostInfoMapper {
                     id: record.post_id,
-                    title: record.title,
-                    description: record.description,
-                    preview_image_url: record.preview_image_url,
+                    title: record.title.clone(),
+                    description: record.description.clone(),
+                    preview_image_url: record.preview_image_url.clone(),
                     labels: Vec::new(),
                     published_time: record.published_time,
                 });
 
-            if let (Some(label_id), Some(label_name), Some(label_color)) =
-                (record.label_id, record.label_name, record.label_color)
-            {
+            if let (Some(label_id), Some(label_name), Some(label_color)) = (
+                record.label_id,
+                record.label_name.clone(),
+                record.label_color,
+            ) {
                 post_info.labels.push(LabelMapper {
                     id: label_id,
                     name: label_name,
@@ -93,7 +95,14 @@ impl PostDbService for PostDbServiceImpl {
             }
         }
 
-        Ok(post_info_mappers_map.into_values().collect())
+        let mut ordered_posts = Vec::new();
+        for record in &records {
+            if let Some(post_info) = post_info_mappers_map.remove(&record.post_id) {
+                ordered_posts.push(post_info);
+            }
+        }
+
+        Ok(ordered_posts)
     }
 
     async fn get_full_post(&self, id: i32) -> Result<PostMapper, PostError> {
@@ -135,25 +144,27 @@ impl PostDbService for PostDbServiceImpl {
 
         let mut post_mappers_map = HashMap::<i32, PostMapper>::new();
 
-        for record in records {
+        for record in &records {
             let post = post_mappers_map
                 .entry(record.post_id)
                 .or_insert_with(|| PostMapper {
                     id: record.post_id,
                     info: PostInfoMapper {
                         id: record.post_id,
-                        title: record.title,
-                        description: record.description,
-                        preview_image_url: record.preview_image_url,
+                        title: record.title.clone(),
+                        description: record.description.clone(),
+                        preview_image_url: record.preview_image_url.clone(),
                         labels: Vec::new(),
                         published_time: record.published_time,
                     },
-                    content: record.content,
+                    content: record.content.clone(),
                 });
 
-            if let (Some(label_id), Some(label_name), Some(label_color)) =
-                (record.label_id, record.label_name, record.label_color)
-            {
+            if let (Some(label_id), Some(label_name), Some(label_color)) = (
+                record.label_id,
+                record.label_name.clone(),
+                record.label_color,
+            ) {
                 post.info.labels.push(LabelMapper {
                     id: label_id,
                     name: label_name,

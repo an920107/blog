@@ -17,7 +17,7 @@
 	}
 </script>
 
-<a class="flex cursor-pointer flex-col gap-y-4" href="/post/{postInfo.id}">
+<a class="flex cursor-pointer flex-col gap-y-6" href="/post/{postInfo.id}">
 	<div class="relative aspect-video overflow-hidden rounded-2xl bg-gray-200">
 		<img
 			class="rounded-2xl object-cover transition-opacity duration-300
@@ -32,10 +32,10 @@
 			<div class="absolute inset-0 flex items-center justify-center bg-gray-200"></div>
 		{/if}
 	</div>
-	<div class="flex flex-col gap-y-1.5">
+	<div class="flex flex-col gap-y-2.5">
 		<PostPreviewLabels labels={postInfo.labels} />
-		<span class="line-clamp-1 font-bold">{postInfo.title}</span>
+		<span class="line-clamp-1 text-lg font-bold">{postInfo.title}</span>
 		<span class="line-clamp-3 text-justify text-sm">{postInfo.description}</span>
-		<span class="text-sm text-gray-500">查看更多 ⭢</span>
+		<span class="text-sm text-gray-500">{postInfo.formattedPublishedTime}</span>
 	</div>
 </a>

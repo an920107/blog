@@ -5,12 +5,14 @@ export enum StatusType {
 	Error
 }
 
-export interface IdleState {
+export interface IdleState<T> {
 	status: StatusType.Idle;
+	data?: T;
 }
 
-export interface LoadingState {
+export interface LoadingState<T> {
 	status: StatusType.Loading;
+	data?: T;
 }
 
 export interface SuccessState<T> {
@@ -18,9 +20,10 @@ export interface SuccessState<T> {
 	data: T;
 }
 
-export interface ErrorState {
+export interface ErrorState<T> {
 	status: StatusType.Error;
+	data?: T;
 	error: Error;
 }
 
-export type AsyncState<T> = IdleState | LoadingState | SuccessState<T> | ErrorState;
+export type AsyncState<T> = IdleState<T> | LoadingState<T> | SuccessState<T> | ErrorState<T>;

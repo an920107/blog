@@ -1,24 +1,16 @@
 <script lang="ts">
 	import type { LabelViewModel } from '$lib/post/adapter/presenter/labelViewModel';
+	import Label from '$lib/post/framework/ui/Label.svelte';
 
 	const { labels }: { labels: readonly LabelViewModel[] } = $props();
 </script>
 
-<div class="flex flex-row gap-x-2 text-xs">
+<div class="flex flex-row gap-x-2">
 	{#each labels.slice(0, 2) as label (label.id)}
-		<div
-			class="flex flex-row items-center gap-x-1 rounded-full px-2 py-0.5"
-			style="background-color: {label.color.hex};"
-		>
-			<div
-				class="size-2 rounded-full"
-				style="background-color: {label.color.darken(0.2).hex};"
-			></div>
-			<span>{label.name}</span>
-		</div>
+		<Label {label} />
 	{/each}
 	{#if labels.length > 2}
-		<div class="rounded-full bg-gray-200 px-2 py-0.5">
+		<div class="rounded-full bg-gray-200 px-2 py-0.5 text-xs">
 			<span>+{labels.length - 2}</span>
 		</div>
 	{/if}
