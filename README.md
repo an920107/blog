@@ -11,6 +11,8 @@ As for the more detailed development approach, I plan to use Clean Architecture 
 
 These will allow me to become more proficient in these modern development practices and leave a lot of flexibility and room for adjustments in the future.
 
+For more information about the development process, you can check out the [project board](https://git.squidspirit.com/squid/blog/projects). As for the details of the architecture and convention, you can find them in the [wiki](https://git.squidspirit.com/squid/blog/wiki).
+
 ## License
 
 This project uses a combination of the [MIT License and a custom license](./LICENSE.md). Based on the MIT License, anyone is permitted to use the code. However, before deploying the code, they must first replace any information belonging to "me" or any content that could identify "me," such as logos, names, and "about me" sections.
