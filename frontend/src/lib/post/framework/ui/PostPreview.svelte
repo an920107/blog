@@ -17,7 +17,7 @@
 	}
 </script>
 
-<a class="flex cursor-pointer flex-col gap-y-6" href="/post/{postInfo.id}">
+<a class="flex cursor-pointer flex-col gap-y-6" href="/post/{postInfo.id}" title={postInfo.title}>
 	<div class="relative aspect-video overflow-hidden rounded-2xl bg-gray-200">
 		<img
 			class="rounded-2xl object-cover transition-opacity duration-300
@@ -34,8 +34,8 @@
 	</div>
 	<div class="flex flex-col gap-y-2.5">
 		<PostPreviewLabels labels={postInfo.labels} />
-		<span class="line-clamp-1 text-lg font-bold">{postInfo.title}</span>
-		<span class="line-clamp-3 text-justify text-sm">{postInfo.description}</span>
+		<h2 class="line-clamp-1 text-lg font-bold">{postInfo.title}</h2>
+		<p class="line-clamp-3 text-justify text-sm">{postInfo.description}</p>
 		<span class="text-sm text-gray-500">{postInfo.formattedPublishedTime}</span>
 	</div>
 </a>
