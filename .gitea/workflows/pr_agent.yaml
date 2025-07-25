@@ -1,0 +1,20 @@
+name: Auto Comment On PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  add_improve_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add '/improve' comment to PR
+        run: |
+          echo "Target URL: ${{ vars.GIT_PROVIDER_URL }}/api/v1/repos/${{ gitea.repository }}/issues/${{ gitea.ref_name }}/comments"
+          curl --fail -X POST \
+            -H "Authorization: token ${{ secrets.BOT_PAT }}" \
+            -H "Content-Type: application/json" \
+            -d '{"body": "/improve"}' \
+            "${{ vars.GIT_PROVIDER_URL }}/api/v1/repos/${{ gitea.repository }}/issues/${{ gitea.ref_name }}/comments"
