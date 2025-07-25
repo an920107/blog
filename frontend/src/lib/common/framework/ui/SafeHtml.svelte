@@ -5,7 +5,9 @@
 
 	const { html }: { html: string } = $props();
 
-	const sanitizedHtml = $derived(sanitizeHtml(html));
+	const sanitizedHtml = $derived(
+		sanitizeHtml(html, { allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']) })
+	);
 </script>
 
 {@html sanitizedHtml}
