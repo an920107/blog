@@ -5,8 +5,8 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{
-        color_mapper::ColorMapper, label_mapper::LabelMapper, post_db_service::PostDbService,
-        post_info_mapper::PostInfoMapper, post_mapper::PostMapper,
+        color_db_mapper::ColorMapper, label_db_mapper::LabelMapper, post_db_service::PostDbService,
+        post_info_db_mapper::PostInfoMapper, post_db_mapper::PostMapper,
     },
     application::error::post_error::PostError,
 };

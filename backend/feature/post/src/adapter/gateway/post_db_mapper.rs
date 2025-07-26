@@ -1,4 +1,4 @@
-use crate::{adapter::gateway::post_info_mapper::PostInfoMapper, domain::entity::post::Post};
+use crate::{adapter::gateway::post_info_db_mapper::PostInfoMapper, domain::entity::post::Post};
 
 pub struct PostMapper {
     pub id: i32,

@@ -1,4 +1,4 @@
-use crate::{adapter::gateway::color_mapper::ColorMapper, domain::entity::label::Label};
+use crate::{adapter::gateway::color_db_mapper::ColorMapper, domain::entity::label::Label};
 
 pub struct LabelMapper {
     pub id: i32,

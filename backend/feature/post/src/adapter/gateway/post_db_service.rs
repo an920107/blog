@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::{post_info_mapper::PostInfoMapper, post_mapper::PostMapper},
+    adapter::gateway::{post_info_db_mapper::PostInfoMapper, post_db_mapper::PostMapper},
     application::error::post_error::PostError,
 };
 
