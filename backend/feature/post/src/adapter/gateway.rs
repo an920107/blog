@@ -1,6 +1,6 @@
-pub mod color_mapper;
-pub mod label_mapper;
+pub mod color_db_mapper;
+pub mod label_db_mapper;
+pub mod post_db_mapper;
 pub mod post_db_service;
-pub mod post_info_mapper;
-pub mod post_mapper;
+pub mod post_info_db_mapper;
 pub mod post_repository_impl;

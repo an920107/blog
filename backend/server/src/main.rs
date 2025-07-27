@@ -4,6 +4,7 @@ use actix_web::{
     dev::{ServiceFactory, ServiceRequest, ServiceResponse},
     web,
 };
+use image::framework::web::image_web_routes::configure_image_routes;
 use post::framework::web::post_web_routes::configure_post_routes;
 use server::container::Container;
 use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
@@ -15,6 +16,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let db_pool = init_database().await;
+    let storage_path = env::var("STORAGE_PATH").unwrap_or_else(|_| "static".to_string());
 
     let host = env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
     let port = env::var("PORT")
@@ -22,7 +24,7 @@ async fn main() -> std::io::Result<()> {
         .parse::<u16>()
         .unwrap();
 
-    HttpServer::new(move || create_app(db_pool.clone()))
+    HttpServer::new(move || create_app(db_pool.clone(), storage_path.clone()))
         .bind((host, port))?
         .run()
         .await
@@ -59,6 +61,7 @@ async fn init_database() -> Pool<Postgres> {
 
 fn create_app(
     db_pool: Pool<Postgres>,
+    storage_path: String,
 ) -> App<
     impl ServiceFactory<
         ServiceRequest,
@@ -68,9 +71,11 @@ fn create_app(
         Error = Error,
     >,
 > {
-    let container = Container::new(db_pool);
+    let container = Container::new(db_pool, &storage_path);
 
     App::new()
         .app_data(web::Data::from(container.post_controller))
+        .app_data(web::Data::from(container.image_controller))
         .configure(configure_post_routes)
+        .configure(configure_image_routes)
 }

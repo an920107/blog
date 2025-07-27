@@ -11,9 +11,11 @@ FROM alpine:latest AS runner
 WORKDIR /app
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/server .
 EXPOSE 8080
+VOLUME ["/app/static"]
 ENV RUST_LOG=info
 ENV HOST=0.0.0.0
 ENV PORT=8080
+ENV STORAGE_PATH=/app/static
 ENV DATABASE_HOST=127.0.0.1
 ENV DATABASE_PORT=5432
 ENV DATABASE_USER=postgres

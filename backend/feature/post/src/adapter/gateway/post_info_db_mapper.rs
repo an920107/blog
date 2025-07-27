@@ -1,6 +1,6 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
 
-use crate::{adapter::gateway::label_mapper::LabelMapper, domain::entity::post_info::PostInfo};
+use crate::{adapter::gateway::label_db_mapper::LabelMapper, domain::entity::post_info::PostInfo};
 
 pub struct PostInfoMapper {
     pub id: i32,
@@ -12,7 +12,7 @@ pub struct PostInfoMapper {
 }
 
 impl PostInfoMapper {
-    pub fn to_entity(&self) -> PostInfo {
+    pub fn into_entity(self) -> PostInfo {
         PostInfo {
             id: self.id,
             title: self.title.clone(),
@@ -21,7 +21,7 @@ impl PostInfoMapper {
             published_time: self
                 .published_time
                 .map(|dt| DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc)),
-            labels: self.labels.iter().map(LabelMapper::to_entity).collect(),
+            labels: self.labels.into_iter().map(LabelMapper::into_entity).collect(),
         }
     }
 }

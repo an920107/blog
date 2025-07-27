@@ -28,7 +28,7 @@ impl PostRepository for PostRepositoryImpl {
             .map(|mappers| {
                 mappers
                     .into_iter()
-                    .map(|mapper| mapper.to_entity())
+                    .map(|mapper| mapper.into_entity())
                     .collect::<Vec<PostInfo>>()
             })
     }
@@ -37,6 +37,6 @@ impl PostRepository for PostRepositoryImpl {
         self.post_db_service
             .get_full_post(id)
             .await
-            .map(|mapper| mapper.to_entity())
+            .map(|mapper| mapper.into_entity())
     }
 }

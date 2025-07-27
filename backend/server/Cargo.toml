@@ -10,4 +10,5 @@ env_logger.workspace = true
 percent-encoding.workspace = true
 sqlx.workspace = true
 
+image.workspace = true
 post.workspace = true

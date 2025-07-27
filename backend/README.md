@@ -39,4 +39,3 @@
       ```bash
       RUST_LOG=debug watchexec -e rs -r 'cargo run'
       ```
-

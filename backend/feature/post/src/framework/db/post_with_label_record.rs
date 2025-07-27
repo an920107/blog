@@ -1,6 +1,6 @@
 use chrono::NaiveDateTime;
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(sqlx::FromRow)]
 pub struct PostWithLabelRecord {
     pub post_id: i32,
     pub title: String,
