@@ -4,11 +4,15 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+actix-session.workspace = true
 actix-web.workspace = true
 dotenv.workspace = true
 env_logger.workspace = true
+hex.workspace = true
+openidconnect.workspace = true
 percent-encoding.workspace = true
 sqlx.workspace = true
 
+auth.workspace = true
 image.workspace = true
 post.workspace = true

@@ -1,67 +1,56 @@
+use actix_session::{
+    SessionMiddleware, config::SessionMiddlewareBuilder, storage::RedisSessionStore,
+};
 use actix_web::{
     App, Error, HttpServer,
     body::MessageBody,
     dev::{ServiceFactory, ServiceRequest, ServiceResponse},
     web,
 };
+use auth::framework::web::auth_web_routes::configure_auth_routes;
 use image::framework::web::image_web_routes::configure_image_routes;
+use openidconnect::reqwest;
 use post::framework::web::post_web_routes::configure_post_routes;
-use server::container::Container;
-use sqlx::{Pool, Postgres, postgres::PgPoolOptions};
-use std::env;
+use server::{configuration::Configuration, container::Container};
+use sqlx::{Pool, Postgres};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     env_logger::init();
 
-    let db_pool = init_database().await;
-    let storage_path = env::var("STORAGE_PATH").unwrap_or_else(|_| "static".to_string());
+    let http_client = reqwest::ClientBuilder::new()
+        .redirect(reqwest::redirect::Policy::none())
+        .build()
+        .expect("Failed to create HTTP client");
 
-    let host = env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
-    let port = env::var("PORT")
-        .unwrap_or_else(|_| "8080".to_string())
-        .parse::<u16>()
-        .unwrap();
+    let configuration = Configuration::new(http_client.clone()).await;
 
-    HttpServer::new(move || create_app(db_pool.clone(), storage_path.clone()))
-        .bind((host, port))?
-        .run()
-        .await
-}
+    let host = configuration.server.host.clone();
+    let port = configuration.server.port;
 
-async fn init_database() -> Pool<Postgres> {
-    let host = env::var("DATABASE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());
-    let port = env::var("DATABASE_PORT").unwrap_or_else(|_| "5432".to_string());
-    let user = env::var("DATABASE_USER").unwrap_or_else(|_| "postgres".to_string());
-    let password = env::var("DATABASE_PASSWORD").unwrap_or_else(|_| "".to_string());
-    let dbname = env::var("DATABASE_NAME").unwrap_or_else(|_| "postgres".to_string());
+    let db_pool = configuration.db.create_connection().await;
+    let session_key = configuration.session.session_key.clone();
+    let session_store = configuration.session.create_session_store().await;
 
-    let encoded_password =
-        percent_encoding::utf8_percent_encode(&password, percent_encoding::NON_ALPHANUMERIC)
-            .to_string();
-    let database_url = format!(
-        "postgres://{}:{}@{}:{}/{}",
-        user, encoded_password, host, port, dbname
-    );
-
-    let db_pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&database_url)
-        .await
-        .expect("Failed to create database connection pool");
-
-    sqlx::migrate!("../migrations")
-        .run(&db_pool)
-        .await
-        .expect("Failed to run database migrations");
-
-    db_pool
+    HttpServer::new(move || {
+        create_app(
+            db_pool.clone(),
+            http_client.clone(),
+            SessionMiddleware::builder(session_store.clone(), session_key.clone()),
+            configuration.clone(),
+        )
+    })
+    .bind((host, port))?
+    .run()
+    .await
 }
 
 fn create_app(
     db_pool: Pool<Postgres>,
-    storage_path: String,
+    http_client: reqwest::Client,
+    session_middleware_builder: SessionMiddlewareBuilder<RedisSessionStore>,
+    configuration: Configuration,
 ) -> App<
     impl ServiceFactory<
         ServiceRequest,
@@ -71,11 +60,14 @@ fn create_app(
         Error = Error,
     >,
 > {
-    let container = Container::new(db_pool, &storage_path);
+    let container = Container::new(db_pool, http_client, configuration);
 
     App::new()
-        .app_data(web::Data::from(container.post_controller))
+        .wrap(session_middleware_builder.build())
+        .app_data(web::Data::from(container.auth_controller))
         .app_data(web::Data::from(container.image_controller))
-        .configure(configure_post_routes)
+        .app_data(web::Data::from(container.post_controller))
+        .configure(configure_auth_routes)
         .configure(configure_image_routes)
+        .configure(configure_post_routes)
 }

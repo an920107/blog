@@ -1,13 +1,12 @@
 [package]
-name = "image"
+name = "auth"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
-actix-multipart.workspace = true
+actix-session.workspace = true
 actix-web.workspace = true
 async-trait.workspace = true
-futures.workspace = true
 log.workspace = true
+openidconnect.workspace = true
 serde.workspace = true
-sqlx.workspace = true

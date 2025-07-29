@@ -1,5 +1,5 @@
 [workspace]
-members = ["server", "feature/image", "feature/post"]
+members = ["server", "feature/auth", "feature/image", "feature/post"]
 resolver = "2"
 
 [workspace.package]
@@ -8,13 +8,19 @@ edition = "2024"
 
 [workspace.dependencies]
 actix-multipart = "0.7.2"
+actix-session = { version = "0.10.1", features = ["redis-session"] }
 actix-web = "4.10.2"
 async-trait = "0.1.88"
 chrono = "0.4.41"
 dotenv = "0.15.0"
 env_logger = "0.11.8"
 futures = "0.3.31"
+hex = "0.4.3"
 log = "0.4.27"
+openidconnect = { version = "4.0.1", features = [
+    "reqwest",
+    "reqwest-blocking",
+] }
 percent-encoding = "2.3.1"
 serde = { version = "1.0.219", features = ["derive"] }
 sqlx = { version = "0.8.5", features = [
@@ -26,5 +32,6 @@ sqlx = { version = "0.8.5", features = [
 tokio = { version = "1.45.0", features = ["full"] }
 
 server.path = "server"
+auth.path = "feature/auth"
 image.path = "feature/image"
 post.path = "feature/post"
