@@ -1,8 +1,9 @@
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::domain::entity::color::Color;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct ColorResponseDto {
     pub red: u8,
     pub green: u8,

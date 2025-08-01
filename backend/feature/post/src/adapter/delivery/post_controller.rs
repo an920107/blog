@@ -2,11 +2,14 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 
-use crate::application::{
-    error::post_error::PostError,
-    use_case::{
-        get_all_post_info_use_case::GetAllPostInfoUseCase,
-        get_full_post_use_case::GetFullPostUseCase,
+use crate::{
+    adapter::delivery::post_info_query_dto::PostQueryDto,
+    application::{
+        error::post_error::PostError,
+        use_case::{
+            get_all_post_info_use_case::GetAllPostInfoUseCase,
+            get_full_post_use_case::GetFullPostUseCase,
+        },
     },
 };
 
@@ -16,10 +19,10 @@ use super::{post_info_response_dto::PostInfoResponseDto, post_response_dto::Post
 pub trait PostController: Send + Sync {
     async fn get_all_post_info(
         &self,
-        is_published_only: bool,
+        query: PostQueryDto,
     ) -> Result<Vec<PostInfoResponseDto>, PostError>;
 
-    async fn get_full_post(&self, id: i32) -> Result<PostResponseDto, PostError>;
+    async fn get_post_by_id(&self, id: i32) -> Result<PostResponseDto, PostError>;
 }
 
 pub struct PostControllerImpl {
@@ -43,9 +46,12 @@ impl PostControllerImpl {
 impl PostController for PostControllerImpl {
     async fn get_all_post_info(
         &self,
-        is_published_only: bool,
+        query: PostQueryDto,
     ) -> Result<Vec<PostInfoResponseDto>, PostError> {
-        let result = self.get_all_post_info_use_case.execute(is_published_only).await;
+        let result = self
+            .get_all_post_info_use_case
+            .execute(query.is_published_only.unwrap_or(true))
+            .await;
 
         result.map(|post_info_list| {
             let post_info_response_dto_list: Vec<PostInfoResponseDto> = post_info_list
@@ -57,7 +63,7 @@ impl PostController for PostControllerImpl {
         })
     }
 
-    async fn get_full_post(&self, id: i32) -> Result<PostResponseDto, PostError> {
+    async fn get_post_by_id(&self, id: i32) -> Result<PostResponseDto, PostError> {
         let result = self.get_full_post_use_case.execute(id).await;
 
         result.map(PostResponseDto::from)

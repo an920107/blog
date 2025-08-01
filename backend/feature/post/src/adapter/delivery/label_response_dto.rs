@@ -1,10 +1,11 @@
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::{
     adapter::delivery::color_response_dto::ColorResponseDto, domain::entity::label::Label,
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct LabelResponseDto {
     pub id: i32,
     pub name: String,

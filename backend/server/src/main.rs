@@ -11,7 +11,7 @@ use auth::framework::web::auth_web_routes::configure_auth_routes;
 use image::framework::web::image_web_routes::configure_image_routes;
 use openidconnect::reqwest;
 use post::framework::web::post_web_routes::configure_post_routes;
-use server::{configuration::Configuration, container::Container};
+use server::{api_doc::configure_api_doc_routes, configuration::Configuration, container::Container};
 use sqlx::{Pool, Postgres};
 
 #[actix_web::main]
@@ -68,6 +68,7 @@ fn create_app(
         .app_data(web::Data::from(container.auth_controller))
         .app_data(web::Data::from(container.image_controller))
         .app_data(web::Data::from(container.post_controller))
+        .configure(configure_api_doc_routes)
         .configure(configure_auth_routes)
         .configure(configure_image_routes)
         .configure(configure_post_routes)

@@ -1,8 +1,9 @@
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::domain::entity::user::User;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct UserResponseDto {
     pub id: i32,
     pub displayed_name: String,

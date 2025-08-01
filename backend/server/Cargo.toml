@@ -12,6 +12,8 @@ hex.workspace = true
 openidconnect.workspace = true
 percent-encoding.workspace = true
 sqlx.workspace = true
+utoipa.workspace = true
+utoipa-redoc.workspace = true
 
 auth.workspace = true
 image.workspace = true

@@ -1,10 +1,11 @@
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::domain::entity::post_info::PostInfo;
 
 use super::label_response_dto::LabelResponseDto;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct PostInfoResponseDto {
     pub id: i32,
     pub title: String,
