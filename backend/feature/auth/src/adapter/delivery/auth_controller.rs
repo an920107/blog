@@ -11,6 +11,7 @@ use crate::{
         use_case::{
             exchange_auth_code_use_case::ExchangeAuthCodeUseCase,
             get_auth_url_use_case::{AuthUrl, GetAuthUrlUseCase},
+            get_user_use_case::GetUserUseCase,
         },
     },
 };
@@ -25,21 +26,26 @@ pub trait AuthController: Send + Sync {
         expected_state: &str,
         expected_nonce: &str,
     ) -> Result<UserResponseDto, AuthError>;
+
+    async fn get_user(&self, user_id: i32) -> Result<UserResponseDto, AuthError>;
 }
 
 pub struct AuthControllerImpl {
     get_auth_url_use_case: Arc<dyn GetAuthUrlUseCase>,
     exchange_auth_code_use_case: Arc<dyn ExchangeAuthCodeUseCase>,
+    get_user_use_case: Arc<dyn GetUserUseCase>,
 }
 
 impl AuthControllerImpl {
     pub fn new(
         get_auth_url_use_case: Arc<dyn GetAuthUrlUseCase>,
         exchange_auth_code_use_case: Arc<dyn ExchangeAuthCodeUseCase>,
+        get_user_use_case: Arc<dyn GetUserUseCase>,
     ) -> Self {
         Self {
             get_auth_url_use_case,
             exchange_auth_code_use_case,
+            get_user_use_case,
         }
     }
 }
@@ -62,5 +68,10 @@ impl AuthController for AuthControllerImpl {
             .await;
 
         result.map(|user| UserResponseDto::from(user))
+    }
+
+    async fn get_user(&self, user_id: i32) -> Result<UserResponseDto, AuthError> {
+        let user = self.get_user_use_case.execute(user_id).await?;
+        Ok(UserResponseDto::from(user))
     }
 }

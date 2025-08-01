@@ -101,6 +101,17 @@ async fn logout_handler(session: Session) -> impl Responder {
         .finish()
 }
 
-async fn get_logged_in_user_handler(user_id: UserId) -> impl Responder {
-    HttpResponse::Ok().body(format!("Logged in user ID: {}", user_id.get()))
+async fn get_logged_in_user_handler(
+    auth_controller: web::Data<dyn AuthController>,
+    user_id: UserId,
+) -> impl Responder {
+    let result = auth_controller.get_user(user_id.get()).await;
+
+    match result {
+        Ok(user) => HttpResponse::Ok().json(user),
+        Err(e) => {
+            log::error!("{e:?}");
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }

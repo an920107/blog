@@ -12,6 +12,8 @@ pub trait AuthRepository: Send + Sync {
     async fn exchange_auth_code(&self, code: &str, expected_nonce: &str)
     -> Result<User, AuthError>;
 
+    async fn get_user_by_id(&self, user_id: i32) -> Result<User, AuthError>;
+
     async fn get_user_by_source_id(&self, issuer: &str, source_id: &str)
     -> Result<User, AuthError>;
 

@@ -4,7 +4,8 @@ use async_trait::async_trait;
 
 use crate::{
     adapter::gateway::{
-        auth_oidc_service::AuthOidcService, user_db_service::UserDbService, user_db_mapper::UserMapper,
+        auth_oidc_service::AuthOidcService, user_db_mapper::UserMapper,
+        user_db_service::UserDbService,
     },
     application::{
         error::auth_error::AuthError, gateway::auth_repository::AuthRepository,
@@ -45,6 +46,13 @@ impl AuthRepository for AuthRepositoryImpl {
             .exchange_auth_code(code, expected_nonce)
             .await
             .map(|dto| dto.into_entity())
+    }
+
+    async fn get_user_by_id(&self, user_id: i32) -> Result<User, AuthError> {
+        self.user_db_service
+            .get_user_by_id(user_id)
+            .await
+            .map(|mapper| mapper.into_entity())
     }
 
     async fn get_user_by_source_id(

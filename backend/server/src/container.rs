@@ -7,7 +7,7 @@ use auth::{
     },
     application::use_case::{
         exchange_auth_code_use_case::ExchangeAuthCodeUseCaseImpl,
-        get_auth_url_use_case::LoginUseCaseImpl,
+        get_auth_url_use_case::LoginUseCaseImpl, get_user_use_case::GetUserUseCaseImpl,
     },
     framework::{
         db::user_db_service_impl::UserDbServiceImpl,
@@ -68,9 +68,11 @@ impl Container {
         let get_auth_url_use_case = Arc::new(LoginUseCaseImpl::new(auth_repository.clone()));
         let exchange_auth_code_use_case =
             Arc::new(ExchangeAuthCodeUseCaseImpl::new(auth_repository.clone()));
+        let get_user_use_case = Arc::new(GetUserUseCaseImpl::new(auth_repository.clone()));
         let auth_controller = Arc::new(AuthControllerImpl::new(
             get_auth_url_use_case,
             exchange_auth_code_use_case,
+            get_user_use_case,
         ));
 
         let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool.clone()));
