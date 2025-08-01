@@ -41,8 +41,32 @@ impl ExchangeAuthCodeUseCase for ExchangeAuthCodeUseCaseImpl {
             return Err(AuthError::InvalidState);
         }
 
-        self.auth_repository
+        let mut logged_in_user = self
+            .auth_repository
             .exchange_auth_code(code, expected_nonce)
-            .await
+            .await?;
+
+        let saved_user_result = self
+            .auth_repository
+            .get_user_by_source_id(&logged_in_user.issuer, &logged_in_user.source_id)
+            .await;
+
+        match saved_user_result {
+            Ok(user) => {
+                logged_in_user.id = user.id;
+            }
+            Err(AuthError::UserNotFound) => {
+                let id = self
+                    .auth_repository
+                    .save_user(logged_in_user.clone())
+                    .await?;
+                logged_in_user.id = id;
+            }
+            Err(e) => {
+                return Err(e);
+            }
+        };
+
+        Ok(logged_in_user)
     }
 }

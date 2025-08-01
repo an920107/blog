@@ -93,6 +93,8 @@ impl AuthOidcService for AuthOidcServiceImpl {
             )
             .map_err(|_| AuthError::InvalidIdToken)?;
 
+        let issuer = claims.issuer().to_string();
+
         let preferred_username = claims
             .preferred_username()
             .map(|username| username.to_string());
@@ -101,6 +103,7 @@ impl AuthOidcService for AuthOidcServiceImpl {
 
         Ok(OidcClaimsResponseDto {
             sub: claims.subject().to_string(),
+            issuer: issuer,
             preferred_username: preferred_username,
             email: email,
         })

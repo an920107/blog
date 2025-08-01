@@ -6,11 +6,10 @@ use crate::{
         auth_controller::AuthController, oidc_callback_query_dto::OidcCallbackQueryDto,
     },
     application::error::auth_error::AuthError,
+    framework::web::constants::{
+        SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE, SESSION_KEY_USER_ID,
+    },
 };
-
-const SESSION_KEY_AUTH_STATE: &str = "auth_state";
-const SESSION_KEY_AUTH_NONCE: &str = "auth_nonce";
-const SESSION_KEY_USER: &str = "user";
 
 pub fn configure_auth_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -29,11 +28,11 @@ async fn oidc_login_handler(
 
     match result {
         Ok(auth_url) => {
-            if let Err(e) = session.insert(SESSION_KEY_AUTH_STATE, auth_url.state) {
+            if let Err(e) = session.insert::<String>(SESSION_KEY_AUTH_STATE, auth_url.state) {
                 log::error!("{e:?}");
                 return HttpResponse::InternalServerError().finish();
             }
-            if let Err(e) = session.insert(SESSION_KEY_AUTH_NONCE, auth_url.nonce) {
+            if let Err(e) = session.insert::<String>(SESSION_KEY_AUTH_NONCE, auth_url.nonce) {
                 log::error!("{e:?}");
                 return HttpResponse::InternalServerError().finish();
             }
@@ -53,12 +52,12 @@ async fn oidc_callback_handler(
     query: web::Query<OidcCallbackQueryDto>,
     session: Session,
 ) -> impl Responder {
-    let expected_state: String = match session.get(SESSION_KEY_AUTH_STATE) {
+    let expected_state = match session.get::<String>(SESSION_KEY_AUTH_STATE) {
         Ok(Some(state)) => state,
         _ => return HttpResponse::BadRequest().finish(),
     };
 
-    let expected_nonce: String = match session.get(SESSION_KEY_AUTH_NONCE) {
+    let expected_nonce = match session.get::<String>(SESSION_KEY_AUTH_NONCE) {
         Ok(Some(nonce)) => nonce,
         _ => return HttpResponse::BadRequest().finish(),
     };
@@ -71,7 +70,7 @@ async fn oidc_callback_handler(
     session.remove(SESSION_KEY_AUTH_NONCE);
     match result {
         Ok(user) => {
-            if let Err(e) = session.insert(SESSION_KEY_USER, user) {
+            if let Err(e) = session.insert::<i32>(SESSION_KEY_USER_ID, user.id) {
                 log::error!("{e:?}");
                 return HttpResponse::InternalServerError().finish();
             }
@@ -95,7 +94,7 @@ async fn oidc_callback_handler(
 async fn logout_handler(session: Session) -> impl Responder {
     session.remove(SESSION_KEY_AUTH_STATE);
     session.remove(SESSION_KEY_AUTH_NONCE);
-    session.remove(SESSION_KEY_USER);
+    session.remove(SESSION_KEY_USER_ID);
     HttpResponse::Found()
         .append_header((header::LOCATION, "/"))
         .finish()

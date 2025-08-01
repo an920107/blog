@@ -10,3 +10,4 @@ async-trait.workspace = true
 log.workspace = true
 openidconnect.workspace = true
 serde.workspace = true
+sqlx.workspace = true

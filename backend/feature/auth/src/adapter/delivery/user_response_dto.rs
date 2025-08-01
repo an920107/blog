@@ -4,7 +4,7 @@ use crate::domain::entity::user::User;
 
 #[derive(Serialize)]
 pub struct UserResponseDto {
-    pub source_id: String,
+    pub id: i32,
     pub displayed_name: String,
     pub email: String,
 }
@@ -12,7 +12,7 @@ pub struct UserResponseDto {
 impl From<User> for UserResponseDto {
     fn from(user: User) -> Self {
         UserResponseDto {
-            source_id: user.source_id,
+            id: user.id,
             displayed_name: user.displayed_name,
             email: user.email,
         }

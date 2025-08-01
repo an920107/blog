@@ -54,7 +54,7 @@ impl ImageDbService for ImageDbServiceImpl {
         match image_record {
             Ok(record) => match record {
                 Some(record) => Ok(ImageDbMapper {
-                    id: Some(record.id),
+                    id: record.id,
                     mime_type: record.mime_type,
                 }),
                 None => Err(ImageError::NotFound),

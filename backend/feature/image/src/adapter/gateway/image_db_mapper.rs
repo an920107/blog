@@ -1,7 +1,7 @@
 use crate::domain::entity::image::Image;
 
 pub struct ImageDbMapper {
-    pub id: Option<i32>,
+    pub id: i32,
     pub mime_type: String,
 }
 

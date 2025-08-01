@@ -8,7 +8,7 @@ pub struct ImageRequestDto {
 impl ImageRequestDto {
     pub fn into_entity(self) -> Image {
         Image {
-            id: None,
+            id: -1,
             mime_type: self.mime_type,
             data: self.data,
         }

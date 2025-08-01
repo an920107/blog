@@ -428,6 +428,7 @@ dependencies = [
  "log",
  "openidconnect",
  "serde",
+ "sqlx",
 ]
 
 [[package]]

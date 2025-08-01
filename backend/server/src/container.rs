@@ -9,7 +9,10 @@ use auth::{
         exchange_auth_code_use_case::ExchangeAuthCodeUseCaseImpl,
         get_auth_url_use_case::LoginUseCaseImpl,
     },
-    framework::oidc::auth_oidc_service_impl::AuthOidcServiceImpl,
+    framework::{
+        db::user_db_service_impl::UserDbServiceImpl,
+        oidc::auth_oidc_service_impl::AuthOidcServiceImpl,
+    },
 };
 use image::{
     adapter::{
@@ -60,7 +63,8 @@ impl Container {
             oidc_configuration.redirect_url.clone(),
             http_client,
         ));
-        let auth_repository = Arc::new(AuthRepositoryImpl::new(auth_oidc_service));
+        let user_db_service = Arc::new(UserDbServiceImpl::new(db_pool.clone()));
+        let auth_repository = Arc::new(AuthRepositoryImpl::new(user_db_service, auth_oidc_service));
         let get_auth_url_use_case = Arc::new(LoginUseCaseImpl::new(auth_repository.clone()));
         let exchange_auth_code_use_case =
             Arc::new(ExchangeAuthCodeUseCaseImpl::new(auth_repository.clone()));
