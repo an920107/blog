@@ -20,7 +20,7 @@ impl SessionConfiguration {
         let session_key = Key::from(&session_key_bytes);
 
         let redis_url =
-            std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.1:6379".to_string());
+            std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
 
         Self {
             session_key,

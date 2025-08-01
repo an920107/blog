@@ -11,3 +11,5 @@ futures.workspace = true
 log.workspace = true
 serde.workspace = true
 sqlx.workspace = true
+
+auth.workspace = true

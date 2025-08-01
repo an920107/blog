@@ -1,5 +1,6 @@
 use actix_multipart::Multipart;
 use actix_web::{HttpResponse, Responder, web};
+use auth::framework::web::auth_middleware::UserId;
 use futures::StreamExt;
 
 use crate::{
@@ -18,6 +19,7 @@ pub fn configure_image_routes(cfg: &mut web::ServiceConfig) {
 async fn upload_image_handler(
     image_controller: web::Data<dyn ImageController>,
     mut payload: Multipart,
+    _: UserId,
 ) -> impl Responder {
     let mut image_request_dto: Option<ImageRequestDto> = None;
 

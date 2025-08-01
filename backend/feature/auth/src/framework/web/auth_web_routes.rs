@@ -6,8 +6,9 @@ use crate::{
         auth_controller::AuthController, oidc_callback_query_dto::OidcCallbackQueryDto,
     },
     application::error::auth_error::AuthError,
-    framework::web::constants::{
-        SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE, SESSION_KEY_USER_ID,
+    framework::web::{
+        auth_middleware::UserId,
+        constants::{SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE, SESSION_KEY_USER_ID},
     },
 };
 
@@ -18,6 +19,8 @@ pub fn configure_auth_routes(cfg: &mut web::ServiceConfig) {
             .route("/callback", web::get().to(oidc_callback_handler))
             .route("/logout", web::get().to(logout_handler)),
     );
+
+    cfg.service(web::resource("/me").route(web::get().to(get_logged_in_user_handler)));
 }
 
 async fn oidc_login_handler(
@@ -92,10 +95,12 @@ async fn oidc_callback_handler(
 }
 
 async fn logout_handler(session: Session) -> impl Responder {
-    session.remove(SESSION_KEY_AUTH_STATE);
-    session.remove(SESSION_KEY_AUTH_NONCE);
-    session.remove(SESSION_KEY_USER_ID);
+    session.clear();
     HttpResponse::Found()
         .append_header((header::LOCATION, "/"))
         .finish()
+}
+
+async fn get_logged_in_user_handler(user_id: UserId) -> impl Responder {
+    HttpResponse::Ok().body(format!("Logged in user ID: {}", user_id.get()))
 }

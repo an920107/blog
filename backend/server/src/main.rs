@@ -63,6 +63,7 @@ fn create_app(
     let container = Container::new(db_pool, http_client, configuration);
 
     App::new()
+        // The middlewares are executed in opposite order as registration.
         .wrap(session_middleware_builder.build())
         .app_data(web::Data::from(container.auth_controller))
         .app_data(web::Data::from(container.image_controller))
