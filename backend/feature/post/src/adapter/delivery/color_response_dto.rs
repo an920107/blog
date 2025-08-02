@@ -5,16 +5,9 @@ use crate::domain::entity::color::Color;
 
 #[derive(Serialize, ToSchema)]
 pub struct ColorResponseDto {
-    #[schema(maximum = 255)]
     pub red: u8,
-
-    #[schema(maximum = 255)]
     pub green: u8,
-
-    #[schema(maximum = 255)]
     pub blue: u8,
-
-    #[schema(maximum = 255)]
     pub alpha: u8,
 }
 

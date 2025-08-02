@@ -10,9 +10,13 @@ pub struct PostInfoResponseDto {
     pub id: i32,
     pub title: String,
     pub description: String,
-    pub preview_image_url: String,
     pub labels: Vec<LabelResponseDto>,
-    pub published_time: Option<i64>,
+
+    #[schema(format = Uri)]
+    pub preview_image_url: String,
+
+    #[schema(format = DateTime)]
+    pub published_time: Option<String>,
 }
 
 impl From<PostInfo> for PostInfoResponseDto {
@@ -27,9 +31,7 @@ impl From<PostInfo> for PostInfoResponseDto {
                 .into_iter()
                 .map(LabelResponseDto::from)
                 .collect(),
-            published_time: entity
-                .published_time
-                .map(|datetime| datetime.timestamp_micros()),
+            published_time: entity.published_time.map(|datetime| datetime.to_rfc3339()),
         }
     }
 }

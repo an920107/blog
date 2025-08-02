@@ -30,7 +30,11 @@ sqlx = { version = "0.8.5", features = [
     "runtime-tokio-rustls",
 ] }
 tokio = { version = "1.45.0", features = ["full"] }
-utoipa = { version = "5.4.0", features = ["actix_extras"] }
+utoipa = { version = "5.4.0", features = [
+    "actix_extras",
+    "non_strict_integers",
+    "url",
+] }
 utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 
 server.path = "server"

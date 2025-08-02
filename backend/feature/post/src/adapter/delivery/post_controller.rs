@@ -4,16 +4,19 @@ use async_trait::async_trait;
 
 use crate::{
     adapter::delivery::{
-        create_label_request_dto::CreateLabelRequestDto, post_info_query_dto::PostQueryDto,
+        create_label_request_dto::CreateLabelRequestDto,
+        create_post_request_dto::CreatePostRequestDto, post_info_query_dto::PostQueryDto,
         update_label_request_dto::UpdateLabelRequestDto,
+        update_post_request_dto::UpdatePostRequestDto,
     },
     application::{
         error::post_error::PostError,
         use_case::{
-            create_label_use_case::CreateLabelUseCase,
+            create_label_use_case::CreateLabelUseCase, create_post_use_case::CreatePostUseCase,
             get_all_labels_use_case::GetAllLabelsUseCase,
             get_all_post_info_use_case::GetAllPostInfoUseCase,
             get_full_post_use_case::GetFullPostUseCase, update_label_use_case::UpdateLabelUseCase,
+            update_post_use_case::UpdatePostUseCase,
         },
     },
 };
@@ -32,6 +35,14 @@ pub trait PostController: Send + Sync {
 
     async fn get_post_by_id(&self, id: i32) -> Result<PostResponseDto, PostError>;
 
+    async fn create_post(&self, post: CreatePostRequestDto) -> Result<PostResponseDto, PostError>;
+
+    async fn update_post(
+        &self,
+        id: i32,
+        post: UpdatePostRequestDto,
+    ) -> Result<PostResponseDto, PostError>;
+
     async fn create_label(
         &self,
         label: CreateLabelRequestDto,
@@ -49,6 +60,8 @@ pub trait PostController: Send + Sync {
 pub struct PostControllerImpl {
     get_all_post_info_use_case: Arc<dyn GetAllPostInfoUseCase>,
     get_full_post_use_case: Arc<dyn GetFullPostUseCase>,
+    create_post_use_case: Arc<dyn CreatePostUseCase>,
+    update_post_use_case: Arc<dyn UpdatePostUseCase>,
     create_label_use_case: Arc<dyn CreateLabelUseCase>,
     update_label_use_case: Arc<dyn UpdateLabelUseCase>,
     get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
@@ -58,6 +71,8 @@ impl PostControllerImpl {
     pub fn new(
         get_all_post_info_use_case: Arc<dyn GetAllPostInfoUseCase>,
         get_full_post_use_case: Arc<dyn GetFullPostUseCase>,
+        create_post_use_case: Arc<dyn CreatePostUseCase>,
+        update_post_use_case: Arc<dyn UpdatePostUseCase>,
         create_label_use_case: Arc<dyn CreateLabelUseCase>,
         update_label_use_case: Arc<dyn UpdateLabelUseCase>,
         get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
@@ -65,6 +80,8 @@ impl PostControllerImpl {
         Self {
             get_all_post_info_use_case,
             get_full_post_use_case,
+            create_post_use_case,
+            update_post_use_case,
             create_label_use_case,
             update_label_use_case,
             get_all_labels_use_case,
@@ -135,5 +152,32 @@ impl PostController for PostControllerImpl {
                 .map(|label| LabelResponseDto::from(label))
                 .collect()
         })
+    }
+
+    async fn create_post(&self, post: CreatePostRequestDto) -> Result<PostResponseDto, PostError> {
+        let label_ids = post.label_ids.clone();
+        let post_entity = post.into_entity();
+
+        let id = self
+            .create_post_use_case
+            .execute(post_entity, &label_ids)
+            .await?;
+
+        self.get_post_by_id(id).await
+    }
+
+    async fn update_post(
+        &self,
+        id: i32,
+        post: UpdatePostRequestDto,
+    ) -> Result<PostResponseDto, PostError> {
+        let label_ids = post.label_ids.clone();
+        let post_entity = post.into_entity(id);
+
+        self.update_post_use_case
+            .execute(post_entity, &label_ids)
+            .await?;
+
+        self.get_post_by_id(id).await
     }
 }

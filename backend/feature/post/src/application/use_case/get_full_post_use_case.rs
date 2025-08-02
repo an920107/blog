@@ -25,6 +25,6 @@ impl GetFullPostUseCaseImpl {
 #[async_trait]
 impl GetFullPostUseCase for GetFullPostUseCaseImpl {
     async fn execute(&self, id: i32) -> Result<Post, PostError> {
-        self.post_repository.get_full_post(id).await
+        self.post_repository.get_post_by_id(id).await
     }
 }

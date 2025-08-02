@@ -5,8 +5,8 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{
-        color_db_mapper::ColorMapper, label_db_mapper::LabelMapper, post_db_service::PostDbService,
-        post_info_db_mapper::PostInfoMapper, post_db_mapper::PostMapper,
+        color_db_mapper::ColorMapper, label_db_mapper::LabelMapper, post_db_mapper::PostMapper,
+        post_db_service::PostDbService, post_info_db_mapper::PostInfoMapper,
     },
     application::error::post_error::PostError,
 };
@@ -58,7 +58,7 @@ impl PostDbService for PostDbServiceImpl {
             query_builder.push(r#" AND p.published_time IS NOT NULL"#);
         }
 
-        query_builder.push(r#" ORDER BY p.id"#);
+        query_builder.push(r#" ORDER BY p.id, pl."order""#);
 
         let records = query_builder
             .build_query_as::<PostInfoWithLabelRecord>()
@@ -105,7 +105,7 @@ impl PostDbService for PostDbServiceImpl {
         Ok(ordered_posts)
     }
 
-    async fn get_full_post(&self, id: i32) -> Result<PostMapper, PostError> {
+    async fn get_post_by_id(&self, id: i32) -> Result<PostMapper, PostError> {
         let mut query_builder = sqlx::QueryBuilder::new(
             r#"
                 SELECT
@@ -130,7 +130,7 @@ impl PostDbService for PostDbServiceImpl {
         );
 
         query_builder.push_bind(id);
-        query_builder.push(r#" ORDER BY p.id"#);
+        query_builder.push(r#" ORDER BY p.id, pl."order""#);
 
         let records = query_builder
             .build_query_as::<PostWithLabelRecord>()
@@ -181,5 +181,122 @@ impl PostDbService for PostDbServiceImpl {
             Some(v) => Ok(v),
             None => Err(PostError::NotFound),
         }
+    }
+
+    async fn create_post(&self, post: PostMapper, label_ids: &[i32]) -> Result<i32, PostError> {
+        let mut tx = self
+            .db_pool
+            .begin()
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        let post_id = sqlx::query_scalar!(
+            r#"
+            INSERT INTO post (
+                title, description, preview_image_url, content, published_time
+            ) VALUES ($1, $2, $3, $4, $5)
+            RETURNING id
+            "#,
+            post.info.title,
+            post.info.description,
+            post.info.preview_image_url,
+            post.content,
+            post.info.published_time,
+        )
+        .fetch_one(&mut *tx)
+        .await
+        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        for (order, &label_id) in label_ids.iter().enumerate() {
+            sqlx::query!(
+                r#"
+                INSERT INTO post_label (
+                    post_id, label_id, "order"
+                ) VALUES ($1, $2, $3)
+                ON CONFLICT DO NOTHING
+                "#,
+                post_id,
+                label_id,
+                order as i32,
+            )
+            .execute(&mut *tx)
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        }
+
+        tx.commit()
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        Ok(post_id)
+    }
+
+    async fn update_post(&self, post: PostMapper, label_ids: &[i32]) -> Result<(), PostError> {
+        let mut tx = self
+            .db_pool
+            .begin()
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        let affected_rows = sqlx::query!(
+            r#"
+            UPDATE post
+            SET 
+                title = $1, 
+                description = $2, 
+                preview_image_url = $3, 
+                content = $4, 
+                published_time = $5
+            WHERE id = $6
+            "#,
+            post.info.title,
+            post.info.description,
+            post.info.preview_image_url,
+            post.content,
+            post.info.published_time,
+            post.id,
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|err| PostError::DatabaseError(err.to_string()))?
+        .rows_affected();
+
+        if affected_rows == 0 {
+            return Err(PostError::NotFound);
+        }
+
+        sqlx::query!(
+            r#"
+            DELETE FROM post_label
+            WHERE post_id = $1
+            "#,
+            post.id,
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        for (order, &label_id) in label_ids.iter().enumerate() {
+            sqlx::query!(
+                r#"
+                INSERT INTO post_label (
+                    post_id, label_id, "order"
+                ) VALUES ($1, $2, $3)
+                ON CONFLICT DO NOTHING
+                "#,
+                post.id,
+                label_id,
+                order as i32,
+            )
+            .execute(&mut *tx)
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        }
+
+        tx.commit()
+            .await
+            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+
+        Ok(())
     }
 }

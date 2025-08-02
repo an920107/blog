@@ -8,7 +8,7 @@ export const PostInfoResponseSchema = z.object({
 	description: z.string(),
 	preview_image_url: z.url(),
 	labels: z.array(LabelResponseSchema),
-	published_time: z.number().int()
+	published_time: z.iso.datetime()
 });
 
 export class PostInfoResponseDto {
@@ -43,7 +43,7 @@ export class PostInfoResponseDto {
 			description: parsedJson.description,
 			previewImageUrl: new URL(parsedJson.preview_image_url),
 			labels: parsedJson.labels.map((label) => LabelResponseDto.fromJson(label)),
-			publishedTime: new Date(parsedJson.published_time / 1000)
+			publishedTime: new Date(parsedJson.published_time)
 		});
 	}
 

@@ -7,6 +7,8 @@ use crate::domain::entity::user::User;
 pub struct UserResponseDto {
     pub id: i32,
     pub displayed_name: String,
+
+    #[schema(format = Email)]
     pub email: String,
 }
 
