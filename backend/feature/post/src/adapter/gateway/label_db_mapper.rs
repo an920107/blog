@@ -15,3 +15,13 @@ impl LabelMapper {
         }
     }
 }
+
+impl From<Label> for LabelMapper {
+    fn from(label: Label) -> Self {
+        Self {
+            id: label.id,
+            name: label.name,
+            color: ColorMapper::from(label.color),
+        }
+    }
+}

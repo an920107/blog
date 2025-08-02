@@ -11,3 +11,5 @@ log.workspace = true
 serde.workspace = true
 sqlx.workspace = true
 utoipa.workspace = true
+
+auth.workspace = true

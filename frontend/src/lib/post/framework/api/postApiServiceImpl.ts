@@ -7,7 +7,7 @@ export class PostApiServiceImpl implements PostApiService {
 	constructor(private fetchFn: typeof fetch) {}
 
 	async getAllPosts(): Promise<PostInfoResponseDto[]> {
-		const url = new URL('post/all', Environment.API_BASE_URL);
+		const url = new URL('post', Environment.API_BASE_URL);
 
 		const response = await this.fetchFn(url.href);
 

@@ -7,7 +7,7 @@ use crate::adapter::delivery::{
 
 #[utoipa::path(
     get,
-    path = "/post/all",
+    path = "/post",
     tag = "post",
     summary = "Get all post information",
     params(

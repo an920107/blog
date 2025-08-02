@@ -2232,6 +2232,7 @@ version = "0.2.0"
 dependencies = [
  "actix-web",
  "async-trait",
+ "auth",
  "chrono",
  "log",
  "serde",

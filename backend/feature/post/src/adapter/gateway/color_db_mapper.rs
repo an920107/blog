@@ -14,3 +14,14 @@ impl ColorMapper {
         }
     }
 }
+
+impl From<Color> for ColorMapper {
+    fn from(color: Color) -> Self {
+        let value: u32 = ((color.red as u32) << 24)
+            | ((color.green as u32) << 16)
+            | ((color.blue as u32) << 8)
+            | (color.alpha as u32);
+
+        Self { value }
+    }
+}
