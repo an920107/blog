@@ -8,7 +8,7 @@ export const PostInfoResponseSchema = z.object({
 	description: z.string(),
 	preview_image_url: z.url(),
 	labels: z.array(LabelResponseSchema),
-	published_time: z.iso.datetime()
+	published_time: z.iso.datetime({ offset: true })
 });
 
 export class PostInfoResponseDto {
