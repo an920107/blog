@@ -18,9 +18,18 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
+			id="google-fonts"
 			href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&family=Noto+Sans+TC:wght@100..900&display=swap"
 			rel="stylesheet"
+			media="print"
 		/>
+		<noscript>
+			<link
+				href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&family=Noto+Sans+TC:wght@100..900&display=swap"
+				rel="stylesheet"
+			/>
+		</noscript>
+		<script src="%sveltekit.assets%/js/font-loader.js" defer></script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover" class="antialiased">
