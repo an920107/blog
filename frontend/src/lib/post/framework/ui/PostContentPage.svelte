@@ -20,7 +20,7 @@
 <svelte:head>
 	<title>{generateTitle(state.data?.info.title)}</title>
 </svelte:head>
-<article class="container prose pb-10">
+<article class="container prose pb-10 prose-gray">
 	{#if state.data}
 		<PostContentHeader postInfo={state.data.info} />
 		<div class="max-w-3xl">

@@ -34,7 +34,7 @@
 	</div>
 	<div class="flex flex-col gap-y-2.5">
 		<PostPreviewLabels labels={postInfo.labels} />
-		<h2 class="line-clamp-1 text-lg font-bold">{postInfo.title}</h2>
+		<h2 class="line-clamp-1 text-lg font-bold text-gray-800">{postInfo.title}</h2>
 		<p class="line-clamp-3 text-justify text-sm">{postInfo.description}</p>
 		<span class="text-sm text-gray-500">{postInfo.formattedPublishedTime}</span>
 	</div>
