@@ -15,6 +15,10 @@ declare global {
 
 		declare const __VERSION__: string;
 	}
+
+	interface Window {
+		dataLayer: unknown[];
+	}
 }
 
 export {};
