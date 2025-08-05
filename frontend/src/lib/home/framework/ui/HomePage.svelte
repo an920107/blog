@@ -6,7 +6,8 @@
 </script>
 
 <svelte:head>
-	<title>{generateTitle()}</title>
+	<title>{generateTitle('程式、科技、教學、分享')}</title>
+	<!-- The meta description is set in `Terminal` -->
 </svelte:head>
 <div>
 	<TitleScreen />

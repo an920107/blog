@@ -5,6 +5,7 @@
 	import markdownit from 'markdown-it';
 	import SafeHtml from '$lib/common/framework/ui/SafeHtml.svelte';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
+	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
 
 	const { id }: { id: number } = $props();
 
@@ -19,6 +20,15 @@
 
 <svelte:head>
 	<title>{generateTitle(state.data?.info.title)}</title>
+	{#if state.data}
+		<meta name="description" content={state.data.info.description} />
+		<StructuredData
+			headline={state.data.info.title}
+			description={state.data.info.description}
+			datePublished={state.data.info.publishedTime}
+			image={state.data.info.previewImageUrl}
+		/>
+	{/if}
 </svelte:head>
 <article class="container prose pb-10 prose-gray">
 	{#if state.data}
