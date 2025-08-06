@@ -22,12 +22,14 @@
 	<title>{generateTitle(state.data?.info.title)}</title>
 	{#if state.data}
 		<meta name="description" content={state.data.info.description} />
-		<StructuredData
-			headline={state.data.info.title}
-			description={state.data.info.description}
-			datePublished={state.data.info.publishedTime}
-			image={state.data.info.previewImageUrl}
-		/>
+		{#if state.data.info.isPublished}
+			<StructuredData
+				headline={state.data.info.title}
+				description={state.data.info.description}
+				datePublished={state.data.info.publishedTime!}
+				image={state.data.info.previewImageUrl}
+			/>
+		{/if}
 	{/if}
 </svelte:head>
 <article class="container prose pb-10 prose-gray">

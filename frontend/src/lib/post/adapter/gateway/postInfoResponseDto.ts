@@ -8,7 +8,7 @@ export const PostInfoResponseSchema = z.object({
 	description: z.string(),
 	preview_image_url: z.url(),
 	labels: z.array(LabelResponseSchema),
-	published_time: z.iso.datetime({ offset: true })
+	published_time: z.iso.datetime({ offset: true }).nullable()
 });
 
 export class PostInfoResponseDto {
@@ -17,7 +17,7 @@ export class PostInfoResponseDto {
 	readonly description: string;
 	readonly previewImageUrl: URL;
 	readonly labels: readonly LabelResponseDto[];
-	readonly publishedTime: Date;
+	readonly publishedTime: Date | null;
 
 	private constructor(props: {
 		id: number;
@@ -25,7 +25,7 @@ export class PostInfoResponseDto {
 		description: string;
 		previewImageUrl: URL;
 		labels: LabelResponseDto[];
-		publishedTime: Date;
+		publishedTime: Date | null;
 	}) {
 		this.id = props.id;
 		this.title = props.title;
@@ -37,13 +37,19 @@ export class PostInfoResponseDto {
 
 	static fromJson(json: unknown): PostInfoResponseDto {
 		const parsedJson = PostInfoResponseSchema.parse(json);
+
+		let published_time: Date | null = null;
+		if (parsedJson.published_time !== null) {
+			published_time = new Date(parsedJson.published_time);
+		}
+
 		return new PostInfoResponseDto({
 			id: parsedJson.id,
 			title: parsedJson.title,
 			description: parsedJson.description,
 			previewImageUrl: new URL(parsedJson.preview_image_url),
 			labels: parsedJson.labels.map((label) => LabelResponseDto.fromJson(label)),
-			publishedTime: new Date(parsedJson.published_time)
+			publishedTime: published_time
 		});
 	}
 

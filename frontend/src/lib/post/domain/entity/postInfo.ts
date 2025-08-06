@@ -6,7 +6,7 @@ export class PostInfo {
 	readonly description: string;
 	readonly previewImageUrl: URL;
 	readonly labels: readonly Label[];
-	readonly publishedTime: Date;
+	readonly publishedTime: Date | null;
 
 	constructor(props: {
 		id: number;
@@ -14,7 +14,7 @@ export class PostInfo {
 		description: string;
 		previewImageUrl: URL;
 		labels: readonly Label[];
-		publishedTime: Date;
+		publishedTime: Date | null;
 	}) {
 		this.id = props.id;
 		this.title = props.title;

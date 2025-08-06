@@ -10,7 +10,7 @@ export class PostInfoViewModel {
 	readonly description: string;
 	readonly previewImageUrl: URL;
 	readonly labels: readonly LabelViewModel[];
-	readonly publishedTime: Date;
+	readonly publishedTime: Date | null;
 
 	private constructor(props: {
 		id: number;
@@ -18,7 +18,7 @@ export class PostInfoViewModel {
 		description: string;
 		previewImageUrl: URL;
 		labels: readonly LabelViewModel[];
-		publishedTime: Date;
+		publishedTime: Date | null;
 	}) {
 		this.id = props.id;
 		this.title = props.title;
@@ -40,18 +40,27 @@ export class PostInfoViewModel {
 	}
 
 	static rehydrate(props: DehydratedPostInfoProps): PostInfoViewModel {
+		let publishedTime: Date | null = null;
+		if (props.publishedTime !== null) {
+			publishedTime = new Date(props.publishedTime);
+		}
+
 		return new PostInfoViewModel({
 			id: props.id,
 			title: props.title,
 			description: props.description,
 			previewImageUrl: new URL(props.previewImageUrl),
 			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
-			publishedTime: new Date(props.publishedTime)
+			publishedTime: publishedTime
 		});
 	}
 
-	get formattedPublishedTime(): string {
-		return this.publishedTime.toISOString().slice(0, 10);
+	get isPublished(): boolean {
+		return this.publishedTime !== null;
+	}
+
+	get formattedPublishedTime(): string | null {
+		return this.publishedTime?.toISOString().slice(0, 10) ?? null;
 	}
 
 	dehydrate(): DehydratedPostInfoProps {
@@ -61,7 +70,7 @@ export class PostInfoViewModel {
 			description: this.description,
 			previewImageUrl: this.previewImageUrl.href,
 			labels: this.labels.map((label) => label.dehydrate()),
-			publishedTime: this.publishedTime.getTime()
+			publishedTime: this.publishedTime?.getTime() ?? null
 		};
 	}
 }
@@ -72,5 +81,5 @@ export interface DehydratedPostInfoProps {
 	description: string;
 	previewImageUrl: string;
 	labels: DehydratedLabelProps[];
-	publishedTime: number;
+	publishedTime: number | null;
 }
