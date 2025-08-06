@@ -9,7 +9,7 @@ use crate::{
 
 #[async_trait]
 pub trait GetFullPostUseCase: Send + Sync {
-    async fn execute(&self, id: i32) -> Result<Post, PostError>;
+    async fn execute(&self, id: i32, user_id: Option<i32>) -> Result<Post, PostError>;
 }
 
 pub struct GetFullPostUseCaseImpl {
@@ -24,7 +24,13 @@ impl GetFullPostUseCaseImpl {
 
 #[async_trait]
 impl GetFullPostUseCase for GetFullPostUseCaseImpl {
-    async fn execute(&self, id: i32) -> Result<Post, PostError> {
-        self.post_repository.get_post_by_id(id).await
+    async fn execute(&self, id: i32, user_id: Option<i32>) -> Result<Post, PostError> {
+        let post = self.post_repository.get_post_by_id(id).await?;
+
+        if post.info.published_time.is_none() && user_id.is_none() {
+            return Err(PostError::Unauthorized);
+        }
+
+        Ok(post)
     }
 }

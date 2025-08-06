@@ -27,15 +27,18 @@ pub async fn update_post_handler(
     post_controller: web::Data<dyn PostController>,
     path: web::Path<i32>,
     post_dto: web::Json<UpdatePostRequestDto>,
-    _: UserId,
+    user_id: UserId,
 ) -> impl Responder {
     let id = path.into_inner();
-    let result = post_controller.update_post(id, post_dto.into_inner()).await;
+    let result = post_controller
+        .update_post(id, post_dto.into_inner(), user_id.get())
+        .await;
 
     match result {
         Ok(post) => HttpResponse::Ok().json(post),
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
+            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

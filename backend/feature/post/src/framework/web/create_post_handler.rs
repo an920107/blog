@@ -26,9 +26,11 @@ use crate::{
 pub async fn create_post_handler(
     post_controller: web::Data<dyn PostController>,
     post_dto: web::Json<CreatePostRequestDto>,
-    _: UserId,
+    user_id: UserId,
 ) -> impl Responder {
-    let result = post_controller.create_post(post_dto.into_inner()).await;
+    let result = post_controller
+        .create_post(post_dto.into_inner(), user_id.get())
+        .await;
 
     match result {
         Ok(post) => HttpResponse::Created().json(post),

@@ -9,7 +9,11 @@ use crate::{
 
 #[async_trait]
 pub trait GetAllPostInfoUseCase: Send + Sync {
-    async fn execute(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError>;
+    async fn execute(
+        &self,
+        is_published_only: bool,
+        user_id: Option<i32>,
+    ) -> Result<Vec<PostInfo>, PostError>;
 }
 
 pub struct GetAllPostInfoUseCaseImpl {
@@ -24,7 +28,15 @@ impl GetAllPostInfoUseCaseImpl {
 
 #[async_trait]
 impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
-    async fn execute(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError> {
-        self.post_repository.get_all_post_info(is_published_only).await
+    async fn execute(
+        &self,
+        is_published_only: bool,
+        user_id: Option<i32>,
+    ) -> Result<Vec<PostInfo>, PostError> {
+        let is_published_only = is_published_only && user_id.is_some();
+
+        self.post_repository
+            .get_all_post_info(is_published_only)
+            .await
     }
 }

@@ -38,6 +38,7 @@ pub async fn update_label_handler(
         Ok(label) => HttpResponse::Ok().json(label),
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
+            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

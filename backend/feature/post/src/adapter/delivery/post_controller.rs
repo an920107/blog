@@ -31,16 +31,26 @@ pub trait PostController: Send + Sync {
     async fn get_all_post_info(
         &self,
         query: PostQueryDto,
+        user_id: Option<i32>,
     ) -> Result<Vec<PostInfoResponseDto>, PostError>;
 
-    async fn get_post_by_id(&self, id: i32) -> Result<PostResponseDto, PostError>;
+    async fn get_post_by_id(
+        &self,
+        id: i32,
+        user_id: Option<i32>,
+    ) -> Result<PostResponseDto, PostError>;
 
-    async fn create_post(&self, post: CreatePostRequestDto) -> Result<PostResponseDto, PostError>;
+    async fn create_post(
+        &self,
+        post: CreatePostRequestDto,
+        user_id: i32,
+    ) -> Result<PostResponseDto, PostError>;
 
     async fn update_post(
         &self,
         id: i32,
         post: UpdatePostRequestDto,
+        user_id: i32,
     ) -> Result<PostResponseDto, PostError>;
 
     async fn create_label(
@@ -94,10 +104,11 @@ impl PostController for PostControllerImpl {
     async fn get_all_post_info(
         &self,
         query: PostQueryDto,
+        user_id: Option<i32>,
     ) -> Result<Vec<PostInfoResponseDto>, PostError> {
         let result = self
             .get_all_post_info_use_case
-            .execute(query.is_published_only.unwrap_or(true))
+            .execute(query.is_published_only.unwrap_or(true), user_id)
             .await;
 
         result.map(|post_info_list| {
@@ -110,8 +121,12 @@ impl PostController for PostControllerImpl {
         })
     }
 
-    async fn get_post_by_id(&self, id: i32) -> Result<PostResponseDto, PostError> {
-        let result = self.get_full_post_use_case.execute(id).await;
+    async fn get_post_by_id(
+        &self,
+        id: i32,
+        user_id: Option<i32>,
+    ) -> Result<PostResponseDto, PostError> {
+        let result = self.get_full_post_use_case.execute(id, user_id).await;
 
         result.map(PostResponseDto::from)
     }
@@ -154,7 +169,11 @@ impl PostController for PostControllerImpl {
         })
     }
 
-    async fn create_post(&self, post: CreatePostRequestDto) -> Result<PostResponseDto, PostError> {
+    async fn create_post(
+        &self,
+        post: CreatePostRequestDto,
+        user_id: i32,
+    ) -> Result<PostResponseDto, PostError> {
         let label_ids = post.label_ids.clone();
         let post_entity = post.into_entity();
 
@@ -163,13 +182,14 @@ impl PostController for PostControllerImpl {
             .execute(post_entity, &label_ids)
             .await?;
 
-        self.get_post_by_id(id).await
+        self.get_post_by_id(id, Some(user_id)).await
     }
 
     async fn update_post(
         &self,
         id: i32,
         post: UpdatePostRequestDto,
+        user_id: i32,
     ) -> Result<PostResponseDto, PostError> {
         let label_ids = post.label_ids.clone();
         let post_entity = post.into_entity(id);
@@ -178,6 +198,6 @@ impl PostController for PostControllerImpl {
             .execute(post_entity, &label_ids)
             .await?;
 
-        self.get_post_by_id(id).await
+        self.get_post_by_id(id, Some(user_id)).await
     }
 }
