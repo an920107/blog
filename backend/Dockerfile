@@ -1,15 +1,14 @@
-FROM rust:1-slim AS base
-RUN apt update -qq && apt install -y -qq --no-install-recommends musl-tools
-RUN rustup target add x86_64-unknown-linux-musl
+FROM rust:1-alpine AS base
+RUN apk add --no-cache build-base openssl-dev openssl-libs-static
 
 FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN cargo build --release --target x86_64-unknown-linux-musl
+RUN cargo build --release
 
 FROM alpine:latest AS runner
 WORKDIR /app
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/server .
+COPY --from=builder /app/target/release/server .
 EXPOSE 8080
 VOLUME ["/app/static"]
 ENV RUST_LOG=info
