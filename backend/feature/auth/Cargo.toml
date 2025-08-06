@@ -6,9 +6,12 @@ edition.workspace = true
 [dependencies]
 actix-session.workspace = true
 actix-web.workspace = true
+anyhow.workspace = true
 async-trait.workspace = true
-log.workspace = true
 openidconnect.workspace = true
+sentry.workspace = true
 serde.workspace = true
 sqlx.workspace = true
 utoipa.workspace = true
+
+common.workspace = true

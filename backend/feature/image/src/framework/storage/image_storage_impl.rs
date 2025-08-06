@@ -3,6 +3,8 @@ use std::{
     io::Write,
 };
 
+use common::framework::error::IOError;
+
 use crate::{
     adapter::gateway::image_storage::ImageStorage, application::error::image_error::ImageError,
 };
@@ -22,20 +24,20 @@ impl ImageStorageImpl {
 impl ImageStorage for ImageStorageImpl {
     fn write_data(&self, id: i32, data: &[u8]) -> Result<(), ImageError> {
         let dir_path = format!("{}/images", self.sotrage_path);
-        fs::create_dir_all(&dir_path).map_err(|e| ImageError::StorageError(e.to_string()))?;
+        fs::create_dir_all(&dir_path).map_err(|e| ImageError::Unexpected(IOError(e).into()))?;
 
         let file_path = format!("{}/{}", dir_path, id);
         let mut file =
-            File::create(&file_path).map_err(|e| ImageError::StorageError(e.to_string()))?;
+            File::create(&file_path).map_err(|e| ImageError::Unexpected(IOError(e).into()))?;
         file.write_all(data)
-            .map_err(|e| ImageError::StorageError(e.to_string()))?;
+            .map_err(|e| ImageError::Unexpected(e.into()))?;
 
         Ok(())
     }
 
     fn read_data(&self, id: i32) -> Result<Vec<u8>, ImageError> {
         let file_path = format!("{}/images/{}", self.sotrage_path, id);
-        let data = fs::read(&file_path).map_err(|e| ImageError::StorageError(e.to_string()))?;
+        let data = fs::read(&file_path).map_err(|e| ImageError::Unexpected(IOError(e).into()))?;
         Ok(data)
     }
 }

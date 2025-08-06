@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use common::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
@@ -31,7 +32,7 @@ impl UserDbService for UserDbServiceImpl {
         )
         .fetch_optional(&self.db_pool)
         .await
-        .map_err(|e| AuthError::DatabaseError(e.to_string()))?;
+        .map_err(|e| AuthError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
             Some(record) => Ok(record.into_mapper()),
@@ -56,7 +57,7 @@ impl UserDbService for UserDbServiceImpl {
         )
         .fetch_optional(&self.db_pool)
         .await
-        .map_err(|e| AuthError::DatabaseError(e.to_string()))?;
+        .map_err(|e| AuthError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
             Some(record) => Ok(record.into_mapper()),
@@ -78,7 +79,7 @@ impl UserDbService for UserDbServiceImpl {
         )
         .fetch_one(&self.db_pool)
         .await
-        .map_err(|e| AuthError::DatabaseError(e.to_string()))?;
+        .map_err(|e| AuthError::Unexpected(DatabaseError(e).into()))?;
 
         Ok(id)
     }

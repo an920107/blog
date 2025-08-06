@@ -57,7 +57,7 @@ impl ImageController for ImageControllerImpl {
         image: ImageRequestDto,
     ) -> Result<ImageInfoResponseDto, ImageError> {
         if !self.mime_type_whitelist.contains(&image.mime_type) {
-            return Err(ImageError::UnsupportedMimeType);
+            return Err(ImageError::UnsupportedMimeType(image.mime_type));
         }
 
         let mime_type = image.mime_type.clone();

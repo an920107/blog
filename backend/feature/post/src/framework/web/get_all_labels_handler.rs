@@ -1,7 +1,10 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
+use sentry::integrations::anyhow::capture_anyhow;
 
-use crate::adapter::delivery::{
-    label_response_dto::LabelResponseDto, post_controller::PostController,
+use crate::{
+    adapter::delivery::{label_response_dto::LabelResponseDto, post_controller::PostController},
+    application::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -21,7 +24,10 @@ pub async fn get_all_labels_handler(
     match result {
         Ok(labels) => HttpResponse::Ok().json(labels),
         Err(e) => {
-            log::error!("{e:?}");
+            match e {
+                PostError::Unexpected(e) => capture_anyhow(&e),
+                _ => capture_anyhow(&anyhow!(e)),
+            };
             HttpResponse::InternalServerError().finish()
         }
     }

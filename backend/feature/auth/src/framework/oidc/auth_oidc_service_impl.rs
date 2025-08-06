@@ -80,7 +80,7 @@ impl AuthOidcService for AuthOidcServiceImpl {
         let token_response = self
             .oidc_client
             .exchange_code(AuthorizationCode::new(code.to_string()))
-            .map_err(|e| AuthError::OidcError(e.to_string()))?
+            .unwrap()
             .request_async(&self.http_client)
             .await
             .map_err(|_| AuthError::InvalidAuthCode)?;

@@ -1,8 +1,13 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
+use sentry::integrations::anyhow::capture_anyhow;
 
-use crate::adapter::delivery::{
-    post_controller::PostController, post_info_query_dto::PostQueryDto,
-    post_info_response_dto::PostInfoResponseDto,
+use crate::{
+    adapter::delivery::{
+        post_controller::PostController, post_info_query_dto::PostQueryDto,
+        post_info_response_dto::PostInfoResponseDto,
+    },
+    application::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -26,7 +31,10 @@ pub async fn get_all_post_info_handler(
     match result {
         Ok(post_info_list) => HttpResponse::Ok().json(post_info_list),
         Err(e) => {
-            log::error!("{e:?}");
+            match e {
+                PostError::Unexpected(e) => capture_anyhow(&e),
+                _ => capture_anyhow(&anyhow!(e)),
+            };
             HttpResponse::InternalServerError().finish()
         }
     }

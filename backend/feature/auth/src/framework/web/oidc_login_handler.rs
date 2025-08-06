@@ -1,8 +1,11 @@
 use actix_session::Session;
 use actix_web::{HttpResponse, Responder, http::header, web};
+use anyhow::anyhow;
+use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::auth_controller::AuthController,
+    application::error::auth_error::AuthError,
     framework::web::constants::{SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE},
 };
 
@@ -24,11 +27,11 @@ pub async fn oidc_login_handler(
     match result {
         Ok(auth_url) => {
             if let Err(e) = session.insert::<String>(SESSION_KEY_AUTH_STATE, auth_url.state) {
-                log::error!("{e:?}");
+                capture_anyhow(&e.into());
                 return HttpResponse::InternalServerError().finish();
             }
             if let Err(e) = session.insert::<String>(SESSION_KEY_AUTH_NONCE, auth_url.nonce) {
-                log::error!("{e:?}");
+                capture_anyhow(&e.into());
                 return HttpResponse::InternalServerError().finish();
             }
             HttpResponse::Found()
@@ -36,7 +39,10 @@ pub async fn oidc_login_handler(
                 .finish()
         }
         Err(e) => {
-            log::error!("{e:?}");
+            match e {
+                AuthError::Unexpected(e) => capture_anyhow(&e),
+                _ => capture_anyhow(&anyhow!(e)),
+            };
             HttpResponse::InternalServerError().finish()
         }
     }

@@ -5,17 +5,19 @@ use actix_web::{
     App, Error, HttpServer,
     body::MessageBody,
     dev::{ServiceFactory, ServiceRequest, ServiceResponse},
+    rt::Runtime,
     web,
 };
 use auth::framework::web::auth_web_routes::configure_auth_routes;
 use image::framework::web::image_web_routes::configure_image_routes;
 use openidconnect::reqwest;
 use post::framework::web::post_web_routes::configure_post_routes;
-use server::{api_doc::configure_api_doc_routes, configuration::Configuration, container::Container};
+use server::{
+    api_doc::configure_api_doc_routes, configuration::Configuration, container::Container,
+};
 use sqlx::{Pool, Postgres};
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
+fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     env_logger::init();
 
@@ -24,31 +26,45 @@ async fn main() -> std::io::Result<()> {
         .build()
         .expect("Failed to create HTTP client");
 
-    let configuration = Configuration::new(http_client.clone()).await;
+    let rt = Runtime::new().unwrap();
+    let configuration = rt.block_on(async { Configuration::new(http_client.clone()).await });
 
-    let host = configuration.server.host.clone();
-    let port = configuration.server.port;
+    let _guard = sentry::init((
+        configuration.sentry.dsn.clone(),
+        configuration.sentry.options.clone(),
+    ));
 
-    let db_pool = configuration.db.create_connection().await;
-    let session_key = configuration.session.session_key.clone();
-    let session_store = configuration.session.create_session_store().await;
+    actix_web::rt::System::new().block_on(async {
+        let host = configuration.server.host.clone();
+        let port = configuration.server.port;
 
-    HttpServer::new(move || {
-        create_app(
-            db_pool.clone(),
-            http_client.clone(),
-            SessionMiddleware::builder(session_store.clone(), session_key.clone()),
-            configuration.clone(),
-        )
-    })
-    .bind((host, port))?
-    .run()
-    .await
+        let db_pool = configuration.db.create_connection().await;
+        let session_key = configuration.session.session_key.clone();
+        let session_store = configuration.session.create_session_store().await;
+
+        HttpServer::new(move || {
+            create_app(
+                db_pool.clone(),
+                http_client.clone(),
+                sentry::integrations::actix::Sentry::builder()
+                    .capture_server_errors(true)
+                    .start_transaction(true),
+                SessionMiddleware::builder(session_store.clone(), session_key.clone()),
+                configuration.clone(),
+            )
+        })
+        .bind((host, port))?
+        .run()
+        .await
+    })?;
+
+    Ok(())
 }
 
 fn create_app(
     db_pool: Pool<Postgres>,
     http_client: reqwest::Client,
+    sentry_builder: sentry::integrations::actix::SentryBuilder,
     session_middleware_builder: SessionMiddlewareBuilder<RedisSessionStore>,
     configuration: Configuration,
 ) -> App<
@@ -64,6 +80,7 @@ fn create_app(
 
     App::new()
         // The middlewares are executed in opposite order as registration.
+        .wrap(sentry_builder.finish())
         .wrap(session_middleware_builder.build())
         .app_data(web::Data::from(container.auth_controller))
         .app_data(web::Data::from(container.image_controller))

@@ -1,15 +1,26 @@
 [workspace]
-members = ["server", "feature/auth", "feature/image", "feature/post"]
+members = [
+    "server",
+    "feature/auth",
+    "feature/common",
+    "feature/image",
+    "feature/post",
+    "feature/common",
+]
 resolver = "2"
 
 [workspace.package]
 version = "0.2.0"
 edition = "2024"
 
+[profile.release]
+debug = true
+
 [workspace.dependencies]
 actix-multipart = "0.7.2"
 actix-session = { version = "0.10.1", features = ["redis-session"] }
 actix-web = "4.10.2"
+anyhow = "1.0.98"
 async-trait = "0.1.88"
 chrono = "0.4.41"
 dotenv = "0.15.0"
@@ -22,6 +33,7 @@ openidconnect = { version = "4.0.1", features = [
     "reqwest-blocking",
 ] }
 percent-encoding = "2.3.1"
+sentry = { version = "0.42.0", features = ["actix", "anyhow"] }
 serde = { version = "1.0.219", features = ["derive"] }
 sqlx = { version = "0.8.5", features = [
     "chrono",
@@ -39,5 +51,6 @@ utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 
 server.path = "server"
 auth.path = "feature/auth"
+common.path = "feature/common"
 image.path = "feature/image"
 post.path = "feature/post"

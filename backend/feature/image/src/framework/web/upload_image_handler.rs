@@ -1,7 +1,9 @@
 use actix_multipart::Multipart;
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use futures::StreamExt;
+use sentry::integrations::anyhow::capture_anyhow;
 use utoipa::ToSchema;
 
 use crate::{
@@ -73,9 +75,15 @@ pub async fn upload_image_handler(
     match result {
         Ok(image_info) => HttpResponse::Created().json(image_info),
         Err(e) => match e {
-            ImageError::UnsupportedMimeType => HttpResponse::BadRequest().body(format!("{e:?}")),
+            ImageError::UnsupportedMimeType(mime_type) => {
+                HttpResponse::BadRequest().body(format!("Unsupported MIME type: {}", mime_type))
+            }
+            ImageError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
             _ => {
-                log::error!("{e:?}");
+                capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
         },

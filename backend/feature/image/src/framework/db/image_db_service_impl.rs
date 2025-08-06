@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use common::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
@@ -34,7 +35,7 @@ impl ImageDbService for ImageDbServiceImpl {
 
         match id {
             Ok(id) => Ok(id),
-            Err(e) => Err(ImageError::DatabaseError(e.to_string())),
+            Err(e) => Err(ImageError::Unexpected(DatabaseError(e).into())),
         }
     }
 
@@ -59,7 +60,7 @@ impl ImageDbService for ImageDbServiceImpl {
                 }),
                 None => Err(ImageError::NotFound),
             },
-            Err(e) => Err(ImageError::DatabaseError(e.to_string())),
+            Err(e) => Err(ImageError::Unexpected(DatabaseError(e).into())),
         }
     }
 }

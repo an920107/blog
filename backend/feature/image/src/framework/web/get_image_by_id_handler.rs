@@ -1,4 +1,6 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
+use sentry::integrations::anyhow::capture_anyhow;
 use utoipa::ToSchema;
 
 use crate::{
@@ -29,8 +31,12 @@ pub async fn get_image_by_id_handler(
             .body(image_response.data),
         Err(e) => match e {
             ImageError::NotFound => HttpResponse::NotFound().finish(),
+            ImageError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
             _ => {
-                log::error!("{e:?}");
+                capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
         },

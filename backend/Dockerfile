@@ -13,6 +13,7 @@ COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/server .
 EXPOSE 8080
 VOLUME ["/app/static"]
 ENV RUST_LOG=info
+ENV RUST_BACKTRACE=1
 ENV HOST=0.0.0.0
 ENV PORT=8080
 ENV STORAGE_PATH=/app/static
@@ -27,5 +28,6 @@ ENV OIDC_ISSUER_URL=
 ENV OIDC_REDIRECT_URL=
 ENV OIDC_CLIENT_ID=
 ENV OIDC_CLIENT_SECRET=
+ENV SENTRY_DSN=
 
 CMD ["./server"]

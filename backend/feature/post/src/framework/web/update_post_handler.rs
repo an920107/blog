@@ -1,9 +1,13 @@
 use actix_web::{HttpResponse, Responder, web};
 use auth::framework::web::auth_middleware::UserId;
+use sentry::integrations::anyhow::capture_anyhow;
 
-use crate::adapter::delivery::{
-    post_controller::PostController, post_response_dto::PostResponseDto,
-    update_post_request_dto::UpdatePostRequestDto,
+use crate::{
+    adapter::delivery::{
+        post_controller::PostController, post_response_dto::PostResponseDto,
+        update_post_request_dto::UpdatePostRequestDto,
+    },
+    application::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -30,14 +34,12 @@ pub async fn update_post_handler(
 
     match result {
         Ok(post) => HttpResponse::Ok().json(post),
-        Err(e) => {
-            log::error!("{e:?}");
-            match e {
-                crate::application::error::post_error::PostError::NotFound => {
-                    HttpResponse::NotFound().finish()
-                }
-                _ => HttpResponse::InternalServerError().finish(),
+        Err(e) => match e {
+            PostError::NotFound => HttpResponse::NotFound().finish(),
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
             }
-        }
+        },
     }
 }

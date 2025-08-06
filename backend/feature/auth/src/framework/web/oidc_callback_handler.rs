@@ -1,5 +1,7 @@
 use actix_session::Session;
 use actix_web::{HttpResponse, Responder, http::header, web};
+use anyhow::anyhow;
+use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::{
@@ -48,7 +50,7 @@ pub async fn oidc_callback_handler(
     match result {
         Ok(user) => {
             if let Err(e) = session.insert::<i32>(SESSION_KEY_USER_ID, user.id) {
-                log::error!("{e:?}");
+                capture_anyhow(&e.into());
                 return HttpResponse::InternalServerError().finish();
             }
             HttpResponse::Found()
@@ -61,7 +63,10 @@ pub async fn oidc_callback_handler(
             | AuthError::InvalidNonce
             | AuthError::InvalidState => HttpResponse::BadRequest().finish(),
             _ => {
-                log::error!("{e:?}");
+                match e {
+                    AuthError::Unexpected(e) => capture_anyhow(&e),
+                    _ => capture_anyhow(&anyhow!(e)),
+                };
                 HttpResponse::InternalServerError().finish()
             }
         },

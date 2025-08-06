@@ -1,5 +1,6 @@
 use actix_web::{HttpResponse, Responder, web};
 use auth::framework::web::auth_middleware::UserId;
+use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::{
@@ -37,8 +38,8 @@ pub async fn update_label_handler(
         Ok(label) => HttpResponse::Ok().json(label),
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
-            _ => {
-                log::error!("{e:?}");
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

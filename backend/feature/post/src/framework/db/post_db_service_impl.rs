@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use async_trait::async_trait;
+use common::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
@@ -64,7 +65,7 @@ impl PostDbService for PostDbServiceImpl {
             .build_query_as::<PostInfoWithLabelRecord>()
             .fetch_all(&self.db_pool)
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         let mut post_info_mappers_map = HashMap::<i32, PostInfoMapper>::new();
 
@@ -136,7 +137,7 @@ impl PostDbService for PostDbServiceImpl {
             .build_query_as::<PostWithLabelRecord>()
             .fetch_all(&self.db_pool)
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         if records.is_empty() {
             return Err(PostError::NotFound);
@@ -188,7 +189,7 @@ impl PostDbService for PostDbServiceImpl {
             .db_pool
             .begin()
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         let post_id = sqlx::query_scalar!(
             r#"
@@ -205,7 +206,7 @@ impl PostDbService for PostDbServiceImpl {
         )
         .fetch_one(&mut *tx)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         for (order, &label_id) in label_ids.iter().enumerate() {
             sqlx::query!(
@@ -221,12 +222,12 @@ impl PostDbService for PostDbServiceImpl {
             )
             .execute(&mut *tx)
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
         }
 
         tx.commit()
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         Ok(post_id)
     }
@@ -236,7 +237,7 @@ impl PostDbService for PostDbServiceImpl {
             .db_pool
             .begin()
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         let affected_rows = sqlx::query!(
             r#"
@@ -258,7 +259,7 @@ impl PostDbService for PostDbServiceImpl {
         )
         .execute(&mut *tx)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?
         .rows_affected();
 
         if affected_rows == 0 {
@@ -274,7 +275,7 @@ impl PostDbService for PostDbServiceImpl {
         )
         .execute(&mut *tx)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         for (order, &label_id) in label_ids.iter().enumerate() {
             sqlx::query!(
@@ -290,12 +291,12 @@ impl PostDbService for PostDbServiceImpl {
             )
             .execute(&mut *tx)
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
         }
 
         tx.commit()
             .await
-            .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         Ok(())
     }

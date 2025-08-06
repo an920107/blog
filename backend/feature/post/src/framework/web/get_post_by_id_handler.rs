@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Responder, web};
+use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::{post_controller::PostController, post_response_dto::PostResponseDto},
@@ -24,13 +25,12 @@ pub async fn get_post_by_id_handler(
 
     match result {
         Ok(post) => HttpResponse::Ok().json(post),
-        Err(e) => {
-            if e == PostError::NotFound {
-                HttpResponse::NotFound().finish()
-            } else {
-                log::error!("{e:?}");
+        Err(e) => match e {
+            PostError::NotFound => HttpResponse::NotFound().finish(),
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
-        }
+        },
     }
 }

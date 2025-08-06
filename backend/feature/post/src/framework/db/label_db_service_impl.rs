@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use common::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
@@ -31,7 +32,7 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_one(&self.db_pool)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         Ok(id)
     }
@@ -49,7 +50,7 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .execute(&self.db_pool)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?
         .rows_affected();
 
         if affected_rows == 0 {
@@ -71,7 +72,7 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_optional(&self.db_pool)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
             Some(record) => Ok(record.into_mapper()),
@@ -91,7 +92,7 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_all(&self.db_pool)
         .await
-        .map_err(|err| PostError::DatabaseError(err.to_string()))?;
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         let mappers = records
             .into_iter()
