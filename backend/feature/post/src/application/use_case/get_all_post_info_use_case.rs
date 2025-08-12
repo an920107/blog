@@ -33,7 +33,15 @@ impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
         is_published_only: bool,
         user_id: Option<i32>,
     ) -> Result<Vec<PostInfo>, PostError> {
-        let is_published_only = is_published_only && user_id.is_some();
+        let has_logged_in = user_id.is_some();
+
+        // | is_published_only | has_logged_in | result |
+        // | ----------------- | ------------- | ------ |
+        // | T                 | T             | T      |
+        // | T                 | F             | T      |
+        // | F                 | T             | F      |
+        // | F                 | F             | T      |
+        let is_published_only = is_published_only || !has_logged_in;
 
         self.post_repository
             .get_all_post_info(is_published_only)
