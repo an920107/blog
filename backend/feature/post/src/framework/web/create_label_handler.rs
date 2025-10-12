@@ -34,7 +34,10 @@ pub async fn create_label_handler(
         Ok(label) => HttpResponse::Created().json(label),
         Err(e) => match e {
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
-            PostError::NotFound | PostError::InvalidSemanticId => {
+            PostError::DuplicatedLabelName => HttpResponse::Conflict().finish(),
+            PostError::NotFound
+            | PostError::InvalidSemanticId
+            | PostError::DuplicatedSemanticId => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

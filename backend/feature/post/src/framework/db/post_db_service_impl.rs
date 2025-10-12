@@ -211,7 +211,14 @@ impl PostDbService for PostDbServiceImpl {
         )
         .fetch_one(&mut *tx)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        .map_err(|e| {
+            if let sqlx::Error::Database(db_err) = &e {
+                if db_err.constraint() == Some("idx_post_semantic_id") {
+                    return PostError::DuplicatedSemanticId;
+                }
+            }
+            PostError::Unexpected(DatabaseError(e).into())
+        })?;
 
         for (order, &label_id) in label_ids.iter().enumerate() {
             sqlx::query!(
@@ -266,7 +273,14 @@ impl PostDbService for PostDbServiceImpl {
         )
         .execute(&mut *tx)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?
+        .map_err(|e| {
+            if let sqlx::Error::Database(db_err) = &e {
+                if db_err.constraint() == Some("idx_post_semantic_id") {
+                    return PostError::DuplicatedSemanticId;
+                }
+            }
+            PostError::Unexpected(DatabaseError(e).into())
+        })?
         .rows_affected();
 
         if affected_rows == 0 {

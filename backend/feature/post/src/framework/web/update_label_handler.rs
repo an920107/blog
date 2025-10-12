@@ -40,7 +40,8 @@ pub async fn update_label_handler(
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
-            PostError::InvalidSemanticId => {
+            PostError::DuplicatedLabelName => HttpResponse::Conflict().finish(),
+            PostError::InvalidSemanticId | PostError::DuplicatedSemanticId => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

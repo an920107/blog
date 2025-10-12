@@ -37,7 +37,8 @@ pub async fn create_post_handler(
         Err(e) => match e {
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
-            PostError::NotFound => {
+            PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
+            PostError::NotFound | PostError::DuplicatedLabelName => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

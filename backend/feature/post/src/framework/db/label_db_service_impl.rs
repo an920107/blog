@@ -32,7 +32,14 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_one(&self.db_pool)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        .map_err(|e| {
+            if let sqlx::Error::Database(db_err) = &e {
+                if db_err.constraint() == Some("idx_label_name") {
+                    return PostError::DuplicatedLabelName;
+                }
+            }
+            PostError::Unexpected(DatabaseError(e).into())
+        })?;
 
         Ok(id)
     }
@@ -50,7 +57,14 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .execute(&self.db_pool)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?
+        .map_err(|e| {
+            if let sqlx::Error::Database(db_err) = &e {
+                if db_err.constraint() == Some("idx_label_name") {
+                    return PostError::DuplicatedLabelName;
+                }
+            }
+            PostError::Unexpected(DatabaseError(e).into())
+        })?
         .rows_affected();
 
         if affected_rows == 0 {

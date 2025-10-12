@@ -5,6 +5,8 @@ pub enum PostError {
     NotFound,
     Unauthorized,
     InvalidSemanticId,
+    DuplicatedSemanticId,
+    DuplicatedLabelName,
     Unexpected(anyhow::Error),
 }
 
@@ -17,6 +19,8 @@ impl Display for PostError {
                 f,
                 "Semantic ID shouldn't be numeric and must conform to `^[0-9a-zA-Z_\\-]+$`"
             ),
+            PostError::DuplicatedSemanticId => write!(f, "Semantic ID already exists"),
+            PostError::DuplicatedLabelName => write!(f, "Label name already exists"),
             PostError::Unexpected(e) => write!(f, "Unexpected error: {}", e),
         }
     }

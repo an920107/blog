@@ -24,7 +24,11 @@ pub async fn get_all_labels_handler(
     match result {
         Ok(labels) => HttpResponse::Ok().json(labels),
         Err(e) => match e {
-            PostError::NotFound | PostError::Unauthorized | PostError::InvalidSemanticId => {
+            PostError::NotFound
+            | PostError::Unauthorized
+            | PostError::InvalidSemanticId
+            | PostError::DuplicatedSemanticId
+            | PostError::DuplicatedLabelName => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
