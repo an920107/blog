@@ -35,12 +35,15 @@ pub async fn get_all_post_info_handler(
 
     match result {
         Ok(post_info_list) => HttpResponse::Ok().json(post_info_list),
-        Err(e) => {
-            match e {
-                PostError::Unexpected(e) => capture_anyhow(&e),
-                _ => capture_anyhow(&anyhow!(e)),
-            };
-            HttpResponse::InternalServerError().finish()
-        }
+        Err(e) => match e {
+            PostError::NotFound | PostError::Unauthorized | PostError::InvalidSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
+        },
     }
 }

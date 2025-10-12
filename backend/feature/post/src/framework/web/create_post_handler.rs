@@ -34,12 +34,17 @@ pub async fn create_post_handler(
 
     match result {
         Ok(post) => HttpResponse::Created().json(post),
-        Err(e) => {
-            match e {
-                PostError::Unexpected(e) => capture_anyhow(&e),
-                _ => capture_anyhow(&anyhow!(e)),
-            };
-            HttpResponse::InternalServerError().finish()
-        }
+        Err(e) => match e {
+            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
+            PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
+            PostError::NotFound => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
+        },
     }
 }

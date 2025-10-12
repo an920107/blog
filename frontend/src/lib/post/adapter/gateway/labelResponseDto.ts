@@ -5,7 +5,7 @@ import { z } from 'zod';
 export const LabelResponseSchema = z.object({
 	id: z.int32(),
 	name: z.string(),
-	color: ColorResponseSchema
+	color: ColorResponseSchema,
 });
 
 export class LabelResponseDto {
@@ -24,7 +24,7 @@ export class LabelResponseDto {
 		return new LabelResponseDto({
 			id: parsedJson.id,
 			name: parsedJson.name,
-			color: ColorResponseDto.fromJson(parsedJson.color)
+			color: ColorResponseDto.fromJson(parsedJson.color),
 		});
 	}
 
@@ -32,7 +32,7 @@ export class LabelResponseDto {
 		return new Label({
 			id: this.id,
 			name: this.name,
-			color: this.color
+			color: this.color,
 		});
 	}
 }

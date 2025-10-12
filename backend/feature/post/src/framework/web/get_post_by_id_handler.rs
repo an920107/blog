@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
 
@@ -11,8 +12,8 @@ use crate::{
     get,
     path = "/post/{id}",
     tag = "post",
-    summary = "Get post by ID",
-    description = "Only authenticated users can access unpublished posts.",
+    summary = "Get post by ID or semantic ID",
+    description = "Only authenticated users can access unpublished posts. Accepts either numeric ID or semantic ID.",
     responses (
         (status = 200, body = PostResponseDto),
         (status = 404, description = "Post not found")
@@ -20,12 +21,12 @@ use crate::{
 )]
 pub async fn get_post_by_id_handler(
     post_controller: web::Data<dyn PostController>,
-    path: web::Path<i32>,
+    path: web::Path<String>,
     user_id: Option<UserId>,
 ) -> impl Responder {
-    let id = path.into_inner();
+    let id_or_semantic_id = path.into_inner();
     let result = post_controller
-        .get_post_by_id(id, user_id.map(|id| id.get()))
+        .get_post_by_id_or_semantic_id(&id_or_semantic_id, user_id.map(|id| id.get()))
         .await;
 
     match result {
@@ -33,6 +34,10 @@ pub async fn get_post_by_id_handler(
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
+            PostError::InvalidSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

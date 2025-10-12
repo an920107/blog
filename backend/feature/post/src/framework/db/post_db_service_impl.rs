@@ -37,6 +37,7 @@ impl PostDbService for PostDbServiceImpl {
             r#"
                 SELECT
                     p.id AS post_id,
+                    p.semantic_id,
                     p.title,
                     p.description,
                     p.preview_image_url,
@@ -74,6 +75,7 @@ impl PostDbService for PostDbServiceImpl {
                 .entry(record.post_id)
                 .or_insert_with(|| PostInfoMapper {
                     id: record.post_id,
+                    semantic_id: record.semantic_id.clone(),
                     title: record.title.clone(),
                     description: record.description.clone(),
                     preview_image_url: record.preview_image_url.clone(),
@@ -111,6 +113,7 @@ impl PostDbService for PostDbServiceImpl {
             r#"
                 SELECT
                     p.id AS post_id,
+                    p.semantic_id,
                     p.title,
                     p.description,
                     p.preview_image_url,
@@ -151,6 +154,7 @@ impl PostDbService for PostDbServiceImpl {
                 .or_insert_with(|| PostMapper {
                     id: record.post_id,
                     info: PostInfoMapper {
+                        semantic_id: record.semantic_id.clone(),
                         id: record.post_id,
                         title: record.title.clone(),
                         description: record.description.clone(),
@@ -194,10 +198,11 @@ impl PostDbService for PostDbServiceImpl {
         let post_id = sqlx::query_scalar!(
             r#"
             INSERT INTO post (
-                title, description, preview_image_url, content, published_time
-            ) VALUES ($1, $2, $3, $4, $5)
+                semantic_id, title, description, preview_image_url, content, published_time
+            ) VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id
             "#,
+            post.info.semantic_id,
             post.info.title,
             post.info.description,
             post.info.preview_image_url,
@@ -243,13 +248,15 @@ impl PostDbService for PostDbServiceImpl {
             r#"
             UPDATE post
             SET 
-                title = $1, 
-                description = $2, 
-                preview_image_url = $3, 
-                content = $4, 
-                published_time = $5
-            WHERE id = $6
+                semantic_id = $1,
+                title = $2, 
+                description = $3, 
+                preview_image_url = $4, 
+                content = $5, 
+                published_time = $6
+            WHERE id = $7
             "#,
+            post.info.semantic_id,
             post.info.title,
             post.info.description,
             post.info.preview_image_url,
@@ -299,5 +306,24 @@ impl PostDbService for PostDbServiceImpl {
             .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
 
         Ok(())
+    }
+
+    async fn get_id_by_semantic_id(&self, semantic_id: &str) -> Result<i32, PostError> {
+        let id = sqlx::query_scalar!(
+            r#"
+            SELECT id
+            FROM post
+            WHERE semantic_id = $1 AND deleted_time IS NULL
+            "#,
+            semantic_id,
+        )
+        .fetch_optional(&self.db_pool)
+        .await
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+
+        match id {
+            Some(id) => Ok(id),
+            None => Err(PostError::NotFound),
+        }
     }
 }

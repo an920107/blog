@@ -4,15 +4,17 @@ import z from 'zod';
 
 export const PostInfoResponseSchema = z.object({
 	id: z.int32(),
+	semantic_id: z.string(),
 	title: z.string(),
 	description: z.string(),
 	preview_image_url: z.url(),
 	labels: z.array(LabelResponseSchema),
-	published_time: z.iso.datetime({ offset: true }).nullable()
+	published_time: z.iso.datetime({ offset: true }).nullable(),
 });
 
 export class PostInfoResponseDto {
 	readonly id: number;
+	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
 	readonly previewImageUrl: URL;
@@ -21,6 +23,7 @@ export class PostInfoResponseDto {
 
 	private constructor(props: {
 		id: number;
+		semanticId: string;
 		title: string;
 		description: string;
 		previewImageUrl: URL;
@@ -28,6 +31,7 @@ export class PostInfoResponseDto {
 		publishedTime: Date | null;
 	}) {
 		this.id = props.id;
+		this.semanticId = props.semanticId;
 		this.title = props.title;
 		this.description = props.description;
 		this.previewImageUrl = props.previewImageUrl;
@@ -45,22 +49,24 @@ export class PostInfoResponseDto {
 
 		return new PostInfoResponseDto({
 			id: parsedJson.id,
+			semanticId: parsedJson.semantic_id,
 			title: parsedJson.title,
 			description: parsedJson.description,
 			previewImageUrl: new URL(parsedJson.preview_image_url),
 			labels: parsedJson.labels.map((label) => LabelResponseDto.fromJson(label)),
-			publishedTime: published_time
+			publishedTime: published_time,
 		});
 	}
 
 	toEntity(): PostInfo {
 		return new PostInfo({
 			id: this.id,
+			semanticId: this.semanticId,
 			title: this.title,
 			description: this.description,
 			previewImageUrl: this.previewImageUrl,
 			labels: this.labels.map((label) => label.toEntity()),
-			publishedTime: this.publishedTime
+			publishedTime: this.publishedTime,
 		});
 	}
 }

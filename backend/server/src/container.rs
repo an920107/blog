@@ -36,13 +36,12 @@ use post::{
         },
     },
     application::use_case::{
-        create_label_use_case::CreateLabelUseCaseImpl,
-        create_post_use_case::CreatePostUseCaseImpl,
+        create_label_use_case::CreateLabelUseCaseImpl, create_post_use_case::CreatePostUseCaseImpl,
         get_all_labels_use_case::GetAllLabelsUseCaseImpl,
         get_all_post_info_use_case::GetAllPostInfoUseCaseImpl,
-        get_full_post_use_case::GetFullPostUseCaseImpl,
-        update_label_use_case::UpdateLabelUseCaseImpl,
-        update_post_use_case::UpdatePostUseCaseImpl,
+        get_post_by_id_use_case::GetFullPostUseCaseImpl,
+        get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCaseImpl,
+        update_label_use_case::UpdateLabelUseCaseImpl, update_post_use_case::UpdatePostUseCaseImpl,
     },
     framework::db::{
         label_db_service_impl::LabelDbServiceImpl, post_db_service_impl::PostDbServiceImpl,
@@ -97,7 +96,12 @@ impl Container {
 
         let get_all_post_info_use_case =
             Arc::new(GetAllPostInfoUseCaseImpl::new(post_repository.clone()));
-        let get_full_post_use_case = Arc::new(GetFullPostUseCaseImpl::new(post_repository.clone()));
+        let get_post_by_id_use_case =
+            Arc::new(GetFullPostUseCaseImpl::new(post_repository.clone()));
+        let get_post_by_semantic_id_use_case = Arc::new(GetPostBySemanticIdUseCaseImpl::new(
+            post_repository.clone(),
+            get_post_by_id_use_case.clone(),
+        ));
         let create_post_use_case = Arc::new(CreatePostUseCaseImpl::new(post_repository.clone()));
         let update_post_use_case = Arc::new(UpdatePostUseCaseImpl::new(post_repository.clone()));
         let create_label_use_case = Arc::new(CreateLabelUseCaseImpl::new(label_repository.clone()));
@@ -107,7 +111,8 @@ impl Container {
 
         let post_controller = Arc::new(PostControllerImpl::new(
             get_all_post_info_use_case,
-            get_full_post_use_case,
+            get_post_by_id_use_case,
+            get_post_by_semantic_id_use_case,
             create_post_use_case,
             update_post_use_case,
             create_label_use_case,

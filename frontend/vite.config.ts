@@ -10,22 +10,22 @@ export default defineConfig({
 		sentrySvelteKit({
 			sourceMapsUploadOptions: {
 				org: 'squidspirit',
-				project: 'blog-beta-frontend'
-			}
+				project: 'blog-beta-frontend',
+			},
 		}),
 		tailwindcss(),
-		sveltekit()
+		sveltekit(),
 	],
 	define: {
-		'App.__VERSION__': JSON.stringify(version)
+		'App.__VERSION__': JSON.stringify(version),
 	},
 	server: {
 		proxy: {
 			'/api': {
 				target: 'http://127.0.0.1:8080',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, '')
-			}
-		}
-	}
+				rewrite: (path) => path.replace(/^\/api/, ''),
+			},
+		},
+	},
 });

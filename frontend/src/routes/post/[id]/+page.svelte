@@ -9,8 +9,7 @@
 	import PostContentPage from '$lib/post/framework/ui/PostContentPage.svelte';
 
 	const { data, params }: PageProps = $props();
-
-	const id = parseInt(params.id, 10);
+	const { id } = params;
 
 	const initialData = PostViewModel.rehydrate(data.dehydratedData!);
 

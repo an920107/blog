@@ -2,7 +2,7 @@
 	let {
 		label,
 		link,
-		isSelected
+		isSelected,
 	}: {
 		label: string;
 		link: string;

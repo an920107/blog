@@ -23,12 +23,15 @@ pub async fn get_all_labels_handler(
 
     match result {
         Ok(labels) => HttpResponse::Ok().json(labels),
-        Err(e) => {
-            match e {
-                PostError::Unexpected(e) => capture_anyhow(&e),
-                _ => capture_anyhow(&anyhow!(e)),
-            };
-            HttpResponse::InternalServerError().finish()
-        }
+        Err(e) => match e {
+            PostError::NotFound | PostError::Unauthorized | PostError::InvalidSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
+        },
     }
 }

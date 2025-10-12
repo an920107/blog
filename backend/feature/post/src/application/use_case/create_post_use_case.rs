@@ -25,8 +25,7 @@ impl CreatePostUseCaseImpl {
 #[async_trait]
 impl CreatePostUseCase for CreatePostUseCaseImpl {
     async fn execute(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError> {
-        self.post_repository
-            .create_post(post, label_ids)
-            .await
+        post.validate()?;
+        self.post_repository.create_post(post, label_ids).await
     }
 }

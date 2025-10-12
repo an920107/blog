@@ -2,6 +2,7 @@ import type { Label } from '$lib/post/domain/entity/label';
 
 export class PostInfo {
 	readonly id: number;
+	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
 	readonly previewImageUrl: URL;
@@ -10,6 +11,7 @@ export class PostInfo {
 
 	constructor(props: {
 		id: number;
+		semanticId: string;
 		title: string;
 		description: string;
 		previewImageUrl: URL;
@@ -17,6 +19,7 @@ export class PostInfo {
 		publishedTime: Date | null;
 	}) {
 		this.id = props.id;
+		this.semanticId = props.semanticId;
 		this.title = props.title;
 		this.description = props.description;
 		this.previewImageUrl = props.previewImageUrl;

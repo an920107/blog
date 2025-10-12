@@ -11,7 +11,7 @@ export class PostRepositoryImpl implements PostRepository {
 		return dtos.map((dto) => dto.toEntity());
 	}
 
-	async getPost(id: number): Promise<Post | null> {
+	async getPost(id: string): Promise<Post | null> {
 		const dto = await this.postApiService.getPost(id);
 		return dto?.toEntity() ?? null;
 	}

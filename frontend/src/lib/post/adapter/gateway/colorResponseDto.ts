@@ -5,7 +5,7 @@ export const ColorResponseSchema = z.object({
 	red: z.number().int().min(0).max(255),
 	green: z.number().int().min(0).max(255),
 	blue: z.number().int().min(0).max(255),
-	alpha: z.number().int().min(0).max(255)
+	alpha: z.number().int().min(0).max(255),
 });
 
 export class ColorResponseDto {
@@ -27,7 +27,7 @@ export class ColorResponseDto {
 			red: parsedJson.red,
 			green: parsedJson.green,
 			blue: parsedJson.blue,
-			alpha: parsedJson.alpha
+			alpha: parsedJson.alpha,
 		});
 	}
 
@@ -36,7 +36,7 @@ export class ColorResponseDto {
 			red: this.red,
 			green: this.green,
 			blue: this.blue,
-			alpha: this.alpha
+			alpha: this.alpha,
 		});
 	}
 }

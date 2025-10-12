@@ -6,6 +6,7 @@ use crate::domain::entity::{post::Post, post_info::PostInfo};
 
 #[derive(Deserialize, ToSchema, Clone)]
 pub struct CreatePostRequestDto {
+    pub semantic_id: String,
     pub title: String,
     pub description: String,
     pub content: String,
@@ -24,6 +25,7 @@ impl CreatePostRequestDto {
             id: -1,
             info: PostInfo {
                 id: -1,
+                semantic_id: self.semantic_id,
                 title: self.title,
                 description: self.description,
                 preview_image_url: self.preview_image_url,

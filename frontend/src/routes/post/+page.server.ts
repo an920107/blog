@@ -7,6 +7,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const state = await postListBloc.dispatch({ event: PostListEventType.PostListLoadedEvent });
 
 	return {
-		dehydratedData: state.data?.map((post) => post.dehydrate())
+		dehydratedData: state.data?.map((post) => post.dehydrate()),
 	};
 };

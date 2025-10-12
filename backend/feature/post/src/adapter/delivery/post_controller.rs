@@ -15,8 +15,9 @@ use crate::{
             create_label_use_case::CreateLabelUseCase, create_post_use_case::CreatePostUseCase,
             get_all_labels_use_case::GetAllLabelsUseCase,
             get_all_post_info_use_case::GetAllPostInfoUseCase,
-            get_full_post_use_case::GetFullPostUseCase, update_label_use_case::UpdateLabelUseCase,
-            update_post_use_case::UpdatePostUseCase,
+            get_post_by_id_use_case::GetPostByIdUseCase,
+            get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase,
+            update_label_use_case::UpdateLabelUseCase, update_post_use_case::UpdatePostUseCase,
         },
     },
 };
@@ -34,9 +35,9 @@ pub trait PostController: Send + Sync {
         user_id: Option<i32>,
     ) -> Result<Vec<PostInfoResponseDto>, PostError>;
 
-    async fn get_post_by_id(
+    async fn get_post_by_id_or_semantic_id(
         &self,
-        id: i32,
+        id_or_semantic_id: &str,
         user_id: Option<i32>,
     ) -> Result<PostResponseDto, PostError>;
 
@@ -69,7 +70,8 @@ pub trait PostController: Send + Sync {
 
 pub struct PostControllerImpl {
     get_all_post_info_use_case: Arc<dyn GetAllPostInfoUseCase>,
-    get_full_post_use_case: Arc<dyn GetFullPostUseCase>,
+    get_post_by_id_use_case: Arc<dyn GetPostByIdUseCase>,
+    get_post_by_semantic_id_use_case: Arc<dyn GetPostBySemanticIdUseCase>,
     create_post_use_case: Arc<dyn CreatePostUseCase>,
     update_post_use_case: Arc<dyn UpdatePostUseCase>,
     create_label_use_case: Arc<dyn CreateLabelUseCase>,
@@ -80,7 +82,8 @@ pub struct PostControllerImpl {
 impl PostControllerImpl {
     pub fn new(
         get_all_post_info_use_case: Arc<dyn GetAllPostInfoUseCase>,
-        get_full_post_use_case: Arc<dyn GetFullPostUseCase>,
+        get_post_by_id_use_case: Arc<dyn GetPostByIdUseCase>,
+        get_post_by_semantic_id_use_case: Arc<dyn GetPostBySemanticIdUseCase>,
         create_post_use_case: Arc<dyn CreatePostUseCase>,
         update_post_use_case: Arc<dyn UpdatePostUseCase>,
         create_label_use_case: Arc<dyn CreateLabelUseCase>,
@@ -89,13 +92,37 @@ impl PostControllerImpl {
     ) -> Self {
         Self {
             get_all_post_info_use_case,
-            get_full_post_use_case,
+            get_post_by_id_use_case,
+            get_post_by_semantic_id_use_case,
             create_post_use_case,
             update_post_use_case,
             create_label_use_case,
             update_label_use_case,
             get_all_labels_use_case,
         }
+    }
+
+    async fn get_post_by_id(
+        &self,
+        id: i32,
+        user_id: Option<i32>,
+    ) -> Result<PostResponseDto, PostError> {
+        let result = self.get_post_by_id_use_case.execute(id, user_id).await;
+
+        result.map(PostResponseDto::from)
+    }
+
+    async fn get_post_by_semantic_id(
+        &self,
+        semantic_id: &str,
+        user_id: Option<i32>,
+    ) -> Result<PostResponseDto, PostError> {
+        let result = self
+            .get_post_by_semantic_id_use_case
+            .execute(semantic_id, user_id)
+            .await;
+
+        result.map(PostResponseDto::from)
     }
 }
 
@@ -121,14 +148,17 @@ impl PostController for PostControllerImpl {
         })
     }
 
-    async fn get_post_by_id(
+    async fn get_post_by_id_or_semantic_id(
         &self,
-        id: i32,
+        id_or_semantic_id: &str,
         user_id: Option<i32>,
     ) -> Result<PostResponseDto, PostError> {
-        let result = self.get_full_post_use_case.execute(id, user_id).await;
-
-        result.map(PostResponseDto::from)
+        if let Ok(id) = id_or_semantic_id.parse::<i32>() {
+            self.get_post_by_id(id, user_id).await
+        } else {
+            let semantic_id = id_or_semantic_id;
+            self.get_post_by_semantic_id(semantic_id, user_id).await
+        }
     }
 
     async fn create_label(

@@ -8,7 +8,7 @@ use crate::{
 };
 
 #[async_trait]
-pub trait GetFullPostUseCase: Send + Sync {
+pub trait GetPostByIdUseCase: Send + Sync {
     async fn execute(&self, id: i32, user_id: Option<i32>) -> Result<Post, PostError>;
 }
 
@@ -23,7 +23,7 @@ impl GetFullPostUseCaseImpl {
 }
 
 #[async_trait]
-impl GetFullPostUseCase for GetFullPostUseCaseImpl {
+impl GetPostByIdUseCase for GetFullPostUseCaseImpl {
     async fn execute(&self, id: i32, user_id: Option<i32>) -> Result<Post, PostError> {
         let post = self.post_repository.get_post_by_id(id).await?;
 

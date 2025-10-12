@@ -4,6 +4,7 @@ use std::fmt::Display;
 pub enum PostError {
     NotFound,
     Unauthorized,
+    InvalidSemanticId,
     Unexpected(anyhow::Error),
 }
 
@@ -12,6 +13,10 @@ impl Display for PostError {
         match self {
             PostError::NotFound => write!(f, "Post not found"),
             PostError::Unauthorized => write!(f, "Unauthorized access to post"),
+            PostError::InvalidSemanticId => write!(
+                f,
+                "Semantic ID shouldn't be numeric and must conform to `^[0-9a-zA-Z_\\-]+$`"
+            ),
             PostError::Unexpected(e) => write!(f, "Unexpected error: {}", e),
         }
     }

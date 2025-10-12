@@ -44,6 +44,7 @@ impl PostRepository for PostRepositoryImpl {
     async fn create_post(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError> {
         let info_mapper = PostInfoMapper {
             id: post.info.id,
+            semantic_id: post.info.semantic_id,
             title: post.info.title,
             description: post.info.description,
             preview_image_url: post.info.preview_image_url,
@@ -65,6 +66,7 @@ impl PostRepository for PostRepositoryImpl {
     async fn update_post(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError> {
         let info_mapper = PostInfoMapper {
             id: post.info.id,
+            semantic_id: post.info.semantic_id,
             title: post.info.title,
             description: post.info.description,
             preview_image_url: post.info.preview_image_url,
@@ -81,5 +83,9 @@ impl PostRepository for PostRepositoryImpl {
         self.post_db_service
             .update_post(post_mapper, label_ids)
             .await
+    }
+
+    async fn get_id_by_semantic_id(&self, semantic_id: &str) -> Result<i32, PostError> {
+        self.post_db_service.get_id_by_semantic_id(semantic_id).await
     }
 }

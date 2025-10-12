@@ -8,7 +8,7 @@ export type PostEvent = PostLoadedEvent;
 
 export class PostBloc {
 	private readonly state = writable<PostState>({
-		status: StatusType.Idle
+		status: StatusType.Idle,
 	});
 
 	constructor(
@@ -17,7 +17,7 @@ export class PostBloc {
 	) {
 		this.state.set({
 			status: StatusType.Idle,
-			data: initialData
+			data: initialData,
 		});
 	}
 
@@ -32,7 +32,7 @@ export class PostBloc {
 		}
 	}
 
-	private async loadPost(id: number): Promise<PostState> {
+	private async loadPost(id: string): Promise<PostState> {
 		this.state.set({ status: StatusType.Loading, data: get(this.state).data });
 
 		const post = await this.getPostUseCase.execute(id);
@@ -44,7 +44,7 @@ export class PostBloc {
 		const postViewModel = PostViewModel.fromEntity(post);
 		const result: PostState = {
 			status: StatusType.Success,
-			data: postViewModel
+			data: postViewModel,
 		};
 
 		this.state.set(result);
@@ -53,10 +53,10 @@ export class PostBloc {
 }
 
 export enum PostEventType {
-	PostLoadedEvent
+	PostLoadedEvent,
 }
 
-export interface PostLoadedEvent {
+interface PostLoadedEvent {
 	event: PostEventType.PostLoadedEvent;
-	id: number;
+	id: string;
 }

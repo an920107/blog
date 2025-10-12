@@ -3,5 +3,5 @@ import type { PostResponseDto } from '$lib/post/adapter/gateway/postResponseDto'
 
 export interface PostApiService {
 	getAllPosts(): Promise<PostInfoResponseDto[]>;
-	getPost(id: number): Promise<PostResponseDto | null>;
+	getPost(id: string): Promise<PostResponseDto | null>;
 }

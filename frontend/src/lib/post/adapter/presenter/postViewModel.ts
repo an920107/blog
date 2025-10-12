@@ -1,6 +1,6 @@
 import {
 	PostInfoViewModel,
-	type DehydratedPostInfoProps
+	type DehydratedPostInfoProps,
 } from '$lib/post/adapter/presenter/postInfoViewModel';
 import type { Post } from '$lib/post/domain/entity/post';
 
@@ -19,7 +19,7 @@ export class PostViewModel {
 		return new PostViewModel({
 			id: post.id,
 			info: PostInfoViewModel.fromEntity(post.info),
-			content: post.content
+			content: post.content,
 		});
 	}
 
@@ -27,7 +27,7 @@ export class PostViewModel {
 		return new PostViewModel({
 			id: props.id,
 			info: PostInfoViewModel.rehydrate(props.info),
-			content: props.content
+			content: props.content,
 		});
 	}
 
@@ -35,7 +35,7 @@ export class PostViewModel {
 		return {
 			id: this.id,
 			info: this.info.dehydrate(),
-			content: this.content
+			content: this.content,
 		};
 	}
 }

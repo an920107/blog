@@ -8,7 +8,7 @@ export type PostListEvent = PostListLoadedEvent;
 
 export class PostListBloc {
 	private readonly state = writable<PostListState>({
-		status: StatusType.Idle
+		status: StatusType.Idle,
 	});
 
 	constructor(
@@ -17,7 +17,7 @@ export class PostListBloc {
 	) {
 		this.state.set({
 			status: StatusType.Idle,
-			data: initialData
+			data: initialData,
 		});
 	}
 
@@ -38,7 +38,7 @@ export class PostListBloc {
 		const postViewModels = posts.map((post) => PostInfoViewModel.fromEntity(post));
 		const result: PostListState = {
 			status: StatusType.Success,
-			data: postViewModels
+			data: postViewModels,
 		};
 
 		this.state.set(result);
@@ -47,7 +47,7 @@ export class PostListBloc {
 }
 
 export enum PostListEventType {
-	PostListLoadedEvent
+	PostListLoadedEvent,
 }
 
 export interface PostListLoadedEvent {

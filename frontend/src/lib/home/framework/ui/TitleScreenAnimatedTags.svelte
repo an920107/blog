@@ -31,7 +31,7 @@
 		'資工系',
 		'軟體工程',
 		'遊戲',
-		'魷魚'
+		'魷魚',
 	];
 
 	// Initialize with placeholder to prevent flickering

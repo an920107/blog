@@ -12,7 +12,7 @@ import { Environment } from '$lib/environment';
 Sentry.init({
 	dsn: Environment.SENTRY_DSN,
 	tracesSampleRate: 1,
-	enableLogs: true
+	enableLogs: true,
 });
 
 export const handle: Handle = sequence(Sentry.sentryHandle(), ({ event, resolve }) => {

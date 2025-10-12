@@ -9,10 +9,10 @@ module.exports = {
 						'--tw-prose-headings': 'var(--color-gray-800)',
 						'--tw-prose-links': 'var(--color-gray-800)',
 						'--tw-prose-bold': 'var(--color-gray-800)',
-						'--tw-prose-quotes': 'var(--color-gray-800)'
-					}
-				}
-			})
-		}
-	}
+						'--tw-prose-quotes': 'var(--color-gray-800)',
+					},
+				},
+			}),
+		},
+	},
 };

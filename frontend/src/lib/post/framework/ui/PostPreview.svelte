@@ -17,7 +17,11 @@
 	}
 </script>
 
-<a class="flex cursor-pointer flex-col gap-y-6" href="/post/{postInfo.id}" title={postInfo.title}>
+<a
+	class="flex cursor-pointer flex-col gap-y-6"
+	href="/post/{postInfo.semanticId}"
+	title={postInfo.title}
+>
 	<div class="relative aspect-video overflow-hidden rounded-2xl bg-gray-200">
 		<img
 			class="rounded-2xl object-cover transition-opacity duration-300

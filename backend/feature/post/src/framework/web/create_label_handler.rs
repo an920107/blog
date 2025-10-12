@@ -32,12 +32,16 @@ pub async fn create_label_handler(
 
     match result {
         Ok(label) => HttpResponse::Created().json(label),
-        Err(e) => {
-            match e {
-                PostError::Unexpected(e) => capture_anyhow(&e),
-                _ => capture_anyhow(&anyhow!(e)),
-            };
-            HttpResponse::InternalServerError().finish()
-        }
+        Err(e) => match e {
+            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
+            PostError::NotFound | PostError::InvalidSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
+            PostError::Unexpected(e) => {
+                capture_anyhow(&e);
+                HttpResponse::InternalServerError().finish()
+            }
+        },
     }
 }

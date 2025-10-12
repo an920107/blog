@@ -43,7 +43,7 @@ export class ColorViewModel {
 			red: Math.round(r * 255),
 			green: Math.round(g * 255),
 			blue: Math.round(b * 255),
-			alpha: 255
+			alpha: 255,
 		});
 	}
 
@@ -52,7 +52,7 @@ export class ColorViewModel {
 			red: color.red,
 			green: color.green,
 			blue: color.blue,
-			alpha: color.alpha
+			alpha: color.alpha,
 		});
 	}
 
@@ -115,7 +115,7 @@ export class ColorViewModel {
 			red: this.red,
 			green: this.green,
 			blue: this.blue,
-			alpha: this.alpha
+			alpha: this.alpha,
 		};
 	}
 }

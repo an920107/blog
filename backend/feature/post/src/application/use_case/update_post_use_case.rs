@@ -25,6 +25,7 @@ impl UpdatePostUseCaseImpl {
 #[async_trait]
 impl UpdatePostUseCase for UpdatePostUseCaseImpl {
     async fn execute(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError> {
+        post.validate()?;
         self.post_repository.update_post(post, label_ids).await
     }
 }

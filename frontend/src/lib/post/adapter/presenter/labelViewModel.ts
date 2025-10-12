@@ -1,6 +1,6 @@
 import {
 	ColorViewModel,
-	type DehydratedColorProps
+	type DehydratedColorProps,
 } from '$lib/post/adapter/presenter/colorViewModel';
 import type { Label } from '$lib/post/domain/entity/label';
 
@@ -19,7 +19,7 @@ export class LabelViewModel {
 		return new LabelViewModel({
 			id: label.id,
 			name: label.name,
-			color: ColorViewModel.fromEntity(label.color)
+			color: ColorViewModel.fromEntity(label.color),
 		});
 	}
 
@@ -27,7 +27,7 @@ export class LabelViewModel {
 		return new LabelViewModel({
 			id: props.id,
 			name: props.name,
-			color: ColorViewModel.rehydrate(props.color)
+			color: ColorViewModel.rehydrate(props.color),
 		});
 	}
 
@@ -35,7 +35,7 @@ export class LabelViewModel {
 		return {
 			id: this.id,
 			name: this.name,
-			color: this.color.dehydrate()
+			color: this.color.dehydrate(),
 		};
 	}
 }

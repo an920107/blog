@@ -5,7 +5,7 @@
 		headline,
 		description,
 		datePublished,
-		image
+		image,
 	}: {
 		headline: string;
 		description: string;
@@ -19,7 +19,7 @@
 		headline: headline,
 		description: description,
 		datePublished: datePublished.toISOString(),
-		image: image.href
+		image: image.href,
 	});
 
 	const jsonLdScript = $derived(

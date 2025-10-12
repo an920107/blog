@@ -19,7 +19,7 @@ export class PostApiServiceImpl implements PostApiService {
 		return json.map(PostInfoResponseDto.fromJson);
 	}
 
-	async getPost(id: number): Promise<PostResponseDto | null> {
+	async getPost(id: string): Promise<PostResponseDto | null> {
 		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
 
 		const response = await this.fetchFn(url.href);

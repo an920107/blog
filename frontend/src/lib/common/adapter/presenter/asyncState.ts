@@ -2,7 +2,7 @@ export enum StatusType {
 	Idle,
 	Loading,
 	Success,
-	Error
+	Error,
 }
 
 export interface IdleState<T> {

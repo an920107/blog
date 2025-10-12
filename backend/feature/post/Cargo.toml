@@ -8,6 +8,7 @@ actix-web.workspace = true
 anyhow.workspace = true
 async-trait.workspace = true
 chrono.workspace = true
+regex.workspace = true
 sentry.workspace = true
 serde.workspace = true
 sqlx.workspace = true

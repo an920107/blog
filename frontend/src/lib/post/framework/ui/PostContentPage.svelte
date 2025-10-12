@@ -7,7 +7,7 @@
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
 
-	const { id }: { id: number } = $props();
+	const { id }: { id: string } = $props();
 
 	const postBloc = getContext<PostBloc>(PostBloc.name);
 	const state = $derived($postBloc);

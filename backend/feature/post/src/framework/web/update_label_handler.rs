@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
 
@@ -39,6 +40,10 @@ pub async fn update_label_handler(
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
+            PostError::InvalidSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

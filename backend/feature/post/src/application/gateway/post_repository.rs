@@ -11,4 +11,5 @@ pub trait PostRepository: Send + Sync {
     async fn get_post_by_id(&self, id: i32) -> Result<Post, PostError>;
     async fn create_post(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError>;
     async fn update_post(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError>;
+    async fn get_id_by_semantic_id(&self, semantic_id: &str) -> Result<i32, PostError>;
 }

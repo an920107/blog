@@ -1,6 +1,6 @@
 import {
 	PostInfoResponseDto,
-	PostInfoResponseSchema
+	PostInfoResponseSchema,
 } from '$lib/post/adapter/gateway/postInfoResponseDto';
 import { Post } from '$lib/post/domain/entity/post';
 import z from 'zod';
@@ -8,7 +8,7 @@ import z from 'zod';
 export const PostResponseSchema = z.object({
 	id: z.int32(),
 	info: PostInfoResponseSchema,
-	content: z.string()
+	content: z.string(),
 });
 
 export class PostResponseDto {
@@ -27,7 +27,7 @@ export class PostResponseDto {
 		return new PostResponseDto({
 			id: parsedJson.id,
 			info: PostInfoResponseDto.fromJson(parsedJson.info),
-			content: parsedJson.content
+			content: parsedJson.content,
 		});
 	}
 
@@ -35,7 +35,7 @@ export class PostResponseDto {
 		return new Post({
 			id: this.id,
 			info: this.info.toEntity(),
-			content: this.content
+			content: this.content,
 		});
 	}
 }

@@ -39,6 +39,7 @@ pub async fn update_post_handler(
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
+            PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
