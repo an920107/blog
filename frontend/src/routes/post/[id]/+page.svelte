@@ -7,14 +7,16 @@
 	import { setContext } from 'svelte';
 	import type { PageProps } from './$types';
 	import PostContentPage from '$lib/post/framework/ui/PostContentPage.svelte';
+	import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
+	import type { PostRepository } from '$lib/post/application/gateway/postRepository';
 
 	const { data, params }: PageProps = $props();
 	const { id } = params;
 
 	const initialData = PostViewModel.rehydrate(data.dehydratedData!);
 
-	const postApiService = new PostApiServiceImpl(fetch);
-	const postRepository = new PostRepositoryImpl(postApiService);
+	const postApiService: PostApiService = new PostApiServiceImpl(fetch);
+	const postRepository: PostRepository = new PostRepositoryImpl(postApiService);
 	const getPostUseCase = new GetPostUseCase(postRepository);
 	const postBloc = new PostBloc(getPostUseCase, initialData);
 

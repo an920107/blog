@@ -4,12 +4,12 @@ import { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseD
 import { PostResponseDto } from '$lib/post/adapter/gateway/postResponseDto';
 
 export class PostApiServiceImpl implements PostApiService {
-	constructor(private fetchFn: typeof fetch) {}
+	constructor(private readonly fetchFn: typeof fetch) {}
 
 	async getAllPosts(): Promise<PostInfoResponseDto[]> {
 		const url = new URL('post', Environment.API_BASE_URL);
 
-		const response = await this.fetchFn(url.href);
+		const response = await this.fetchFn(url);
 
 		if (!response.ok) {
 			return [];
@@ -22,7 +22,7 @@ export class PostApiServiceImpl implements PostApiService {
 	async getPost(id: string): Promise<PostResponseDto | null> {
 		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
 
-		const response = await this.fetchFn(url.href);
+		const response = await this.fetchFn(url);
 
 		if (!response.ok) {
 			return null;

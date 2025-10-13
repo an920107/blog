@@ -1,4 +1,4 @@
-import type { PostRepository } from '$lib/post/application/repository/postRepository';
+import type { PostRepository } from '$lib/post/application/gateway/postRepository';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export class GetAllPostsUseCase {

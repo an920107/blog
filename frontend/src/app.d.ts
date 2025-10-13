@@ -5,6 +5,7 @@ declare global {
 		// interface Error {}
 
 		interface Locals {
+			authBloc: import('$lib/auth/adapter/presenter/authBloc').AuthBloc;
 			postListBloc: import('$lib/post/adapter/presenter/postListBloc').PostListBloc;
 			postBloc: import('$lib/post/adapter/presenter/postBloc').PostBloc;
 		}

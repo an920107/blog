@@ -12,6 +12,8 @@
 </svelte:head>
 <div class="min-h-screen">
 	<Navbar />
-	<slot />
+	<main>
+		<slot />
+	</main>
 </div>
 <Footer />

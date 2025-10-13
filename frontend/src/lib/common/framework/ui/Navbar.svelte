@@ -3,7 +3,7 @@
 	import NavbarAction from '$lib/common/framework/ui/NavbarAction.svelte';
 </script>
 
-<div class="border-b border-gray-300">
+<nav class="border-b border-gray-300">
 	<div
 		class="mx-auto flex h-toolbar-height max-w-screen-xl flex-row items-center justify-between px-4 md:px-6"
 	>
@@ -20,4 +20,4 @@
 			/>
 		</div>
 	</div>
-</div>
+</nav>
