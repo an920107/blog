@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Button } from '$lib/common/framework/components/ui/button/index';
+	import { Button } from '$lib/common/framework/components/ui/button';
 	import type { DashboardLink } from '$lib/dashboard/framework/ui/dashboardLink';
 
 	const { link }: { link: DashboardLink } = $props();

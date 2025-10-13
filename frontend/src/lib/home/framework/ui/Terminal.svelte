@@ -56,7 +56,7 @@
 	<meta name="description" content={lines.join('，')} />
 </svelte:head>
 <div
-	class="container flex flex-col items-center justify-center gap-y-2.5 py-32 md:gap-y-8 md:px-24 md:py-32"
+	class="content-container flex flex-col items-center justify-center gap-y-2.5 py-32 md:gap-y-8 md:px-24 md:py-32"
 >
 	<div
 		bind:this={element}

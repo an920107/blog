@@ -24,8 +24,8 @@
 	onMount(() => authBloc.dispatch({ event: AuthEventType.CurrentUserLoadedEvent }));
 
 	const authState = $derived($authBloc);
-	const isLoading = $derived.by(
-		() => authState.status === StatusType.Loading || authState.status === StatusType.Idle
+	const isLoading = $derived(
+		authState.status === StatusType.Loading || authState.status === StatusType.Idle
 	);
 	const hasError = $derived.by(() => {
 		if (authState.status === StatusType.Error) {

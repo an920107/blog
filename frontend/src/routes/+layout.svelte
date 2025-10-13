@@ -4,6 +4,7 @@
 	import GoogleAnalytics from '$lib/common/framework/ui/GoogleAnalytics.svelte';
 	import '../app.css';
 	import '@fortawesome/fontawesome-free/css/all.min.css';
+	import { Toaster } from '$lib/common/framework/components/ui/sonner';
 </script>
 
 <GoogleAnalytics />
@@ -11,6 +12,7 @@
 	<meta name="app-version" content={App.__VERSION__} />
 </svelte:head>
 <div class="min-h-screen">
+	<Toaster theme="light" />
 	<Navbar />
 	<main>
 		<slot />

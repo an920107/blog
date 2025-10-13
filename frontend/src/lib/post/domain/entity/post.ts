@@ -1,9 +1,9 @@
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export class Post {
-	id: number;
-	info: PostInfo;
-	content: string;
+	readonly id: number;
+	readonly info: PostInfo;
+	readonly content: string;
 
 	constructor(props: { id: number; info: PostInfo; content: string }) {
 		this.id = props.id;

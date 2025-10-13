@@ -32,7 +32,7 @@
 		{/if}
 	{/if}
 </svelte:head>
-<article class="container prose pb-10 prose-gray">
+<article class="content-container prose pb-10 prose-gray">
 	{#if state.data}
 		<PostContentHeader postInfo={state.data.info} />
 		<div class="max-w-3xl">

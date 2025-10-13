@@ -1,7 +1,7 @@
 export class User {
-	id: number;
-	name: string;
-	email: string;
+	readonly id: number;
+	readonly name: string;
+	readonly email: string;
 
 	constructor(props: { id: number; name: string; email: string }) {
 		this.id = props.id;

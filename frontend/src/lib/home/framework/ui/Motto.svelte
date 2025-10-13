@@ -2,7 +2,9 @@
 	import MottoAnimatedMark from './MottoAnimatedMark.svelte';
 </script>
 
-<div class="container flex h-screen flex-col items-center justify-center gap-y-2.5 md:gap-y-8">
+<div
+	class="content-container flex h-screen flex-col items-center justify-center gap-y-2.5 md:gap-y-8"
+>
 	<div
 		class="flex w-[19rem] flex-col gap-y-3 text-3xl font-bold text-gray-800 md:w-[38rem] md:gap-y-4 md:text-6xl"
 	>
