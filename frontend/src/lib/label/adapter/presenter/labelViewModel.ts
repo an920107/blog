@@ -1,8 +1,8 @@
 import {
 	ColorViewModel,
 	type DehydratedColorProps,
-} from '$lib/post/adapter/presenter/colorViewModel';
-import type { Label } from '$lib/post/domain/entity/label';
+} from '$lib/label/adapter/presenter/colorViewModel';
+import type { Label } from '$lib/label/domain/entity/label';
 
 export class LabelViewModel {
 	readonly id: number;

@@ -1,5 +1,4 @@
 use actix_web::{HttpResponse, Responder, web};
-use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
 
@@ -18,7 +17,10 @@ use crate::{
     summary = "Update a post by ID",
     responses(
         (status = 200, body = PostResponseDto),
-        (status = 404, description = "Post not found"),
+        (status = 400, description = PostError::InvalidSemanticId),
+        (status = 401, description = PostError::Unauthorized),
+        (status = 404, description = PostError::NotFound),
+        (status = 409, description = PostError::DuplicatedSemanticId),
     ),
     security(
         ("oauth2" = [])
@@ -42,10 +44,6 @@ pub async fn update_post_handler(
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
-            PostError::DuplicatedLabelName => {
-                capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

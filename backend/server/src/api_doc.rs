@@ -1,6 +1,7 @@
 use actix_web::web;
 use auth::framework::web::auth_api_doc;
 use image::framework::web::image_api_doc;
+use label::framework::web::label_api_doc;
 use post::framework::web::post_api_doc;
 use utoipa::{
     OpenApi,
@@ -40,6 +41,7 @@ pub fn configure_api_doc_routes(cfg: &mut web::ServiceConfig) {
     let openapi = ApiDoc::openapi()
         .merge_from(auth_api_doc::openapi())
         .merge_from(image_api_doc::openapi())
+        .merge_from(label_api_doc::openapi())
         .merge_from(post_api_doc::openapi());
 
     cfg.service(Redoc::with_url("/redoc", openapi));

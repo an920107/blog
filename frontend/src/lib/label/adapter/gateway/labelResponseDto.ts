@@ -1,5 +1,5 @@
-import { ColorResponseDto, ColorResponseSchema } from '$lib/post/adapter/gateway/colorResponseDto';
-import { Label } from '$lib/post/domain/entity/label';
+import { ColorResponseDto, ColorResponseSchema } from '$lib/label/adapter/gateway/colorResponseDto';
+import { Label } from '$lib/label/domain/entity/label';
 import { z } from 'zod';
 
 export const LabelResponseSchema = z.object({

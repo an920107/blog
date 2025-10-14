@@ -4,6 +4,7 @@ members = [
     "feature/auth",
     "feature/common",
     "feature/image",
+    "feature/label",
     "feature/post",
 ]
 resolver = "2"
@@ -53,4 +54,5 @@ server.path = "server"
 auth.path = "feature/auth"
 common.path = "feature/common"
 image.path = "feature/image"
+label.path = "feature/label"
 post.path = "feature/post"

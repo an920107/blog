@@ -4,28 +4,18 @@ use async_trait::async_trait;
 
 use crate::{
     adapter::delivery::{
-        create_label_request_dto::CreateLabelRequestDto,
         create_post_request_dto::CreatePostRequestDto, post_info_query_dto::PostQueryDto,
-        update_label_request_dto::UpdateLabelRequestDto,
         update_post_request_dto::UpdatePostRequestDto,
     },
     application::{
         error::post_error::PostError,
         use_case::{
-            create_label_use_case::CreateLabelUseCase, create_post_use_case::CreatePostUseCase,
-            get_all_labels_use_case::GetAllLabelsUseCase,
-            get_all_post_info_use_case::GetAllPostInfoUseCase,
-            get_post_by_id_use_case::GetPostByIdUseCase,
-            get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase,
-            update_label_use_case::UpdateLabelUseCase, update_post_use_case::UpdatePostUseCase,
+            create_post_use_case::CreatePostUseCase, get_all_post_info_use_case::GetAllPostInfoUseCase, get_post_by_id_use_case::GetPostByIdUseCase, get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase, update_post_use_case::UpdatePostUseCase
         },
     },
 };
 
-use super::{
-    label_response_dto::LabelResponseDto, post_info_response_dto::PostInfoResponseDto,
-    post_response_dto::PostResponseDto,
-};
+use super::{post_info_response_dto::PostInfoResponseDto, post_response_dto::PostResponseDto};
 
 #[async_trait]
 pub trait PostController: Send + Sync {
@@ -53,19 +43,6 @@ pub trait PostController: Send + Sync {
         post: UpdatePostRequestDto,
         user_id: i32,
     ) -> Result<PostResponseDto, PostError>;
-
-    async fn create_label(
-        &self,
-        label: CreateLabelRequestDto,
-    ) -> Result<LabelResponseDto, PostError>;
-
-    async fn update_label(
-        &self,
-        id: i32,
-        label: UpdateLabelRequestDto,
-    ) -> Result<LabelResponseDto, PostError>;
-
-    async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, PostError>;
 }
 
 pub struct PostControllerImpl {
@@ -74,9 +51,6 @@ pub struct PostControllerImpl {
     get_post_by_semantic_id_use_case: Arc<dyn GetPostBySemanticIdUseCase>,
     create_post_use_case: Arc<dyn CreatePostUseCase>,
     update_post_use_case: Arc<dyn UpdatePostUseCase>,
-    create_label_use_case: Arc<dyn CreateLabelUseCase>,
-    update_label_use_case: Arc<dyn UpdateLabelUseCase>,
-    get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
 }
 
 impl PostControllerImpl {
@@ -86,9 +60,6 @@ impl PostControllerImpl {
         get_post_by_semantic_id_use_case: Arc<dyn GetPostBySemanticIdUseCase>,
         create_post_use_case: Arc<dyn CreatePostUseCase>,
         update_post_use_case: Arc<dyn UpdatePostUseCase>,
-        create_label_use_case: Arc<dyn CreateLabelUseCase>,
-        update_label_use_case: Arc<dyn UpdateLabelUseCase>,
-        get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
     ) -> Self {
         Self {
             get_all_post_info_use_case,
@@ -96,9 +67,6 @@ impl PostControllerImpl {
             get_post_by_semantic_id_use_case,
             create_post_use_case,
             update_post_use_case,
-            create_label_use_case,
-            update_label_use_case,
-            get_all_labels_use_case,
         }
     }
 
@@ -159,44 +127,6 @@ impl PostController for PostControllerImpl {
             let semantic_id = id_or_semantic_id;
             self.get_post_by_semantic_id(semantic_id, user_id).await
         }
-    }
-
-    async fn create_label(
-        &self,
-        label: CreateLabelRequestDto,
-    ) -> Result<LabelResponseDto, PostError> {
-        let mut label_entity = label.into_entity();
-        let id = self
-            .create_label_use_case
-            .execute(label_entity.clone())
-            .await?;
-
-        label_entity.id = id;
-        Ok(LabelResponseDto::from(label_entity))
-    }
-
-    async fn update_label(
-        &self,
-        id: i32,
-        label: UpdateLabelRequestDto,
-    ) -> Result<LabelResponseDto, PostError> {
-        let label_entity = label.into_entity(id);
-        self.update_label_use_case
-            .execute(label_entity.clone())
-            .await?;
-
-        Ok(LabelResponseDto::from(label_entity))
-    }
-
-    async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, PostError> {
-        let result = self.get_all_labels_use_case.execute().await;
-
-        result.map(|labels| {
-            labels
-                .into_iter()
-                .map(|label| LabelResponseDto::from(label))
-                .collect()
-        })
     }
 
     async fn create_post(

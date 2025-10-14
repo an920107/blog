@@ -25,7 +25,7 @@ use crate::{
     ),
     responses (
         (status = 201, body = ImageInfoResponseDto),
-        (status = 400, description = "Unsupported MIME type or file field not found"),
+        (status = 400, description = ImageError::UnsupportedMimeType("{MIME_TYPE}".to_string())),
     ),
     security(
         ("oauth2" = [])
@@ -78,12 +78,12 @@ pub async fn upload_image_handler(
             ImageError::UnsupportedMimeType(mime_type) => {
                 HttpResponse::BadRequest().body(format!("Unsupported MIME type: {}", mime_type))
             }
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
+            ImageError::NotFound => {
+                capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
-            _ => {
-                capture_anyhow(&anyhow!(e));
+            ImageError::Unexpected(e) => {
+                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

@@ -15,7 +15,7 @@ use crate::{
     summary = "Get image by ID",
     responses (
         (status = 200, body = inline(ResponseBodySchema), content_type = "image/*"),
-        (status = 404, description = "Image not found")
+        (status = 404, description = ImageError::NotFound),
     )
 )]
 pub async fn get_image_by_id_handler(
@@ -31,12 +31,12 @@ pub async fn get_image_by_id_handler(
             .body(image_response.data),
         Err(e) => match e {
             ImageError::NotFound => HttpResponse::NotFound().finish(),
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
+            ImageError::UnsupportedMimeType(_) => {
+                capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
-            _ => {
-                capture_anyhow(&anyhow!(e));
+            ImageError::Unexpected(e) => {
+                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

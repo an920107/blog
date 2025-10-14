@@ -10,7 +10,7 @@
 	import CreatePostDialog, {
 		type CreatePostDialogFormParams,
 	} from '$lib/post/framework/ui/CreatePostDialog.svelte';
-	import PostLabel from '$lib/post/framework/ui/PostLabel.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 

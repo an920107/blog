@@ -39,8 +39,7 @@ pub async fn get_all_post_info_handler(
             PostError::NotFound
             | PostError::Unauthorized
             | PostError::InvalidSemanticId
-            | PostError::DuplicatedSemanticId
-            | PostError::DuplicatedLabelName => {
+            | PostError::DuplicatedSemanticId => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
-	import PostLabel from '$lib/post/framework/ui/PostLabel.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 
 	const { postInfo }: { postInfo: PostInfoViewModel } = $props();
 </script>

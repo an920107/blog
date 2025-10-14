@@ -1,4 +1,4 @@
-import type { Label } from '$lib/post/domain/entity/label';
+import type { Label } from '$lib/label/domain/entity/label';
 
 export class PostInfo {
 	readonly id: number;

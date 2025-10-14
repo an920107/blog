@@ -1,6 +1,7 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
+use label::adapter::gateway::label_db_mapper::LabelMapper;
 
-use crate::{adapter::gateway::label_db_mapper::LabelMapper, domain::entity::post_info::PostInfo};
+use crate::domain::entity::post_info::PostInfo;
 
 pub struct PostInfoMapper {
     pub id: i32,

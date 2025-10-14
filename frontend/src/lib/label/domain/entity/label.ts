@@ -1,4 +1,4 @@
-import type { Color } from '$lib/post/domain/entity/color';
+import type { Color } from '$lib/label/domain/entity/color';
 
 export class Label {
 	readonly id: number;

@@ -1,7 +1,7 @@
 import {
 	LabelViewModel,
 	type DehydratedLabelProps,
-} from '$lib/post/adapter/presenter/labelViewModel';
+} from '$lib/label/adapter/presenter/labelViewModel';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export class PostInfoViewModel {

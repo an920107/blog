@@ -10,6 +10,7 @@ use actix_web::{
 };
 use auth::framework::web::auth_web_routes::configure_auth_routes;
 use image::framework::web::image_web_routes::configure_image_routes;
+use label::framework::web::label_web_routes::configure_label_routes;
 use openidconnect::reqwest;
 use post::framework::web::post_web_routes::configure_post_routes;
 use server::{
@@ -84,9 +85,11 @@ fn create_app(
         .wrap(session_middleware_builder.build())
         .app_data(web::Data::from(container.auth_controller))
         .app_data(web::Data::from(container.image_controller))
+        .app_data(web::Data::from(container.label_controller))
         .app_data(web::Data::from(container.post_controller))
         .configure(configure_api_doc_routes)
         .configure(configure_auth_routes)
         .configure(configure_image_routes)
+        .configure(configure_label_routes)
         .configure(configure_post_routes)
 }

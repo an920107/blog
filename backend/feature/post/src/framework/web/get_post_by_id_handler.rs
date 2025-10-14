@@ -16,7 +16,8 @@ use crate::{
     description = "Only authenticated users can access unpublished posts. Accepts either numeric ID or semantic ID.",
     responses (
         (status = 200, body = PostResponseDto),
-        (status = 404, description = "Post not found")
+        (status = 401, description = PostError::Unauthorized),
+        (status = 404, description = PostError::NotFound),
     )
 )]
 pub async fn get_post_by_id_handler(
@@ -34,9 +35,7 @@ pub async fn get_post_by_id_handler(
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
-            PostError::InvalidSemanticId
-            | PostError::DuplicatedSemanticId
-            | PostError::DuplicatedLabelName => {
+            PostError::InvalidSemanticId | PostError::DuplicatedSemanticId => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

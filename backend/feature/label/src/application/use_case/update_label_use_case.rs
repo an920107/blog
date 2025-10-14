@@ -3,13 +3,13 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::post_error::PostError, gateway::label_repository::LabelRepository},
+    application::{error::label_error::LabelError, gateway::label_repository::LabelRepository},
     domain::entity::label::Label,
 };
 
 #[async_trait]
 pub trait UpdateLabelUseCase: Send + Sync {
-    async fn execute(&self, label: Label) -> Result<(), PostError>;
+    async fn execute(&self, label: Label) -> Result<(), LabelError>;
 }
 
 pub struct UpdateLabelUseCaseImpl {
@@ -24,7 +24,7 @@ impl UpdateLabelUseCaseImpl {
 
 #[async_trait]
 impl UpdateLabelUseCase for UpdateLabelUseCaseImpl {
-    async fn execute(&self, label: Label) -> Result<(), PostError> {
+    async fn execute(&self, label: Label) -> Result<(), LabelError> {
         self.label_repository.update_label(label).await
     }
 }

@@ -1,0 +1,16 @@
+[package]
+name = "label"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+sentry.workspace = true
+serde.workspace = true
+sqlx.workspace = true
+utoipa.workspace = true
+
+auth.workspace = true
+common.workspace = true

@@ -2,12 +2,13 @@ use std::collections::HashMap;
 
 use async_trait::async_trait;
 use common::framework::error::DatabaseError;
+use label::adapter::gateway::{color_db_mapper::ColorMapper, label_db_mapper::LabelMapper};
 use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{
-        color_db_mapper::ColorMapper, label_db_mapper::LabelMapper, post_db_mapper::PostMapper,
-        post_db_service::PostDbService, post_info_db_mapper::PostInfoMapper,
+        post_db_mapper::PostMapper, post_db_service::PostDbService,
+        post_info_db_mapper::PostInfoMapper,
     },
     application::error::post_error::PostError,
 };

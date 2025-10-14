@@ -27,25 +27,32 @@ use image::{
         storage::image_storage_impl::ImageStorageImpl,
     },
 };
+use label::{
+    adapter::{
+        delivery::label_controller::{LabelController, LabelControllerImpl},
+        gateway::label_repository_impl::LabelRepositoryImpl,
+    },
+    application::use_case::{
+        create_label_use_case::CreateLabelUseCaseImpl,
+        get_all_labels_use_case::GetAllLabelsUseCaseImpl,
+        update_label_use_case::UpdateLabelUseCaseImpl,
+    },
+    framework::db::label_db_service_impl::LabelDbServiceImpl,
+};
 use openidconnect::reqwest;
 use post::{
     adapter::{
         delivery::post_controller::{PostController, PostControllerImpl},
-        gateway::{
-            label_repository_impl::LabelRepositoryImpl, post_repository_impl::PostRepositoryImpl,
-        },
+        gateway::post_repository_impl::PostRepositoryImpl,
     },
     application::use_case::{
-        create_label_use_case::CreateLabelUseCaseImpl, create_post_use_case::CreatePostUseCaseImpl,
-        get_all_labels_use_case::GetAllLabelsUseCaseImpl,
+        create_post_use_case::CreatePostUseCaseImpl,
         get_all_post_info_use_case::GetAllPostInfoUseCaseImpl,
         get_post_by_id_use_case::GetFullPostUseCaseImpl,
         get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCaseImpl,
-        update_label_use_case::UpdateLabelUseCaseImpl, update_post_use_case::UpdatePostUseCaseImpl,
+        update_post_use_case::UpdatePostUseCaseImpl,
     },
-    framework::db::{
-        label_db_service_impl::LabelDbServiceImpl, post_db_service_impl::PostDbServiceImpl,
-    },
+    framework::db::post_db_service_impl::PostDbServiceImpl,
 };
 use sqlx::{Pool, Postgres};
 
@@ -54,6 +61,7 @@ use crate::configuration::Configuration;
 pub struct Container {
     pub auth_controller: Arc<dyn AuthController>,
     pub image_controller: Arc<dyn ImageController>,
+    pub label_controller: Arc<dyn LabelController>,
     pub post_controller: Arc<dyn PostController>,
 }
 
@@ -87,12 +95,26 @@ impl Container {
             get_user_use_case,
         ));
 
-        // Post
-        let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool.clone()));
+        // Label
         let label_db_service = Arc::new(LabelDbServiceImpl::new(db_pool.clone()));
 
-        let post_repository = Arc::new(PostRepositoryImpl::new(post_db_service.clone()));
         let label_repository = Arc::new(LabelRepositoryImpl::new(label_db_service.clone()));
+
+        let create_label_use_case = Arc::new(CreateLabelUseCaseImpl::new(label_repository.clone()));
+        let update_label_use_case = Arc::new(UpdateLabelUseCaseImpl::new(label_repository.clone()));
+        let get_all_labels_use_case =
+            Arc::new(GetAllLabelsUseCaseImpl::new(label_repository.clone()));
+
+        let label_controller = Arc::new(LabelControllerImpl::new(
+            create_label_use_case,
+            update_label_use_case,
+            get_all_labels_use_case,
+        ));
+
+        // Post
+        let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool.clone()));
+
+        let post_repository = Arc::new(PostRepositoryImpl::new(post_db_service.clone()));
 
         let get_all_post_info_use_case =
             Arc::new(GetAllPostInfoUseCaseImpl::new(post_repository.clone()));
@@ -104,10 +126,6 @@ impl Container {
         ));
         let create_post_use_case = Arc::new(CreatePostUseCaseImpl::new(post_repository.clone()));
         let update_post_use_case = Arc::new(UpdatePostUseCaseImpl::new(post_repository.clone()));
-        let create_label_use_case = Arc::new(CreateLabelUseCaseImpl::new(label_repository.clone()));
-        let update_label_use_case = Arc::new(UpdateLabelUseCaseImpl::new(label_repository.clone()));
-        let get_all_labels_use_case =
-            Arc::new(GetAllLabelsUseCaseImpl::new(label_repository.clone()));
 
         let post_controller = Arc::new(PostControllerImpl::new(
             get_all_post_info_use_case,
@@ -115,9 +133,6 @@ impl Container {
             get_post_by_semantic_id_use_case,
             create_post_use_case,
             update_post_use_case,
-            create_label_use_case,
-            update_label_use_case,
-            get_all_labels_use_case,
         ));
 
         // Image
@@ -141,6 +156,7 @@ impl Container {
         Self {
             auth_controller,
             image_controller,
+            label_controller,
             post_controller,
         }
     }

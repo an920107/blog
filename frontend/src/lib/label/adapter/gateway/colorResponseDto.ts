@@ -1,4 +1,4 @@
-import { Color } from '$lib/post/domain/entity/color';
+import { Color } from '$lib/label/domain/entity/color';
 import z from 'zod';
 
 export const ColorResponseSchema = z.object({

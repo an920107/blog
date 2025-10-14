@@ -1877,6 +1877,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "label"
+version = "0.3.1"
+dependencies = [
+ "actix-web",
+ "anyhow",
+ "async-trait",
+ "auth",
+ "common",
+ "sentry",
+ "serde",
+ "sqlx",
+ "utoipa",
+]
+
+[[package]]
 name = "language-tags"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2407,6 +2422,7 @@ dependencies = [
  "auth",
  "chrono",
  "common",
+ "label",
  "regex",
  "sentry",
  "serde",
@@ -3179,6 +3195,7 @@ dependencies = [
  "env_logger",
  "hex",
  "image",
+ "label",
  "openidconnect",
  "percent-encoding",
  "post",

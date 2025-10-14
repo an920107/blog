@@ -1,9 +1,8 @@
 use chrono::{DateTime, Utc};
+use label::domain::entity::label::Label;
 use regex::Regex;
 
 use crate::application::error::post_error::PostError;
-
-use super::label::Label;
 
 pub struct PostInfo {
     pub id: i32,
@@ -21,7 +20,7 @@ impl PostInfo {
             return Err(PostError::InvalidSemanticId);
         }
 
-        let re = Regex::new(r"^[0-9a-zA-Z_\-]+$").unwrap();
+        let re = Regex::new(r"^[0-9a-zA-Z_-]+$").unwrap();
         if !re.is_match(&self.semantic_id) {
             return Err(PostError::InvalidSemanticId);
         }

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { LabelViewModel } from '$lib/post/adapter/presenter/labelViewModel';
-	import PostLabel from '$lib/post/framework/ui/PostLabel.svelte';
+	import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 
 	const { labels }: { labels: readonly LabelViewModel[] } = $props();
 </script>

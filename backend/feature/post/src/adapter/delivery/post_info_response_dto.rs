@@ -1,9 +1,8 @@
+use label::adapter::delivery::label_response_dto::LabelResponseDto;
 use serde::Serialize;
 use utoipa::ToSchema;
 
 use crate::domain::entity::post_info::PostInfo;
-
-use super::label_response_dto::LabelResponseDto;
 
 #[derive(Serialize, ToSchema)]
 pub struct PostInfoResponseDto {

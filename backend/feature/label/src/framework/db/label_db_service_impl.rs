@@ -4,7 +4,7 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{label_db_mapper::LabelMapper, label_db_service::LabelDbService},
-    application::error::post_error::PostError,
+    application::error::label_error::LabelError,
     framework::db::label_record::LabelRecord,
 };
 
@@ -20,7 +20,7 @@ impl LabelDbServiceImpl {
 
 #[async_trait]
 impl LabelDbService for LabelDbServiceImpl {
-    async fn create_label(&self, label: LabelMapper) -> Result<i32, PostError> {
+    async fn create_label(&self, label: LabelMapper) -> Result<i32, LabelError> {
         let id = sqlx::query_scalar!(
             r#"
             INSERT INTO label (name, color)
@@ -35,16 +35,16 @@ impl LabelDbService for LabelDbServiceImpl {
         .map_err(|e| {
             if let sqlx::Error::Database(db_err) = &e {
                 if db_err.constraint() == Some("idx_label_name") {
-                    return PostError::DuplicatedLabelName;
+                    return LabelError::DuplicatedLabelName;
                 }
             }
-            PostError::Unexpected(DatabaseError(e).into())
+            LabelError::Unexpected(DatabaseError(e).into())
         })?;
 
         Ok(id)
     }
 
-    async fn update_label(&self, label: LabelMapper) -> Result<(), PostError> {
+    async fn update_label(&self, label: LabelMapper) -> Result<(), LabelError> {
         let affected_rows = sqlx::query!(
             r#"
             UPDATE label
@@ -60,21 +60,21 @@ impl LabelDbService for LabelDbServiceImpl {
         .map_err(|e| {
             if let sqlx::Error::Database(db_err) = &e {
                 if db_err.constraint() == Some("idx_label_name") {
-                    return PostError::DuplicatedLabelName;
+                    return LabelError::DuplicatedLabelName;
                 }
             }
-            PostError::Unexpected(DatabaseError(e).into())
+            LabelError::Unexpected(DatabaseError(e).into())
         })?
         .rows_affected();
 
         if affected_rows == 0 {
-            return Err(PostError::NotFound);
+            return Err(LabelError::NotFound);
         }
 
         Ok(())
     }
 
-    async fn get_label_by_id(&self, id: i32) -> Result<LabelMapper, PostError> {
+    async fn get_label_by_id(&self, id: i32) -> Result<LabelMapper, LabelError> {
         let record = sqlx::query_as!(
             LabelRecord,
             r#"
@@ -86,15 +86,15 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_optional(&self.db_pool)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        .map_err(|e| LabelError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
             Some(record) => Ok(record.into_mapper()),
-            None => Err(PostError::NotFound),
+            None => Err(LabelError::NotFound),
         }
     }
 
-    async fn get_all_labels(&self) -> Result<Vec<LabelMapper>, PostError> {
+    async fn get_all_labels(&self) -> Result<Vec<LabelMapper>, LabelError> {
         let records = sqlx::query_as!(
             LabelRecord,
             r#"
@@ -106,7 +106,7 @@ impl LabelDbService for LabelDbServiceImpl {
         )
         .fetch_all(&self.db_pool)
         .await
-        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        .map_err(|e| LabelError::Unexpected(DatabaseError(e).into()))?;
 
         let mappers = records
             .into_iter()

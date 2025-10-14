@@ -18,6 +18,9 @@ use crate::{
     summary = "Create a new post",
     responses(
         (status = 201, body = PostResponseDto),
+        (status = 400, description = PostError::InvalidSemanticId),
+        (status = 401, description = PostError::Unauthorized),
+        (status = 409, description = PostError::DuplicatedSemanticId),
     ),
     security(
         ("oauth2" = [])
@@ -38,7 +41,7 @@ pub async fn create_post_handler(
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
             PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
-            PostError::NotFound | PostError::DuplicatedLabelName => {
+            PostError::NotFound => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

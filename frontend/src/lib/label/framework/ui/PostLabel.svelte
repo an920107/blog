@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LabelViewModel } from '$lib/post/adapter/presenter/labelViewModel';
+	import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 
 	const { label }: { label: LabelViewModel } = $props();
 </script>

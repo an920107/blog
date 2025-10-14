@@ -18,4 +18,5 @@ utoipa-redoc.workspace = true
 
 auth.workspace = true
 image.workspace = true
+label.workspace = true
 post.workspace = true

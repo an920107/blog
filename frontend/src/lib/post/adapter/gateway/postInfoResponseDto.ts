@@ -1,4 +1,4 @@
-import { LabelResponseDto, LabelResponseSchema } from '$lib/post/adapter/gateway/labelResponseDto';
+import { LabelResponseDto, LabelResponseSchema } from '$lib/label/adapter/gateway/labelResponseDto';
 import { PostInfo } from '$lib/post/domain/entity/postInfo';
 import z from 'zod';
 

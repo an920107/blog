@@ -3,36 +3,32 @@ use anyhow::anyhow;
 use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
-    adapter::delivery::{label_response_dto::LabelResponseDto, post_controller::PostController},
-    application::error::post_error::PostError,
+    adapter::delivery::{label_controller::LabelController, label_response_dto::LabelResponseDto},
+    application::error::label_error::LabelError,
 };
 
 #[utoipa::path(
     get,
     path = "/label",
-    tag = "post",
+    tag = "label",
     summary = "Get all labels",
     responses(
         (status = 200, body = Vec<LabelResponseDto>)
     )
 )]
 pub async fn get_all_labels_handler(
-    post_controller: web::Data<dyn PostController>,
+    label_controller: web::Data<dyn LabelController>,
 ) -> impl Responder {
-    let result = post_controller.get_all_labels().await;
+    let result = label_controller.get_all_labels().await;
 
     match result {
         Ok(labels) => HttpResponse::Ok().json(labels),
         Err(e) => match e {
-            PostError::NotFound
-            | PostError::Unauthorized
-            | PostError::InvalidSemanticId
-            | PostError::DuplicatedSemanticId
-            | PostError::DuplicatedLabelName => {
+            LabelError::NotFound | LabelError::Unauthorized | LabelError::DuplicatedLabelName => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }
-            PostError::Unexpected(e) => {
+            LabelError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
