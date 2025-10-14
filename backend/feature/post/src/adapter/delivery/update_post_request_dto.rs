@@ -12,8 +12,8 @@ pub struct UpdatePostRequestDto {
     pub content: String,
     pub label_ids: Vec<i32>,
 
-    #[schema(format = Uri)]
-    pub preview_image_url: String,
+    #[schema(required, format = Uri)]
+    pub preview_image_url: Option<String>,
 
     #[schema(required, format = DateTime)]
     pub published_time: Option<String>,

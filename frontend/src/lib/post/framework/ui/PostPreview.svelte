@@ -7,11 +7,11 @@
 	let isImageLoading = $state(true);
 	let isImageError = $state(false);
 
-	function handleImageLoad() {
+	function onImageLoad() {
 		isImageLoading = false;
 	}
 
-	function handleImageError() {
+	function onImageError() {
 		isImageLoading = false;
 		isImageError = true;
 	}
@@ -27,10 +27,10 @@
 			class="rounded-2xl object-cover transition-opacity duration-300
                 {isImageLoading ? 'opacity-0' : 'opacity-100'}
                 {isImageError ? 'hidden' : ''}"
-			src={postInfo.previewImageUrl.href}
+			src={postInfo.previewImageUrl?.href}
 			alt={postInfo.title}
-			onload={handleImageLoad}
-			onerror={handleImageError}
+			onload={onImageLoad}
+			onerror={onImageError}
 		/>
 		{#if isImageLoading || isImageError}
 			<div class="absolute inset-0 flex items-center justify-center bg-gray-200"></div>

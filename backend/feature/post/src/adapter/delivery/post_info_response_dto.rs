@@ -14,7 +14,7 @@ pub struct PostInfoResponseDto {
     pub labels: Vec<LabelResponseDto>,
 
     #[schema(format = Uri)]
-    pub preview_image_url: String,
+    pub preview_image_url: Option<String>,
 
     #[schema(format = DateTime)]
     pub published_time: Option<String>,

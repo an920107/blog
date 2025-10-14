@@ -5,6 +5,11 @@
 	import '../app.css';
 	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import { Toaster } from '$lib/common/framework/components/ui/sonner';
+	import { Container } from '$lib/container';
+	import { setContext } from 'svelte';
+
+	const container = new Container(fetch);
+	setContext(Container.name, container);
 </script>
 
 <GoogleAnalytics />

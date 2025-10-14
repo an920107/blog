@@ -2,6 +2,12 @@ import type { Post } from '$lib/post/domain/entity/post';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export interface PostRepository {
-	getAllPosts(): Promise<PostInfo[]>;
+	getAllPosts(showUnpublished: boolean): Promise<PostInfo[]>;
 	getPost(id: string): Promise<Post | null>;
+	createPost(params: CreatePostParams): Promise<Post>;
+}
+
+export interface CreatePostParams {
+	semanticId: string;
+	title: string;
 }

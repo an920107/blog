@@ -9,7 +9,7 @@ export class PostInfoViewModel {
 	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
-	readonly previewImageUrl: URL;
+	readonly previewImageUrl: URL | null;
 	readonly labels: readonly LabelViewModel[];
 	readonly publishedTime: Date | null;
 
@@ -18,7 +18,7 @@ export class PostInfoViewModel {
 		semanticId: string;
 		title: string;
 		description: string;
-		previewImageUrl: URL;
+		previewImageUrl: URL | null;
 		labels: readonly LabelViewModel[];
 		publishedTime: Date | null;
 	}) {
@@ -49,12 +49,17 @@ export class PostInfoViewModel {
 			publishedTime = new Date(props.publishedTime);
 		}
 
+		let previewImageUrl: URL | null = null;
+		if (props.previewImageUrl) {
+			previewImageUrl = new URL(props.previewImageUrl);
+		}
+
 		return new PostInfoViewModel({
 			id: props.id,
 			semanticId: props.semanticId,
 			title: props.title,
 			description: props.description,
-			previewImageUrl: new URL(props.previewImageUrl),
+			previewImageUrl: previewImageUrl,
 			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
 			publishedTime: publishedTime,
 		});
@@ -74,7 +79,7 @@ export class PostInfoViewModel {
 			semanticId: this.semanticId,
 			title: this.title,
 			description: this.description,
-			previewImageUrl: this.previewImageUrl.href,
+			previewImageUrl: this.previewImageUrl?.href ?? null,
 			labels: this.labels.map((label) => label.dehydrate()),
 			publishedTime: this.publishedTime?.getTime() ?? null,
 		};
@@ -86,7 +91,7 @@ export interface DehydratedPostInfoProps {
 	semanticId: string;
 	title: string;
 	description: string;
-	previewImageUrl: string;
+	previewImageUrl: string | null;
 	labels: DehydratedLabelProps[];
 	publishedTime: number | null;
 }

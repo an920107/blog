@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import UploadImageDialoag from './UploadImageDialoag.svelte';
-	import { ImageBloc, ImageEventType } from '$lib/image/adapter/presenter/imageBloc';
-	import { StatusType } from '$lib/common/adapter/presenter/asyncState';
+	import UploadImageDialoag from '$lib/image/framework/ui/UploadImageDialoag.svelte';
 	import { toast } from 'svelte-sonner';
+	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
 
-	const imageBloc = getContext<ImageBloc>(ImageBloc.name);
-	const state = $derived($imageBloc);
-
-	const isLoading = $derived(state.status === StatusType.Loading);
+	const store = getContext<ImageUploadedStore>(ImageUploadedStore.name);
+	const state = $derived($store);
+	const { trigger: uploadImage } = store;
 
 	async function onUploadImageDialogSubmit(file: File) {
-		const state = await imageBloc.dispatch({ event: ImageEventType.ImageUploadedEvent, file });
+		const state = await uploadImage(file);
 
-		if (state.status === StatusType.Success) {
+		if (state.isSuccess()) {
 			const imageInfo = state.data;
 			console.log('Image URL', imageInfo.url.href);
 
@@ -30,7 +28,7 @@
 					? 'The URL is copied to clipboard'
 					: 'The URL is printed in console',
 			});
-		} else if (state.status === StatusType.Error) {
+		} else if (state.isError()) {
 			toast.error('Failed to upload image', {
 				description: state.error?.message ?? 'Unknown error',
 			});
@@ -41,7 +39,7 @@
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
 		<h1 class="py-16 text-5xl font-bold text-gray-800">Image</h1>
-		<UploadImageDialoag disabled={isLoading} onSubmit={onUploadImageDialogSubmit} />
+		<UploadImageDialoag disabled={state.isLoading()} onSubmit={onUploadImageDialogSubmit} />
 	</div>
 	<p>Gallery is currently unavailable.</p>
 </div>

@@ -6,7 +6,7 @@ pub struct PostWithLabelRecord {
     pub semantic_id: String,
     pub title: String,
     pub description: String,
-    pub preview_image_url: String,
+    pub preview_image_url: Option<String>,
     pub content: String,
     pub published_time: Option<NaiveDateTime>,
 

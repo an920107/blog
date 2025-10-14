@@ -1,7 +1,10 @@
+import type { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
 import type { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseDto';
+import type { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
 import type { PostResponseDto } from '$lib/post/adapter/gateway/postResponseDto';
 
 export interface PostApiService {
-	getAllPosts(): Promise<PostInfoResponseDto[]>;
+	getAllPosts(searchParams: PostListQueryDto): Promise<PostInfoResponseDto[]>;
 	getPost(id: string): Promise<PostResponseDto | null>;
+	createPost(payload: CreatePostRequestDto): Promise<PostResponseDto>;
 }

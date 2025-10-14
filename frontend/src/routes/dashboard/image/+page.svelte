@@ -1,19 +1,12 @@
 <script lang="ts">
-	import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
-	import { ImageRepositoryImpl } from '$lib/image/adapter/gateway/imageRepositoryImpl';
-	import { ImageBloc } from '$lib/image/adapter/presenter/imageBloc';
-	import type { ImageRepository } from '$lib/image/application/gateway/imageRepository';
-	import { UploadImageUseCase } from '$lib/image/application/useCase/uploadImageUseCase';
-	import { ImageApiServiceImpl } from '$lib/image/framework/api/imageApiServiceImpl';
+	import { Container } from '$lib/container';
+	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
 	import ImageManagementPage from '$lib/image/framework/ui/ImageManagementPage.svelte';
-	import { setContext } from 'svelte';
+	import { getContext, setContext } from 'svelte';
 
-	const imageApiService: ImageApiService = new ImageApiServiceImpl(fetch);
-	const imageRepository: ImageRepository = new ImageRepositoryImpl(imageApiService);
-	const uploadImageUseCase = new UploadImageUseCase(imageRepository);
-	const imageBloc = new ImageBloc(uploadImageUseCase);
-
-	setContext(ImageBloc.name, imageBloc);
+	const container = getContext<Container>(Container.name);
+	const store = container.createImageUploadedStore();
+	setContext(ImageUploadedStore.name, store);
 </script>
 
 <ImageManagementPage />

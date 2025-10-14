@@ -36,17 +36,13 @@
 		}
 
 		await uploadImage(file);
-		close();
 		files = undefined;
 		fileInputErrorMessage = null;
-	}
-
-	function close() {
 		open = false;
 	}
 </script>
 
-<Dialog {open} onOpenChange={(val) => (open = val)}>
+<Dialog bind:open>
 	<DialogTrigger class={buttonVariants({ variant: 'default' })}>Upload</DialogTrigger>
 	<DialogContent
 		showCloseButton={false}
@@ -57,7 +53,7 @@
 			<DialogTitle>Upload Image</DialogTitle>
 		</DialogHeader>
 
-		<form id="upload-form" onsubmit={onSubmit}>
+		<form id="upload-image-form" onsubmit={onSubmit}>
 			<Label for="file-input" class="pb-2">
 				{`Image File (${imageMimeTypes.join(', ')})`}
 			</Label>
@@ -76,8 +72,8 @@
 		</form>
 
 		<DialogFooter class="mt-6">
-			<Button variant="outline" onclick={close} {disabled}>Cancel</Button>
-			<Button type="submit" form="upload-form" {disabled}>Submit</Button>
+			<Button variant="outline" onclick={() => (open = false)} {disabled}>Cancel</Button>
+			<Button type="submit" form="upload-image-form" {disabled}>Submit</Button>
 		</DialogFooter>
 	</DialogContent>
 </Dialog>

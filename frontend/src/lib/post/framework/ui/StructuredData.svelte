@@ -10,7 +10,7 @@
 		headline: string;
 		description: string;
 		datePublished: Date;
-		image: URL;
+		image: URL | null;
 	} = $props();
 
 	const structuredData = $derived({
@@ -19,7 +19,7 @@
 		headline: headline,
 		description: description,
 		datePublished: datePublished.toISOString(),
-		image: image.href,
+		image: image?.href,
 	});
 
 	const jsonLdScript = $derived(

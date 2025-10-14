@@ -4,7 +4,7 @@ import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 export class GetAllPostsUseCase {
 	constructor(private readonly postRepository: PostRepository) {}
 
-	execute(): Promise<PostInfo[]> {
-		return this.postRepository.getAllPosts();
+	execute(showUnpublished: boolean = false): Promise<PostInfo[]> {
+		return this.postRepository.getAllPosts(showUnpublished);
 	}
 }

@@ -1,3 +1,4 @@
+import { HttpError } from '$lib/common/framework/web/httpError';
 import { Environment } from '$lib/environment';
 import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
 import { ImageInfoResponseDto } from '$lib/image/adapter/gateway/imageInfoResponseDto';
@@ -17,8 +18,9 @@ export class ImageApiServiceImpl implements ImageApiService {
 		});
 
 		if (!response.ok) {
-			throw new Error(`${response.status} ${response.statusText}`);
+			throw new HttpError(response.status, url);
 		}
+
 		const data = await response.json();
 		return ImageInfoResponseDto.fromJson(data);
 	}

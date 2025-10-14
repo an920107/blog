@@ -1,13 +1,14 @@
 <script lang="ts">
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
-	import { PostListBloc, PostListEventType } from '$lib/post/adapter/presenter/postListBloc';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
 	import { getContext, onMount } from 'svelte';
 
-	const postListBloc = getContext<PostListBloc>(PostListBloc.name);
-	const state = $derived($postListBloc);
+	const store = getContext<PostsListedStore>(PostsListedStore.name);
+	const state = $derived($store);
+	const { trigger: loadPosts } = store;
 
-	onMount(() => postListBloc.dispatch({ event: PostListEventType.PostListLoadedEvent }));
+	onMount(() => loadPosts());
 </script>
 
 <svelte:head>

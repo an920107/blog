@@ -7,7 +7,7 @@ pub struct PostInfoMapper {
     pub semantic_id: String,
     pub title: String,
     pub description: String,
-    pub preview_image_url: String,
+    pub preview_image_url: Option<String>,
     pub published_time: Option<NaiveDateTime>,
     pub labels: Vec<LabelMapper>,
 }

@@ -1,5 +1,5 @@
 <script>
-	import MottoAnimatedMark from './MottoAnimatedMark.svelte';
+	import MottoAnimatedMark from '$lib/home/framework/ui/MottoAnimatedMark.svelte';
 </script>
 
 <div
