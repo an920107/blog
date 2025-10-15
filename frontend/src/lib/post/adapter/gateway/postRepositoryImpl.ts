@@ -11,8 +11,8 @@ import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 export class PostRepositoryImpl implements PostRepository {
 	constructor(private readonly postApiService: PostApiService) {}
 
-	async getAllPosts(showUnpublished: boolean): Promise<PostInfo[]> {
-		const queryDto = new PostListQueryDto({ showUnpublished });
+	async getAllPosts(showUnpublished: boolean, labelId?: number): Promise<PostInfo[]> {
+		const queryDto = new PostListQueryDto({ showUnpublished, labelId });
 		const responseDtos = await this.postApiService.getAllPosts(queryDto);
 		return responseDtos.map((dto) => dto.toEntity());
 	}

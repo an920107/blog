@@ -2,7 +2,7 @@
 	import { Container } from '$lib/container';
 	import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import PostManagementPage from '$lib/post/framework/ui/PostManagementPage.svelte';
+	import PostOverallDashboardPage from '$lib/post/framework/ui/PostOverallDashboardPage.svelte';
 	import { getContext, setContext } from 'svelte';
 	import type { PageProps } from './$types';
 	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
@@ -18,4 +18,4 @@
 	setContext(PostsListedStore.name, postsListedStore);
 </script>
 
-<PostManagementPage />
+<PostOverallDashboardPage />

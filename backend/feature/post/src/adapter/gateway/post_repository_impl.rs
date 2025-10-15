@@ -22,9 +22,13 @@ impl PostRepositoryImpl {
 
 #[async_trait]
 impl PostRepository for PostRepositoryImpl {
-    async fn get_all_post_info(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError> {
+    async fn get_all_post_info(
+        &self,
+        is_published_only: bool,
+        label_id: Option<i32>,
+    ) -> Result<Vec<PostInfo>, PostError> {
         self.post_db_service
-            .get_all_post_info(is_published_only)
+            .get_all_post_info(is_published_only, label_id)
             .await
             .map(|mappers| {
                 mappers

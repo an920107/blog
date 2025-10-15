@@ -33,6 +33,7 @@ impl PostDbService for PostDbServiceImpl {
     async fn get_all_post_info(
         &self,
         is_published_only: bool,
+        label_id: Option<i32>,
     ) -> Result<Vec<PostInfoMapper>, PostError> {
         let mut query_builder = sqlx::QueryBuilder::new(
             r#"
@@ -59,6 +60,13 @@ impl PostDbService for PostDbServiceImpl {
 
         if is_published_only {
             query_builder.push(r#" AND p.published_time IS NOT NULL"#);
+        }
+
+        if let Some(label_id) = label_id {
+            // Only include posts that have the given label
+            query_builder.push(r#" AND EXISTS (SELECT 1 FROM post_label pl2 WHERE pl2.post_id = p.id AND pl2.label_id = "#);
+            query_builder.push_bind(label_id);
+            query_builder.push(r#")"#);
         }
 
         query_builder.push(r#" ORDER BY p.id, pl."order""#);

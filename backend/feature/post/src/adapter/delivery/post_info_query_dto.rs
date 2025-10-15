@@ -5,4 +5,6 @@ use utoipa::IntoParams;
 pub struct PostQueryDto {
     #[param(default = true)]
     pub is_published_only: Option<bool>,
+
+    pub label_id: Option<i32>,
 }

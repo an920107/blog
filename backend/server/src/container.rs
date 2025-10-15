@@ -35,6 +35,7 @@ use label::{
     application::use_case::{
         create_label_use_case::CreateLabelUseCaseImpl,
         get_all_labels_use_case::GetAllLabelsUseCaseImpl,
+        get_label_by_id_use_case::GetLabelByIdUseCaseImpl,
         update_label_use_case::UpdateLabelUseCaseImpl,
     },
     framework::db::label_db_service_impl::LabelDbServiceImpl,
@@ -104,11 +105,14 @@ impl Container {
         let update_label_use_case = Arc::new(UpdateLabelUseCaseImpl::new(label_repository.clone()));
         let get_all_labels_use_case =
             Arc::new(GetAllLabelsUseCaseImpl::new(label_repository.clone()));
+        let get_label_by_id_use_case =
+            Arc::new(GetLabelByIdUseCaseImpl::new(label_repository.clone()));
 
         let label_controller = Arc::new(LabelControllerImpl::new(
             create_label_use_case,
             update_label_use_case,
             get_all_labels_use_case,
+            get_label_by_id_use_case,
         ));
 
         // Post

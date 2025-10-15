@@ -7,7 +7,7 @@
 	});
 
 	type FormParams = z.infer<typeof formSchema>;
-	export type CreateLabelDialogFormParams = FormParams;
+	export type EditLabelDialogFormParams = FormParams;
 </script>
 
 <script lang="ts">
@@ -24,22 +24,30 @@
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import { Label as LabelEntity } from '$lib/label/domain/entity/label';
 	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
+	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
+	import InputError from '$lib/common/framework/ui/InputError.svelte';
 
 	const {
+		title,
+		triggerButtonText,
 		disabled,
+		defaultValues = {
+			name: '',
+			color: '#dddddd',
+		},
 		onSubmit: createLabel,
 	}: {
+		title: string;
+		triggerButtonText: string;
 		disabled: boolean;
+		defaultValues?: FormParams;
 		onSubmit: (params: FormParams) => Promise<boolean>;
 	} = $props();
 
 	let open = $state(false);
 
-	let formData = $state<FormParams>({
-		name: '',
-		color: '#dddddd',
-	});
-	let formErrors = $state<Partial<Record<keyof FormParams, string>>>({});
+	let formData: FormParams = $state(defaultValues);
+	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
 	const previewLabel = $derived(
 		LabelViewModel.fromEntity(
@@ -68,51 +76,60 @@
 			return;
 		}
 
-		formData = {
-			name: '',
-			color: '#dddddd',
-		};
+		formData = defaultValues;
 		open = false;
 	}
 </script>
 
 <Dialog bind:open>
-	<DialogTrigger class={buttonVariants({ variant: 'default' })}>Create</DialogTrigger>
+	<DialogTrigger class={buttonVariants({ variant: 'default' })} {disabled}>
+		{triggerButtonText}
+	</DialogTrigger>
 	<DialogContent
 		showCloseButton={false}
 		onInteractOutside={(e) => e.preventDefault()}
 		onEscapeKeydown={(e) => e.preventDefault()}
 	>
 		<DialogHeader class="mb-4">
-			<DialogTitle>Create Label</DialogTitle>
+			<DialogTitle>{title}</DialogTitle>
 		</DialogHeader>
 
 		<form id="create-label-form" onsubmit={onSubmit} class="space-y-3">
 			<div>
 				<Label for="name-input" class="pb-2">Name</Label>
-				<Input
-					id="name-input"
-					type="text"
-					aria-invalid={formErrors.name !== undefined}
-					bind:value={formData.name}
-				/>
-				{#if formErrors.name}
-					<p class="text-sm text-red-500">{formErrors.name}</p>
-				{/if}
+				<div class="flex flex-row items-center gap-x-2">
+					<Input
+						id="name-input"
+						type="text"
+						aria-invalid={formErrors.name !== undefined}
+						bind:value={formData.name}
+					/>
+					<RestoreButton
+						for="name-input"
+						defaultValue={defaultValues.name}
+						postAction={() => (formErrors.name = undefined)}
+					/>
+				</div>
+				<InputError message={formErrors.name} />
 			</div>
 
-			<div>
+			<div class="w-fit">
 				<Label for="color-input" class="pb-2">Color</Label>
-				<Input
-					id="color-input"
-					type="color"
-					class="w-16"
-					aria-invalid={formErrors.color !== undefined}
-					bind:value={formData.color}
-				/>
-				{#if formErrors.color}
-					<p class="text-sm text-red-500">{formErrors.color}</p>
-				{/if}
+				<div class="flex flex-row items-center gap-x-2">
+					<Input
+						id="color-input"
+						type="color"
+						class="w-16"
+						aria-invalid={formErrors.color !== undefined}
+						bind:value={formData.color}
+					/>
+					<RestoreButton
+						for="color-input"
+						defaultValue={defaultValues.color}
+						postAction={() => (formErrors.color = undefined)}
+					/>
+				</div>
+				<InputError message={formErrors.color} />
 			</div>
 		</form>
 

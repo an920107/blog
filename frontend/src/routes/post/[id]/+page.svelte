@@ -10,7 +10,7 @@
 	const { id } = params;
 	const container = getContext<Container>(Container.name);
 
-	const initialData = PostViewModel.rehydrate(data.dehydratedData!);
+	const initialData = PostViewModel.rehydrate(data.dehydratedData);
 	const store = container.createPostLoadedStore(initialData);
 	setContext(PostLoadedStore.name, store);
 </script>

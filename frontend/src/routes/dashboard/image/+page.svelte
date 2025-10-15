@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Container } from '$lib/container';
 	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
-	import ImageManagementPage from '$lib/image/framework/ui/ImageManagementPage.svelte';
+	import ImageOverallDashboardPage from '$lib/image/framework/ui/ImageOverallDashboardPage.svelte';
 	import { getContext, setContext } from 'svelte';
 
 	const container = getContext<Container>(Container.name);
@@ -9,4 +9,4 @@
 	setContext(ImageUploadedStore.name, store);
 </script>
 
-<ImageManagementPage />
+<ImageOverallDashboardPage />

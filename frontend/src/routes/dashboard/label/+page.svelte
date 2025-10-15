@@ -2,7 +2,7 @@
 	import { Container } from '$lib/container';
 	import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import LabelManagementPage from '$lib/label/framework/ui/LabelManagementPage.svelte';
+	import LabelOverallDashboardPage from '$lib/label/framework/ui/LabelOverallDashboardPage.svelte';
 	import { getContext, setContext } from 'svelte';
 	import type { PageProps } from './$types';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
@@ -18,4 +18,4 @@
 	setContext(LabelsListedStore.name, labelsListedStore);
 </script>
 
-<LabelManagementPage />
+<LabelOverallDashboardPage />

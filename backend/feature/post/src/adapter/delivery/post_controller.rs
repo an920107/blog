@@ -103,7 +103,11 @@ impl PostController for PostControllerImpl {
     ) -> Result<Vec<PostInfoResponseDto>, PostError> {
         let result = self
             .get_all_post_info_use_case
-            .execute(query.is_published_only.unwrap_or(true), user_id)
+            .execute(
+                query.is_published_only.unwrap_or(true),
+                query.label_id,
+                user_id,
+            )
             .await;
 
         result.map(|post_info_list| {

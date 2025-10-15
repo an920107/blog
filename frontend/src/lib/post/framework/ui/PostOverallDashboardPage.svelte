@@ -56,22 +56,20 @@
 			</TableRow>
 		</TableHeader>
 		<TableBody>
-			{#if postsListedState.isSuccess()}
-				{#each postsListedState.data as postInfo (postInfo.id)}
-					<TableRow>
-						<TableCell>{postInfo.id}</TableCell>
-						<TableCell><span class="text-wrap">{postInfo.title}</span></TableCell>
-						<TableCell>
-							<div class="flex flex-row flex-wrap gap-2">
-								{#each postInfo.labels as label (label.id)}
-									<PostLabel {label} />
-								{/each}
-							</div>
-						</TableCell>
-						<TableCell>{postInfo.formattedPublishedTime}</TableCell>
-					</TableRow>
-				{/each}
-			{/if}
+			{#each postsListedState.data ?? [] as postInfo (postInfo.id)}
+				<TableRow>
+					<TableCell>{postInfo.id}</TableCell>
+					<TableCell><span class="text-wrap">{postInfo.title}</span></TableCell>
+					<TableCell>
+						<div class="flex flex-row flex-wrap gap-2">
+							{#each postInfo.labels as label (label.id)}
+								<PostLabel {label} />
+							{/each}
+						</div>
+					</TableCell>
+					<TableCell>{postInfo.formattedPublishedTime}</TableCell>
+				</TableRow>
+			{/each}
 		</TableBody>
 	</Table>
 </div>

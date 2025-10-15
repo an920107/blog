@@ -78,6 +78,11 @@ export class ColorViewModel {
 		return `#${toHex(this.red)}${toHex(this.green)}${toHex(this.blue)}${toHex(this.alpha)}`;
 	}
 
+	get hexWithoutAlpha(): string {
+		const hexString = this.hex;
+		return hexString.slice(0, 7);
+	}
+
 	private toHsl(): Hsl {
 		const r = this.red / 255;
 		const g = this.green / 255;

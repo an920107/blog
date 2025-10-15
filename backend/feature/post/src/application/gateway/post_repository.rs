@@ -7,7 +7,11 @@ use crate::{
 
 #[async_trait]
 pub trait PostRepository: Send + Sync {
-    async fn get_all_post_info(&self, is_published_only: bool) -> Result<Vec<PostInfo>, PostError>;
+    async fn get_all_post_info(
+        &self,
+        is_published_only: bool,
+        label_id: Option<i32>,
+    ) -> Result<Vec<PostInfo>, PostError>;
     async fn get_post_by_id(&self, id: i32) -> Result<Post, PostError>;
     async fn create_post(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError>;
     async fn update_post(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError>;

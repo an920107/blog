@@ -12,6 +12,7 @@ use crate::{
         use_case::{
             create_label_use_case::CreateLabelUseCase,
             get_all_labels_use_case::GetAllLabelsUseCase,
+            get_label_by_id_use_case::GetLabelByIdUseCase,
             update_label_use_case::UpdateLabelUseCase,
         },
     },
@@ -31,12 +32,15 @@ pub trait LabelController: Send + Sync {
     ) -> Result<LabelResponseDto, LabelError>;
 
     async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, LabelError>;
+
+    async fn get_label_by_id(&self, id: i32) -> Result<LabelResponseDto, LabelError>;
 }
 
 pub struct LabelControllerImpl {
     create_label_use_case: Arc<dyn CreateLabelUseCase>,
     update_label_use_case: Arc<dyn UpdateLabelUseCase>,
     get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
+    get_label_by_id_use_case: Arc<dyn GetLabelByIdUseCase>,
 }
 
 impl LabelControllerImpl {
@@ -44,11 +48,13 @@ impl LabelControllerImpl {
         create_label_use_case: Arc<dyn CreateLabelUseCase>,
         update_label_use_case: Arc<dyn UpdateLabelUseCase>,
         get_all_labels_use_case: Arc<dyn GetAllLabelsUseCase>,
+        get_label_by_id_use_case: Arc<dyn GetLabelByIdUseCase>,
     ) -> Self {
         Self {
             create_label_use_case,
             update_label_use_case,
             get_all_labels_use_case,
+            get_label_by_id_use_case,
         }
     }
 }
@@ -83,13 +89,17 @@ impl LabelController for LabelControllerImpl {
     }
 
     async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, LabelError> {
-        let result = self.get_all_labels_use_case.execute().await;
+        let result = self.get_all_labels_use_case.execute().await?;
 
-        result.map(|labels| {
-            labels
-                .into_iter()
-                .map(|label| LabelResponseDto::from(label))
-                .collect()
-        })
+        Ok(result
+            .into_iter()
+            .map(|label| LabelResponseDto::from(label))
+            .collect())
+    }
+
+    async fn get_label_by_id(&self, id: i32) -> Result<LabelResponseDto, LabelError> {
+        let label = self.get_label_by_id_use_case.execute(id).await?;
+
+        Ok(LabelResponseDto::from(label))
     }
 }

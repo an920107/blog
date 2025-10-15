@@ -1,19 +1,18 @@
 <script lang="ts">
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
 	import TableHeader from '$lib/common/framework/components/ui/table/table-header.svelte';
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import CreateLabelDialog, {
-		type CreateLabelDialogFormParams,
-	} from '$lib/label/framework/ui/CreateLabelDialog.svelte';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import EditLabelDialog, {
+		type EditLabelDialogFormParams,
+	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
+	import LabelOverallDashboardTabelRow from '$lib/label/framework/ui/LabelOverallDashboardTabelRow.svelte';
 
 	const labelCreatedStore = getContext<LabelCreatedStore>(LabelCreatedStore.name);
 	const labelCreatedState = $derived($labelCreatedStore);
@@ -23,7 +22,7 @@
 	const labelsListedState = $derived($labelsListedStore);
 	const { trigger: loadLabels } = labelsListedStore;
 
-	async function onCreateLabelDialogSubmit(params: CreateLabelDialogFormParams): Promise<boolean> {
+	async function onSubmit(params: EditLabelDialogFormParams): Promise<boolean> {
 		const colorViewModel = ColorViewModel.fromHex(params.color);
 		const color = colorViewModel.toEntity();
 
@@ -51,9 +50,11 @@
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
 		<h1 class="py-16 text-5xl font-bold text-gray-800">Label</h1>
-		<CreateLabelDialog
+		<EditLabelDialog
+			title="Create Label"
+			triggerButtonText="Create"
 			disabled={labelCreatedState.isLoading()}
-			onSubmit={onCreateLabelDialogSubmit}
+			{onSubmit}
 		/>
 	</div>
 	<Table>
@@ -68,21 +69,7 @@
 		<TableBody>
 			{#if labelsListedState.isSuccess()}
 				{#each labelsListedState.data as label (label.id)}
-					<TableRow>
-						<TableCell>{label.id}</TableCell>
-						<TableCell><span class="text-wrap">{label.name}</span></TableCell>
-						<TableCell>
-							<div class="flex items-center gap-2">
-								<div class="size-4 rounded-full" style="background-color: {label.color.hex};"></div>
-								<span class="font-mono text-sm">{label.color.hex}</span>
-							</div>
-						</TableCell>
-						<TableCell>
-							<div>
-								<PostLabel {label} />
-							</div>
-						</TableCell>
-					</TableRow>
+					<LabelOverallDashboardTabelRow {label} />
 				{/each}
 			{/if}
 		</TableBody>
