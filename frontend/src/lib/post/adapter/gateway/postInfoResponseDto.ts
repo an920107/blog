@@ -1,14 +1,14 @@
-import { LabelResponseDto, LabelResponseSchema } from '$lib/label/adapter/gateway/labelResponseDto';
+import { LabelResponseDto, labelResponseSchema } from '$lib/label/adapter/gateway/labelResponseDto';
 import { PostInfo } from '$lib/post/domain/entity/postInfo';
 import z from 'zod';
 
-export const PostInfoResponseSchema = z.object({
+export const postInfoResponseSchema = z.object({
 	id: z.int32(),
 	semantic_id: z.string(),
 	title: z.string(),
 	description: z.string(),
 	preview_image_url: z.url().nullable(),
-	labels: z.array(LabelResponseSchema),
+	labels: z.array(labelResponseSchema),
 	published_time: z.iso.datetime({ offset: true }).nullable(),
 });
 
@@ -40,7 +40,7 @@ export class PostInfoResponseDto {
 	}
 
 	static fromJson(json: unknown): PostInfoResponseDto {
-		const parsedJson = PostInfoResponseSchema.parse(json);
+		const parsedJson = postInfoResponseSchema.parse(json);
 
 		let published_time: Date | null = null;
 		if (parsedJson.published_time !== null) {

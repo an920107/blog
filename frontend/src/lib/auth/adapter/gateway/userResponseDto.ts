@@ -1,7 +1,7 @@
 import { User } from '$lib/auth/domain/entity/user';
 import z from 'zod';
 
-export const UserResponseSchema = z.object({
+export const userResponseSchema = z.object({
 	id: z.int32(),
 	displayed_name: z.string(),
 	email: z.email(),
@@ -19,7 +19,7 @@ export class UserResponseDto {
 	}
 
 	static fromJson(json: unknown): UserResponseDto {
-		const parsedJson = UserResponseSchema.parse(json);
+		const parsedJson = userResponseSchema.parse(json);
 		return new UserResponseDto({
 			id: parsedJson.id,
 			displayedName: parsedJson.displayed_name,

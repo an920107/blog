@@ -4,6 +4,15 @@ import { AuthLoadedStore } from '$lib/auth/adapter/presenter/authLoadedStore';
 import type { AuthRepository } from '$lib/auth/application/gateway/authRepository';
 import { GetCurrentUserUseCase } from '$lib/auth/application/useCase/getCurrentUserUseCase';
 import { AuthApiServiceImpl } from '$lib/auth/framework/api/authApiServiceImpl';
+import type { LabelApiService } from '$lib/label/adapter/gateway/labelApiService';
+import { LabelRepositoryImpl } from '$lib/label/adapter/gateway/labelRepositoryImpl';
+import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
+import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+import type { LabelRepository } from '$lib/label/application/gateway/labelRepository';
+import { CreateLabelUseCase } from '$lib/label/application/useCase/createLabelUseCase';
+import { GetAllLabelsUseCase } from '$lib/label/application/useCase/getAllLabelsUseCase';
+import { LabelApiServiceImpl } from '$lib/label/framework/api/labelApiServiceImpl';
 import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
 import { ImageRepositoryImpl } from '$lib/image/adapter/gateway/imageRepositoryImpl';
 import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
@@ -48,8 +57,16 @@ export class Container {
 		return new PostLoadedStore(this.useCases.getPostUseCase, initialData);
 	}
 
-	createPostCreatedStore(initialData?: PostViewModel): PostCreatedStore {
-		return new PostCreatedStore(this.useCases.createPostUseCase, initialData);
+	createPostCreatedStore(): PostCreatedStore {
+		return new PostCreatedStore(this.useCases.createPostUseCase);
+	}
+
+	createLabelsListedStore(initialData?: readonly LabelViewModel[]): LabelsListedStore {
+		return new LabelsListedStore(this.useCases.getAllLabelsUseCase, initialData);
+	}
+
+	createLabelCreatedStore(): LabelCreatedStore {
+		return new LabelCreatedStore(this.useCases.createLabelUseCase);
 	}
 }
 
@@ -59,6 +76,7 @@ class ApiServices {
 	private _authApiService?: AuthApiService;
 	private _imageApiService?: ImageApiService;
 	private _postApiService?: PostApiService;
+	private _labelApiService?: LabelApiService;
 
 	constructor(fetchFn: typeof fetch) {
 		this.fetchFn = fetchFn;
@@ -78,6 +96,11 @@ class ApiServices {
 		this._postApiService ??= new PostApiServiceImpl(this.fetchFn);
 		return this._postApiService;
 	}
+
+	get labelApiService(): LabelApiService {
+		this._labelApiService ??= new LabelApiServiceImpl(this.fetchFn);
+		return this._labelApiService;
+	}
 }
 
 class Repositories {
@@ -86,6 +109,7 @@ class Repositories {
 	private _authRepository?: AuthRepository;
 	private _imageRepository?: ImageRepository;
 	private _postRepository?: PostRepository;
+	private _labelRepository?: LabelRepository;
 
 	constructor(apiServices: ApiServices) {
 		this.apiServices = apiServices;
@@ -105,6 +129,11 @@ class Repositories {
 		this._postRepository ??= new PostRepositoryImpl(this.apiServices.postApiService);
 		return this._postRepository;
 	}
+
+	get labelRepository(): LabelRepository {
+		this._labelRepository ??= new LabelRepositoryImpl(this.apiServices.labelApiService);
+		return this._labelRepository;
+	}
 }
 
 class UseCases {
@@ -115,6 +144,8 @@ class UseCases {
 	private _getAllPostsUseCase?: GetAllPostsUseCase;
 	private _getPostUseCase?: GetPostUseCase;
 	private _createPostUseCase?: CreatePostUseCase;
+	private _getAllLabelsUseCase?: GetAllLabelsUseCase;
+	private _createLabelUseCase?: CreateLabelUseCase;
 
 	constructor(repositories: Repositories) {
 		this.repositories = repositories;
@@ -143,5 +174,15 @@ class UseCases {
 	get createPostUseCase(): CreatePostUseCase {
 		this._createPostUseCase ??= new CreatePostUseCase(this.repositories.postRepository);
 		return this._createPostUseCase;
+	}
+
+	get getAllLabelsUseCase(): GetAllLabelsUseCase {
+		this._getAllLabelsUseCase ??= new GetAllLabelsUseCase(this.repositories.labelRepository);
+		return this._getAllLabelsUseCase;
+	}
+
+	get createLabelUseCase(): CreateLabelUseCase {
+		this._createLabelUseCase ??= new CreateLabelUseCase(this.repositories.labelRepository);
+		return this._createLabelUseCase;
 	}
 }

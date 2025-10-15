@@ -2,16 +2,12 @@
 	import z from 'zod';
 
 	const formSchema = z.object({
-		semanticId: z
-			.string()
-			.max(100)
-			.regex(/\D/)
-			.regex(/^[a-zA-Z0-9_-]+$/),
-		title: z.string().trim().nonempty(),
+		name: z.string().trim().nonempty(),
+		color: z.string().regex(/^#?[a-f\d]{6}$/i),
 	});
 
 	type FormParams = z.infer<typeof formSchema>;
-	export type CreatePostDialogFormParams = FormParams;
+	export type CreateLabelDialogFormParams = FormParams;
 </script>
 
 <script lang="ts">
@@ -24,10 +20,14 @@
 	import DialogTrigger from '$lib/common/framework/components/ui/dialog/dialog-trigger.svelte';
 	import Input from '$lib/common/framework/components/ui/input/input.svelte';
 	import Label from '$lib/common/framework/components/ui/label/label.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import { Label as LabelEntity } from '$lib/label/domain/entity/label';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 
 	const {
 		disabled,
-		onSubmit: createPost,
+		onSubmit: createLabel,
 	}: {
 		disabled: boolean;
 		onSubmit: (params: FormParams) => Promise<boolean>;
@@ -35,8 +35,21 @@
 
 	let open = $state(false);
 
-	let formData = $state<FormParams>({ semanticId: '', title: '' });
+	let formData = $state<FormParams>({
+		name: '',
+		color: '#dddddd',
+	});
 	let formErrors = $state<Partial<Record<keyof FormParams, string>>>({});
+
+	const previewLabel = $derived(
+		LabelViewModel.fromEntity(
+			new LabelEntity({
+				id: -1,
+				name: formData.name || 'Preview',
+				color: ColorViewModel.fromHex(formData.color).toEntity(),
+			})
+		)
+	);
 
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
@@ -45,17 +58,20 @@
 		const parseResult = formSchema.safeParse(formData);
 		if (parseResult.error) {
 			const errorResult = z.treeifyError(parseResult.error).properties;
-			formErrors.semanticId = errorResult?.semanticId?.errors[0];
-			formErrors.title = errorResult?.title?.errors[0];
+			formErrors.name = errorResult?.name?.errors[0];
+			formErrors.color = errorResult?.color?.errors[0];
 			return;
 		}
 
-		const isSuccess = await createPost(formData);
+		const isSuccess = await createLabel(formData);
 		if (!isSuccess) {
 			return;
 		}
 
-		formData = { semanticId: '', title: '' };
+		formData = {
+			name: '',
+			color: '#dddddd',
+		};
 		open = false;
 	}
 </script>
@@ -68,40 +84,44 @@
 		onEscapeKeydown={(e) => e.preventDefault()}
 	>
 		<DialogHeader class="mb-4">
-			<DialogTitle>Create Post</DialogTitle>
+			<DialogTitle>Create Label</DialogTitle>
 		</DialogHeader>
 
-		<form id="create-post-form" onsubmit={onSubmit} class="space-y-3">
+		<form id="create-label-form" onsubmit={onSubmit} class="space-y-3">
 			<div>
-				<Label for="semantic-id-input" class="pb-2">Semantic ID</Label>
+				<Label for="name-input" class="pb-2">Name</Label>
 				<Input
-					id="semantic-id-input"
+					id="name-input"
 					type="text"
-					aria-invalid={formErrors.semanticId !== undefined}
-					bind:value={formData.semanticId}
+					aria-invalid={formErrors.name !== undefined}
+					bind:value={formData.name}
 				/>
-				{#if formErrors.semanticId}
-					<p class="text-sm text-red-500">{formErrors.semanticId}</p>
+				{#if formErrors.name}
+					<p class="text-sm text-red-500">{formErrors.name}</p>
 				{/if}
 			</div>
 
 			<div>
-				<Label for="title-input" class="pb-2">Title</Label>
+				<Label for="color-input" class="pb-2">Color</Label>
 				<Input
-					id="title-input"
-					type="text"
-					aria-invalid={formErrors.title !== undefined}
-					bind:value={formData.title}
+					id="color-input"
+					type="color"
+					class="w-16"
+					aria-invalid={formErrors.color !== undefined}
+					bind:value={formData.color}
 				/>
-				{#if formErrors.title}
-					<p class="text-sm text-red-500">{formErrors.title}</p>
+				{#if formErrors.color}
+					<p class="text-sm text-red-500">{formErrors.color}</p>
 				{/if}
 			</div>
 		</form>
 
-		<DialogFooter class="mt-6">
+		<DialogFooter class="mt-6 flex flex-row items-center">
+			<div class="me-auto">
+				<PostLabel label={previewLabel} />
+			</div>
 			<Button variant="outline" onclick={() => (open = false)} {disabled}>Cancel</Button>
-			<Button type="submit" form="create-post-form" {disabled}>Submit</Button>
+			<Button type="submit" form="create-label-form" {disabled}>Submit</Button>
 		</DialogFooter>
 	</DialogContent>
 </Dialog>

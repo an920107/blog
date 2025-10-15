@@ -11,14 +11,7 @@ type PostState = AsyncState<PostViewModel>;
 export class PostCreatedStore implements BaseStore<PostState, CreatePostParams> {
 	private readonly state = writable<PostState>(AsyncState.idle<PostViewModel>(null));
 
-	constructor(
-		private readonly createPostUseCase: CreatePostUseCase,
-		initialData?: PostViewModel
-	) {
-		if (initialData) {
-			this.state.set(AsyncState.idle(initialData));
-		}
-	}
+	constructor(private readonly createPostUseCase: CreatePostUseCase) {}
 
 	get subscribe() {
 		return this.state.subscribe;

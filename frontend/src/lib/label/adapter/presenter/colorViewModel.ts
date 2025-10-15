@@ -1,4 +1,4 @@
-import type { Color } from '$lib/label/domain/entity/color';
+import { Color } from '$lib/label/domain/entity/color';
 
 export class ColorViewModel {
 	readonly red: number;
@@ -56,6 +56,19 @@ export class ColorViewModel {
 		});
 	}
 
+	static fromHex(hex: string): ColorViewModel {
+		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
+		if (!result) {
+			throw new Error('Invalid hex color format');
+		}
+		return new ColorViewModel({
+			red: parseInt(result[1], 16),
+			green: parseInt(result[2], 16),
+			blue: parseInt(result[3], 16),
+			alpha: result[4] ? parseInt(result[4], 16) : 255,
+		});
+	}
+
 	static rehydrate(props: DehydratedColorProps): ColorViewModel {
 		return new ColorViewModel(props);
 	}
@@ -97,6 +110,15 @@ export class ColorViewModel {
 		}
 
 		return { h: h * 360, s: s, l: l };
+	}
+
+	toEntity(): Color {
+		return new Color({
+			red: this.red,
+			green: this.green,
+			blue: this.blue,
+			alpha: this.alpha,
+		});
 	}
 
 	lighten(amount: number): ColorViewModel {

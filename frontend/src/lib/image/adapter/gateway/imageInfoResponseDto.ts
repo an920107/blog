@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const ImageInfoResponseSchema = z.object({
+export const imageInfoResponseSchema = z.object({
 	id: z.int32(),
 	mime_type: z.string(),
 });
@@ -15,7 +15,7 @@ export class ImageInfoResponseDto {
 	}
 
 	static fromJson(json: unknown): ImageInfoResponseDto {
-		const parsedJson = ImageInfoResponseSchema.parse(json);
+		const parsedJson = imageInfoResponseSchema.parse(json);
 		return new ImageInfoResponseDto({
 			id: parsedJson.id,
 			mimeType: parsedJson.mime_type,

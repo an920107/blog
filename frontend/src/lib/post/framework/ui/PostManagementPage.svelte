@@ -22,16 +22,20 @@
 	const postsListedState = $derived($postsListedStore);
 	const { trigger: loadPosts } = postsListedStore;
 
-	async function onCreatePostDialogSubmit(params: CreatePostDialogFormParams) {
+	async function onCreatePostDialogSubmit(params: CreatePostDialogFormParams): Promise<boolean> {
 		const state = await createPost(params);
 
 		if (state.isSuccess()) {
+			loadPosts({ showUnpublished: true });
 			toast.success(`Post created successfully with ID: ${state.data.id}`);
 		} else if (state.isError()) {
 			toast.error('Failed to create post', {
 				description: state.error.message,
 			});
+			return false;
 		}
+
+		return true;
 	}
 
 	onMount(() => loadPosts({ showUnpublished: true }));
@@ -56,13 +60,15 @@
 				{#each postsListedState.data as postInfo (postInfo.id)}
 					<TableRow>
 						<TableCell>{postInfo.id}</TableCell>
-						<TableCell>{postInfo.title}</TableCell>
-						<TableCell class="flex flex-row flex-wrap gap-2">
-							{#each postInfo.labels as label (label.id)}
-								<PostLabel {label} />
-							{/each}
+						<TableCell><span class="text-wrap">{postInfo.title}</span></TableCell>
+						<TableCell>
+							<div class="flex flex-row flex-wrap gap-2">
+								{#each postInfo.labels as label (label.id)}
+									<PostLabel {label} />
+								{/each}
+							</div>
 						</TableCell>
-						<TableCell>{postInfo.formattedPublishedTime || '---'}</TableCell>
+						<TableCell>{postInfo.formattedPublishedTime}</TableCell>
 					</TableRow>
 				{/each}
 			{/if}

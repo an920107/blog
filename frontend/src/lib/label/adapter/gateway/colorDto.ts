@@ -1,14 +1,14 @@
 import { Color } from '$lib/label/domain/entity/color';
 import z from 'zod';
 
-export const ColorResponseSchema = z.object({
+export const colorResponseSchema = z.object({
 	red: z.number().int().min(0).max(255),
 	green: z.number().int().min(0).max(255),
 	blue: z.number().int().min(0).max(255),
 	alpha: z.number().int().min(0).max(255),
 });
 
-export class ColorResponseDto {
+export class ColorDto {
 	readonly red: number;
 	readonly green: number;
 	readonly blue: number;
@@ -21,9 +21,13 @@ export class ColorResponseDto {
 		this.alpha = props.alpha;
 	}
 
-	static fromJson(json: unknown): ColorResponseDto {
-		const parsedJson = ColorResponseSchema.parse(json);
-		return new ColorResponseDto({
+	static fromEntity(color: Color): ColorDto {
+		return new ColorDto(color);
+	}
+
+	static fromJson(json: unknown): ColorDto {
+		const parsedJson = colorResponseSchema.parse(json);
+		return new ColorDto({
 			red: parsedJson.red,
 			green: parsedJson.green,
 			blue: parsedJson.blue,
@@ -38,5 +42,14 @@ export class ColorResponseDto {
 			blue: this.blue,
 			alpha: this.alpha,
 		});
+	}
+
+	toJson() {
+		return {
+			red: this.red,
+			green: this.green,
+			blue: this.blue,
+			alpha: this.alpha,
+		};
 	}
 }
