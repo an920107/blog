@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: sqlx-prepare
+        name: sqlx prepare
+        language: script
+        entry: ./script/sqlx-prepare.sh
+        pass_filenames: false
+      - id: backend-check
+        name: backend check
+        language: script
+        entry: ./script/backend-check.sh
+        pass_filenames: false
+      - id: frontend-lint
+        name: frontend lint
+        language: script
+        entry: ./script/frontend-lint.sh
+        pass_filenames: false
