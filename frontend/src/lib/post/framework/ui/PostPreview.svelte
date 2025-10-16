@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
-	import PostPreviewLabels from '$lib/post/framework/ui/PostPreviewLabels.svelte';
 
 	const { postInfo }: { postInfo: PostInfoViewModel } = $props();
 
@@ -37,9 +38,22 @@
 		{/if}
 	</div>
 	<div class="flex flex-col gap-y-2.5">
-		<PostPreviewLabels labels={postInfo.labels} />
+		{@render labelsView(postInfo.labels)}
 		<h2 class="line-clamp-1 text-lg font-bold text-gray-800">{postInfo.title}</h2>
 		<p class="line-clamp-3 text-justify text-sm">{postInfo.description}</p>
-		<span class="text-sm text-gray-500">{postInfo.formattedPublishedTime}</span>
+		<span class="text-sm text-gray-500">{postInfo.publishedTime?.toLocalISODate()}</span>
 	</div>
 </a>
+
+{#snippet labelsView(labels: readonly LabelViewModel[])}
+	<div class="flex flex-row gap-x-2">
+		{#each labels.slice(0, 2) as label (label.id)}
+			<PostLabel {label} />
+		{/each}
+		{#if labels.length > 2}
+			<div class="rounded-full bg-gray-200 px-2 py-0.5 text-xs">
+				<span>+{labels.length - 2}</span>
+			</div>
+		{/if}
+	</div>
+{/snippet}

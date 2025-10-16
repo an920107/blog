@@ -35,7 +35,7 @@
 			name: '',
 			color: '#dddddd',
 		},
-		onSubmit: createLabel,
+		onSubmit,
 	}: {
 		title: string;
 		triggerButtonText: string;
@@ -59,7 +59,7 @@
 		)
 	);
 
-	async function onSubmit(event: SubmitEvent) {
+	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		formErrors = {};
 
@@ -71,7 +71,7 @@
 			return;
 		}
 
-		const isSuccess = await createLabel(formData);
+		const isSuccess = await onSubmit(formData);
 		if (!isSuccess) {
 			return;
 		}
@@ -94,43 +94,9 @@
 			<DialogTitle>{title}</DialogTitle>
 		</DialogHeader>
 
-		<form id="create-label-form" onsubmit={onSubmit} class="space-y-3">
-			<div>
-				<Label for="name-input" class="pb-2">Name</Label>
-				<div class="flex flex-row items-center gap-x-2">
-					<Input
-						id="name-input"
-						type="text"
-						aria-invalid={formErrors.name !== undefined}
-						bind:value={formData.name}
-					/>
-					<RestoreButton
-						for="name-input"
-						defaultValue={defaultValues.name}
-						postAction={() => (formErrors.name = undefined)}
-					/>
-				</div>
-				<InputError message={formErrors.name} />
-			</div>
-
-			<div class="w-fit">
-				<Label for="color-input" class="pb-2">Color</Label>
-				<div class="flex flex-row items-center gap-x-2">
-					<Input
-						id="color-input"
-						type="color"
-						class="w-16"
-						aria-invalid={formErrors.color !== undefined}
-						bind:value={formData.color}
-					/>
-					<RestoreButton
-						for="color-input"
-						defaultValue={defaultValues.color}
-						postAction={() => (formErrors.color = undefined)}
-					/>
-				</div>
-				<InputError message={formErrors.color} />
-			</div>
+		<form id="create-label-form" onsubmit={handleSubmit} class="space-y-3">
+			{@render nameInput()}
+			{@render colorInput()}
 		</form>
 
 		<DialogFooter class="mt-6 flex flex-row items-center">
@@ -142,3 +108,46 @@
 		</DialogFooter>
 	</DialogContent>
 </Dialog>
+
+{#snippet nameInput()}
+	{@const id = 'name-input'}
+	<div>
+		<Label for={id} class="pb-2">Name</Label>
+		<div class="flex flex-row items-center gap-x-2">
+			<Input
+				{id}
+				type="text"
+				aria-invalid={formErrors.name !== undefined}
+				bind:value={formData.name}
+			/>
+			<RestoreButton
+				for={id}
+				defaultValue={defaultValues.name}
+				postAction={() => (formErrors.name = undefined)}
+			/>
+		</div>
+		<InputError message={formErrors.name} />
+	</div>
+{/snippet}
+
+{#snippet colorInput()}
+	{@const id = 'color-input'}
+	<div>
+		<Label for={id} class="pb-2">Color</Label>
+		<div class="flex flex-row items-center gap-x-2">
+			<Input
+				{id}
+				type="color"
+				class="w-16"
+				aria-invalid={formErrors.color !== undefined}
+				bind:value={formData.color}
+			/>
+			<RestoreButton
+				for={id}
+				defaultValue={defaultValues.color}
+				postAction={() => (formErrors.color = undefined)}
+			/>
+		</div>
+		<InputError message={formErrors.color} />
+	</div>
+{/snippet}

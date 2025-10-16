@@ -8,12 +8,12 @@ import { get, writable } from 'svelte/store';
 
 type LabelState = AsyncState<LabelViewModel>;
 
-interface UpdateLabelTriggerParams {
+interface LabelUpdatedTriggerParams {
 	id: number;
 	params: UpdateLabelParams;
 }
 
-export class LabelUpdatedStore implements BaseStore<LabelState, UpdateLabelTriggerParams> {
+export class LabelUpdatedStore implements BaseStore<LabelState, LabelUpdatedTriggerParams> {
 	static readonly name = 'LabelUpdatedStore';
 
 	private readonly state = writable<LabelState>(AsyncState.idle<LabelViewModel>(null));
@@ -25,10 +25,10 @@ export class LabelUpdatedStore implements BaseStore<LabelState, UpdateLabelTrigg
 	}
 
 	get trigger() {
-		return (params: UpdateLabelTriggerParams) => this.updateLabel(params);
+		return (params: LabelUpdatedTriggerParams) => this.updateLabel(params);
 	}
 
-	private async updateLabel(params: UpdateLabelTriggerParams): Promise<LabelState> {
+	private async updateLabel(params: LabelUpdatedTriggerParams): Promise<LabelState> {
 		this.state.set(AsyncState.loading(get(this.state).data));
 
 		let result: LabelState;

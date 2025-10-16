@@ -7,7 +7,7 @@ import { get, writable } from 'svelte/store';
 
 type PostState = AsyncState<PostViewModel>;
 
-export class PostLoadedStore implements BaseStore<PostState, string> {
+export class PostLoadedStore implements BaseStore<PostState, string | number> {
 	private readonly state = writable<PostState>(AsyncState.idle<PostViewModel>(null));
 
 	constructor(
@@ -24,10 +24,10 @@ export class PostLoadedStore implements BaseStore<PostState, string> {
 	}
 
 	get trigger() {
-		return (id: string) => this.loadPost(id);
+		return (id: string | number) => this.loadPost(id);
 	}
 
-	private async loadPost(id: string): Promise<PostState> {
+	private async loadPost(id: string | number): Promise<PostState> {
 		this.state.set(AsyncState.loading(get(this.state).data));
 
 		let result: PostState;

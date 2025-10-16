@@ -7,7 +7,7 @@ export const postInfoResponseSchema = z.object({
 	semantic_id: z.string(),
 	title: z.string(),
 	description: z.string(),
-	preview_image_url: z.url().nullable(),
+	preview_image_url: z.httpUrl().nullable(),
 	labels: z.array(labelResponseSchema),
 	published_time: z.iso.datetime({ offset: true }).nullable(),
 });

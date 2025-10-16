@@ -2,6 +2,7 @@ import { HttpError } from '$lib/common/framework/web/httpError';
 import { HttpStatusCode } from '$lib/common/framework/web/httpStatusCode';
 import { Environment } from '$lib/environment';
 import type { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
+import type { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
 import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
 import { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseDto';
 import type { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
@@ -24,7 +25,7 @@ export class PostApiServiceImpl implements PostApiService {
 		return data.map(PostInfoResponseDto.fromJson);
 	}
 
-	async getPost(id: string): Promise<PostResponseDto | null> {
+	async getPost(id: string | number): Promise<PostResponseDto | null> {
 		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
 
 		const response = await this.fetchFn(url);
@@ -46,6 +47,23 @@ export class PostApiServiceImpl implements PostApiService {
 
 		const response = await this.fetchFn(url, {
 			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload.toJson()),
+		});
+
+		if (!response.ok) {
+			throw new HttpError(response.status, url);
+		}
+
+		const data = await response.json();
+		return PostResponseDto.fromJson(data);
+	}
+
+	async updatePost(id: number, payload: UpdatePostRequestDto): Promise<PostResponseDto> {
+		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
+
+		const response = await this.fetchFn(url, {
+			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(payload.toJson()),
 		});

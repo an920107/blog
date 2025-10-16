@@ -1,3 +1,4 @@
+import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
 import {
 	LabelViewModel,
 	type DehydratedLabelProps,
@@ -11,7 +12,7 @@ export class PostInfoViewModel {
 	readonly description: string;
 	readonly previewImageUrl: URL | null;
 	readonly labels: readonly LabelViewModel[];
-	readonly publishedTime: Date | null;
+	readonly publishedTime: EnhancedDate | null;
 
 	private constructor(props: {
 		id: number;
@@ -20,7 +21,7 @@ export class PostInfoViewModel {
 		description: string;
 		previewImageUrl: URL | null;
 		labels: readonly LabelViewModel[];
-		publishedTime: Date | null;
+		publishedTime: EnhancedDate | null;
 	}) {
 		this.id = props.id;
 		this.semanticId = props.semanticId;
@@ -39,7 +40,7 @@ export class PostInfoViewModel {
 			description: postInfo.description,
 			previewImageUrl: postInfo.previewImageUrl,
 			labels: postInfo.labels.map((label) => LabelViewModel.fromEntity(label)),
-			publishedTime: postInfo.publishedTime,
+			publishedTime: postInfo.publishedTime ? new EnhancedDate(postInfo.publishedTime) : null,
 		});
 	}
 
@@ -61,16 +62,13 @@ export class PostInfoViewModel {
 			description: props.description,
 			previewImageUrl: previewImageUrl,
 			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
-			publishedTime: publishedTime,
+			publishedTime: publishedTime ? new EnhancedDate(publishedTime) : null,
 		});
 	}
 
 	get isPublished(): boolean {
+		this.publishedTime?.toLocaleString();
 		return this.publishedTime !== null;
-	}
-
-	get formattedPublishedTime(): string | null {
-		return this.publishedTime?.toISOString().slice(0, 10) ?? null;
 	}
 
 	dehydrate(): DehydratedPostInfoProps {

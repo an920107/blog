@@ -7,9 +7,9 @@
 	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import CreatePostDialog, {
-		type CreatePostDialogFormParams,
-	} from '$lib/post/framework/ui/CreatePostDialog.svelte';
+	import EditPostDialog, {
+		type EditPostDialogFormParams,
+	} from '$lib/post/framework/ui/EditPostDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
@@ -22,7 +22,7 @@
 	const postsListedState = $derived($postsListedStore);
 	const { trigger: loadPosts } = postsListedStore;
 
-	async function onCreatePostDialogSubmit(params: CreatePostDialogFormParams): Promise<boolean> {
+	async function onCreatePostDialogSubmit(params: EditPostDialogFormParams): Promise<boolean> {
 		const state = await createPost(params);
 
 		if (state.isSuccess()) {
@@ -44,12 +44,18 @@
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
 		<h1 class="py-16 text-5xl font-bold text-gray-800">Post</h1>
-		<CreatePostDialog disabled={postCreatedState.isLoading()} onSubmit={onCreatePostDialogSubmit} />
+		<EditPostDialog
+			mode="create"
+			triggerButtonText="Create"
+			disabled={postCreatedState.isLoading()}
+			onSubmit={onCreatePostDialogSubmit}
+		/>
 	</div>
 	<Table>
 		<TableHeader>
 			<TableRow>
 				<TableHead>ID</TableHead>
+				<TableHead>Semantic ID</TableHead>
 				<TableHead>Title</TableHead>
 				<TableHead>Labels</TableHead>
 				<TableHead>Published Time</TableHead>
@@ -58,8 +64,15 @@
 		<TableBody>
 			{#each postsListedState.data ?? [] as postInfo (postInfo.id)}
 				<TableRow>
-					<TableCell>{postInfo.id}</TableCell>
-					<TableCell><span class="text-wrap">{postInfo.title}</span></TableCell>
+					<TableHead>
+						<a href="/dashboard/post/{postInfo.id}" class="underline">{postInfo.id}</a>
+					</TableHead>
+					<TableCell>
+						<span class="text-wrap">{postInfo.semanticId}</span>
+					</TableCell>
+					<TableCell>
+						<span class="text-wrap">{postInfo.title}</span>
+					</TableCell>
 					<TableCell>
 						<div class="flex flex-row flex-wrap gap-2">
 							{#each postInfo.labels as label (label.id)}
@@ -67,7 +80,9 @@
 							{/each}
 						</div>
 					</TableCell>
-					<TableCell>{postInfo.formattedPublishedTime}</TableCell>
+					<TableCell>
+						{postInfo.publishedTime?.toLocalISOString() ?? 'Not Published'}
+					</TableCell>
 				</TableRow>
 			{/each}
 		</TableBody>

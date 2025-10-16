@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/common/framework/components/ui/button';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	const {
 		for: htmlFor,
@@ -26,9 +26,16 @@
 
 	onMount(() => {
 		const input = document.getElementById(htmlFor) as HTMLInputElement | null;
-		hidden = input?.value === defaultValue;
-		input?.addEventListener('input', () => {
+
+		function handleInput() {
 			hidden = input?.value === defaultValue;
+		}
+
+		handleInput();
+		input?.addEventListener('input', handleInput);
+
+		onDestroy(() => {
+			input?.removeEventListener('input', handleInput);
 		});
 	});
 </script>

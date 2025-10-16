@@ -24,12 +24,14 @@ import { ImageApiServiceImpl } from '$lib/image/framework/api/imageApiServiceImp
 import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
 import { PostRepositoryImpl } from '$lib/post/adapter/gateway/postRepositoryImpl';
 import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
+import { PostUpdatedStore } from '$lib/post/adapter/presenter/postUpdatedStore';
 import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
 import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 import type { PostViewModel } from '$lib/post/adapter/presenter/postViewModel';
 import type { PostRepository } from '$lib/post/application/gateway/postRepository';
 import { CreatePostUseCase } from '$lib/post/application/useCase/createPostUseCase';
+import { UpdatePostUseCase } from '$lib/post/application/useCase/updatePostUseCase';
 import { GetAllPostsUseCase } from '$lib/post/application/useCase/getAllPostsUseCase';
 import { GetPostUseCase } from '$lib/post/application/useCase/getPostUseCase';
 import { PostApiServiceImpl } from '$lib/post/framework/api/postApiServiceImpl';
@@ -63,6 +65,10 @@ export class Container {
 
 	createPostCreatedStore(): PostCreatedStore {
 		return new PostCreatedStore(this.useCases.createPostUseCase);
+	}
+
+	createPostUpdatedStore(): PostUpdatedStore {
+		return new PostUpdatedStore(this.useCases.updatePostUseCase);
 	}
 
 	createLabelsListedStore(initialData?: readonly LabelViewModel[]): LabelsListedStore {
@@ -156,6 +162,7 @@ class UseCases {
 	private _getAllPostsUseCase?: GetAllPostsUseCase;
 	private _getPostUseCase?: GetPostUseCase;
 	private _createPostUseCase?: CreatePostUseCase;
+	private _updatePostUseCase?: UpdatePostUseCase;
 	private _getAllLabelsUseCase?: GetAllLabelsUseCase;
 	private _getLabelUseCase?: GetLabelUseCase;
 	private _createLabelUseCase?: CreateLabelUseCase;
@@ -188,6 +195,11 @@ class UseCases {
 	get createPostUseCase(): CreatePostUseCase {
 		this._createPostUseCase ??= new CreatePostUseCase(this.repositories.postRepository);
 		return this._createPostUseCase;
+	}
+
+	get updatePostUseCase(): UpdatePostUseCase {
+		this._updatePostUseCase ??= new UpdatePostUseCase(this.repositories.postRepository);
+		return this._updatePostUseCase;
 	}
 
 	get getAllLabelsUseCase(): GetAllLabelsUseCase {

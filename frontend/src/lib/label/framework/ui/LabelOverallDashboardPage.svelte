@@ -12,7 +12,9 @@
 	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import LabelOverallDashboardTabelRow from '$lib/label/framework/ui/LabelOverallDashboardTabelRow.svelte';
+	import { TableCell } from '$lib/common/framework/components/ui/table';
+	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 
 	const labelCreatedStore = getContext<LabelCreatedStore>(LabelCreatedStore.name);
 	const labelCreatedState = $derived($labelCreatedStore);
@@ -67,11 +69,22 @@
 			</TableRow>
 		</TableHeader>
 		<TableBody>
-			{#if labelsListedState.isSuccess()}
-				{#each labelsListedState.data as label (label.id)}
-					<LabelOverallDashboardTabelRow {label} />
-				{/each}
-			{/if}
+			{#each labelsListedState.data ?? [] as label (label.id)}
+				<TableRow>
+					<TableHead>
+						<a href={`/dashboard/label/${label.id}`} class="underline">{label.id}</a>
+					</TableHead>
+					<TableCell>
+						<span class="text-wrap"> {label.name}</span>
+					</TableCell>
+					<TableCell>
+						<ColorCode color={label.color} />
+					</TableCell>
+					<TableCell>
+						<PostLabel {label} />
+					</TableCell>
+				</TableRow>
+			{/each}
 		</TableBody>
 	</Table>
 </div>
