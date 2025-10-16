@@ -128,8 +128,14 @@ impl Container {
             post_repository.clone(),
             get_post_by_id_use_case.clone(),
         ));
-        let create_post_use_case = Arc::new(CreatePostUseCaseImpl::new(post_repository.clone()));
-        let update_post_use_case = Arc::new(UpdatePostUseCaseImpl::new(post_repository.clone()));
+        let create_post_use_case = Arc::new(CreatePostUseCaseImpl::new(
+            post_repository.clone(),
+            label_repository.clone(),
+        ));
+        let update_post_use_case = Arc::new(UpdatePostUseCaseImpl::new(
+            post_repository.clone(),
+            label_repository.clone(),
+        ));
 
         let post_controller = Arc::new(PostControllerImpl::new(
             get_all_post_info_use_case,

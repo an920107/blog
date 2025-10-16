@@ -90,6 +90,8 @@ impl PostRepository for PostRepositoryImpl {
     }
 
     async fn get_id_by_semantic_id(&self, semantic_id: &str) -> Result<i32, PostError> {
-        self.post_db_service.get_id_by_semantic_id(semantic_id).await
+        self.post_db_service
+            .get_id_by_semantic_id(semantic_id)
+            .await
     }
 }

@@ -10,7 +10,11 @@ use crate::{
     application::{
         error::post_error::PostError,
         use_case::{
-            create_post_use_case::CreatePostUseCase, get_all_post_info_use_case::GetAllPostInfoUseCase, get_post_by_id_use_case::GetPostByIdUseCase, get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase, update_post_use_case::UpdatePostUseCase
+            create_post_use_case::CreatePostUseCase,
+            get_all_post_info_use_case::GetAllPostInfoUseCase,
+            get_post_by_id_use_case::GetPostByIdUseCase,
+            get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase,
+            update_post_use_case::UpdatePostUseCase,
         },
     },
 };
