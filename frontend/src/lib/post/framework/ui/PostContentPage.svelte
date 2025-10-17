@@ -6,6 +6,7 @@
 	import MardownRenderer, { type HeadingItem } from '$lib/post/framework/ui/MardownRenderer.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
+	import { cn } from '$lib/common/framework/components/utils';
 
 	const { id }: { id: string } = $props();
 
@@ -110,22 +111,23 @@
 
 {#snippet toc()}
 	{#if headings.length > 0}
-		<div transition:fade class="ms-auto min-w-0 pt-32 max-lg:hidden">
+		<div transition:fade class="ms-auto max-w-xs min-w-0 pt-32 max-lg:hidden">
 			<div class="sticky top-toolbar-height max-h-content-height space-y-1">
 				<p class="mb-2 truncate font-medium text-gray-600">章節目錄</p>
 				{#each headings as heading (heading.id)}
 					{@const padding = (heading.level - 2) * 1.5}
 					{@const isActive = activeHeadingId === heading.id}
-					<p class="truncate font-light" style="padding-left: {padding}rem;">
+					<div style="padding-left: {padding}rem;">
 						<button
-							class="decoration-gray-400 hover:underline {isActive
-								? 'text-gray-900'
-								: 'text-gray-400'}"
+							class={cn(
+								'w-fit max-w-full overflow-hidden text-left font-light text-nowrap text-ellipsis decoration-gray-400 hover:underline',
+								isActive ? 'text-gray-900' : 'text-gray-400'
+							)}
 							onclick={() => smoothScrollToHeading(heading.id)}
 						>
 							{heading.text}
 						</button>
-					</p>
+					</div>
 				{/each}
 			</div>
 		</div>
