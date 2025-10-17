@@ -18,7 +18,10 @@
 			.httpUrl()
 			.nullable()
 			.transform((s) => (s ? new URL(s) : null)),
-		publishedTime: z.date().nullable(),
+		publishedTime: z
+			.date()
+			.nullable()
+			.transform((d) => (d ? new EnhancedDate(d) : null)),
 	});
 
 	type FormParams = z.infer<typeof formSchema>;
@@ -72,7 +75,7 @@
 
 	let labelIds = $state(JSON.stringify(defaultValues.labelIds));
 	let previewImageUrl = $state(defaultValues.previewImageUrl?.href ?? '');
-	let publishedTime = $state(defaultValues.publishedTime?.toISOString().slice(0, 16) ?? '');
+	let publishedTime = $state(defaultValues.publishedTime?.toDateTimeInputValue() ?? '');
 
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
@@ -268,16 +271,14 @@
 
 {#snippet publishedTimeInput()}
 	{@const id = 'published-time-input'}
-	{@const defaultValue = defaultValues.publishedTime
-		? new EnhancedDate(defaultValues.publishedTime).toLocalDateTimeInputValue()
-		: ''}
+	{@const defaultValue = defaultValues.publishedTime?.toDateTimeInputValue() ?? ''}
 	<div>
 		<Label for={id} class="pb-2">Published Time (optional)</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<InputEnabledToggle
 				for={id}
 				{defaultValue}
-				valueOnEnable={new EnhancedDate().toLocalDateTimeInputValue()}
+				valueOnEnable={new EnhancedDate().toDateTimeInputValue()}
 			/>
 			<Input
 				{id}
