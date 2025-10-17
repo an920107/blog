@@ -20,7 +20,7 @@ use crate::{
         (status = 201, body = PostResponseDto),
         (status = 400, description = PostError::InvalidSemanticId),
         (status = 401, description = PostError::Unauthorized),
-        (status = 404, description = format!("{} | {}", PostError::NotFound, PostError::LabelNotFound)),
+        (status = 404, description = PostError::LabelNotFound),
         (status = 409, description = PostError::DuplicatedSemanticId),
     ),
     security(

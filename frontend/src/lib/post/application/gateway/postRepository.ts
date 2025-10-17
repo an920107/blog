@@ -14,7 +14,6 @@ export interface CreatePostParams {
 }
 
 export interface UpdatePostParams {
-	semanticId: string;
 	title: string;
 	description: string;
 	content: string;

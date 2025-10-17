@@ -33,8 +33,6 @@ impl UpdatePostUseCaseImpl {
 #[async_trait]
 impl UpdatePostUseCase for UpdatePostUseCaseImpl {
     async fn execute(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError> {
-        post.validate()?;
-
         // Check if all label IDs exist
         for &label_id in label_ids {
             if let Err(_) = self.label_repository.get_label_by_id(label_id).await {

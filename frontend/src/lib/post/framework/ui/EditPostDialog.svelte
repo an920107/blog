@@ -123,7 +123,9 @@
 		</DialogHeader>
 
 		<form id="create-post-form" onsubmit={handleSubmit} class="space-y-3">
-			{@render semanticIdInput()}
+			{#if mode === 'create'}
+				{@render semanticIdInput()}
+			{/if}
 			{@render titleInput()}
 			{#if mode === 'update'}
 				{@render labelIdsInput()}

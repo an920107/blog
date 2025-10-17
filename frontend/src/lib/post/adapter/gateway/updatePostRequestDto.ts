@@ -1,7 +1,6 @@
 import type { UpdatePostParams } from '$lib/post/application/gateway/postRepository';
 
 export class UpdatePostRequestDto {
-	semanticId: string;
 	title: string;
 	description: string;
 	content: string;
@@ -10,7 +9,6 @@ export class UpdatePostRequestDto {
 	publishedTime: string | null;
 
 	private constructor(props: {
-		semanticId: string;
 		title: string;
 		description: string;
 		content: string;
@@ -18,7 +16,6 @@ export class UpdatePostRequestDto {
 		previewImageUrl: string | null;
 		publishedTime: string | null;
 	}) {
-		this.semanticId = props.semanticId;
 		this.title = props.title;
 		this.description = props.description;
 		this.content = props.content;
@@ -37,7 +34,6 @@ export class UpdatePostRequestDto {
 
 	toJson() {
 		return {
-			semantic_id: this.semanticId,
 			title: this.title,
 			description: this.description,
 			content: this.content,

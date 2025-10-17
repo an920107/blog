@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
 
@@ -20,7 +21,6 @@ use crate::{
         (status = 400, description = PostError::InvalidSemanticId),
         (status = 401, description = PostError::Unauthorized),
         (status = 404, description = format!("{} | {}", PostError::NotFound, PostError::LabelNotFound)),
-        (status = 409, description = PostError::DuplicatedSemanticId),
     ),
     security(
         ("oauth2" = [])
@@ -40,11 +40,13 @@ pub async fn update_post_handler(
     match result {
         Ok(post) => HttpResponse::Ok().json(post),
         Err(e) => match e {
-            PostError::NotFound => HttpResponse::NotFound().finish(),
+            PostError::NotFound | PostError::LabelNotFound => HttpResponse::NotFound().finish(),
             PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
-            PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
-            PostError::LabelNotFound => HttpResponse::NotFound().finish(),
+            PostError::DuplicatedSemanticId => {
+                capture_anyhow(&anyhow!(e));
+                HttpResponse::InternalServerError().finish()
+            }
             PostError::Unexpected(e) => {
                 capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()

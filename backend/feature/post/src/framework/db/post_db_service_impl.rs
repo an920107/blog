@@ -264,15 +264,13 @@ impl PostDbService for PostDbServiceImpl {
             r#"
             UPDATE post
             SET 
-                semantic_id = $1,
-                title = $2, 
-                description = $3, 
-                preview_image_url = $4, 
-                content = $5, 
-                published_time = $6
-            WHERE id = $7
+                title = $1, 
+                description = $2, 
+                preview_image_url = $3, 
+                content = $4, 
+                published_time = $5
+            WHERE id = $6
             "#,
-            post.info.semantic_id,
             post.info.title,
             post.info.description,
             post.info.preview_image_url,
