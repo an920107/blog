@@ -1,3 +1,10 @@
+<script lang="ts">
+	import generateTitle from '$lib/common/framework/ui/generateTitle';
+</script>
+
+<svelte:head>
+	<title>{generateTitle('404 Not Found')}</title>
+</svelte:head>
 <div
 	class="mx-auto flex min-h-content-height max-w-screen-xl flex-col items-center justify-center px-4 md:px-6"
 >

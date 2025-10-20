@@ -13,6 +13,9 @@
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
 	import MardownRenderer from '$lib/post/framework/ui/MardownRenderer.svelte';
+	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
+	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
+	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
 
 	const { id }: { id: number } = $props();
 
@@ -116,13 +119,19 @@
 			<TableRow>
 				<TableHead>Preview Image URL</TableHead>
 				<TableCell>
-					<a
-						href={post?.info.previewImageUrl?.toString()}
-						target="_blank"
-						class="text-wrap underline"
-					>
-						{post?.info.previewImageUrl?.toString() ?? 'None'}
-					</a>
+					{#if post?.info.previewImageUrl}
+						{@const url = post.info.previewImageUrl}
+						<HoverCard>
+							<HoverCardTrigger href={url.href} target="_blank" class="text-wrap underline">
+								{post?.info.previewImageUrl?.toString() ?? 'None'}
+							</HoverCardTrigger>
+							<HoverCardContent class="aspect-video w-96">
+								<img src={url.href} alt="Preview" class="h-full w-full object-cover" />
+							</HoverCardContent>
+						</HoverCard>
+					{:else}
+						<span>None</span>
+					{/if}
 				</TableCell>
 			</TableRow>
 			<TableRow>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/common/framework/components/utils';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
@@ -25,9 +26,11 @@
 >
 	<div class="relative aspect-video overflow-hidden rounded-2xl bg-gray-200">
 		<img
-			class="rounded-2xl object-cover transition-opacity duration-300
-                {isImageLoading ? 'opacity-0' : 'opacity-100'}
-                {isImageError ? 'hidden' : ''}"
+			class={cn(
+				'h-full w-full rounded-2xl object-cover object-center transition-opacity duration-300',
+				isImageLoading ? 'opacity-0' : 'opacity-100',
+				isImageError ? 'hidden' : ''
+			)}
 			src={postInfo.previewImageUrl?.href}
 			alt={postInfo.title}
 			onload={onImageLoad}
