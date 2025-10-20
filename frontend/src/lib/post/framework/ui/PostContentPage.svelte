@@ -7,6 +7,8 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
+	import OpenGraph from './OpenGraph.svelte';
+	import { Environment } from '$lib/environment';
 
 	const { id }: { id: string } = $props();
 
@@ -80,6 +82,14 @@
 				headline={postInfo.title}
 				description={postInfo.description}
 				datePublished={postInfo.publishedTime!}
+				image={postInfo.previewImageUrl}
+			/>
+			<OpenGraph
+				title={postInfo.title}
+				description={postInfo.description}
+				publishedTime={postInfo.publishedTime!}
+				labels={postInfo.labels.map((label) => label.name)}
+				url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
 				image={postInfo.previewImageUrl}
 			/>
 		{/if}
