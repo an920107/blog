@@ -8,7 +8,7 @@ use crate::{
         create_post_request_dto::CreatePostRequestDto, post_controller::PostController,
         post_response_dto::PostResponseDto,
     },
-    application::error::post_error::PostError,
+    domain::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -19,7 +19,6 @@ use crate::{
     responses(
         (status = 201, body = PostResponseDto),
         (status = 400, description = PostError::InvalidSemanticId),
-        (status = 401, description = PostError::Unauthorized),
         (status = 404, description = PostError::LabelNotFound),
         (status = 409, description = PostError::DuplicatedSemanticId),
     ),
@@ -39,7 +38,6 @@ pub async fn create_post_handler(
     match result {
         Ok(post) => HttpResponse::Created().json(post),
         Err(e) => match e {
-            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
             PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
             PostError::LabelNotFound => HttpResponse::NotFound().finish(),

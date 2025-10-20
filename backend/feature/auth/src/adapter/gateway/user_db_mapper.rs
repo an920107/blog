@@ -8,6 +8,18 @@ pub struct UserMapper {
     pub email: String,
 }
 
+impl Into<User> for UserMapper {
+    fn into(self) -> User {
+        User {
+            id: self.id,
+            issuer: self.issuer,
+            source_id: self.source_id,
+            displayed_name: self.displayed_name,
+            email: self.email,
+        }
+    }
+}
+
 impl From<User> for UserMapper {
     fn from(user: User) -> Self {
         Self {
@@ -16,18 +28,6 @@ impl From<User> for UserMapper {
             source_id: user.source_id,
             displayed_name: user.displayed_name,
             email: user.email,
-        }
-    }
-}
-
-impl UserMapper {
-    pub fn into_entity(self) -> User {
-        User {
-            id: self.id,
-            issuer: self.issuer,
-            source_id: self.source_id,
-            displayed_name: self.displayed_name,
-            email: self.email,
         }
     }
 }

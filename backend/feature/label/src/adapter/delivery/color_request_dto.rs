@@ -11,8 +11,8 @@ pub struct ColorRequestDto {
     pub alpha: u8,
 }
 
-impl ColorRequestDto {
-    pub fn into_entity(self) -> Color {
+impl Into<Color> for ColorRequestDto {
+    fn into(self) -> Color {
         Color {
             red: self.red,
             green: self.green,

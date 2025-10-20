@@ -4,7 +4,7 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{label_db_mapper::LabelMapper, label_db_service::LabelDbService},
-    application::error::label_error::LabelError,
+    domain::error::label_error::LabelError,
     framework::db::label_record::LabelRecord,
 };
 

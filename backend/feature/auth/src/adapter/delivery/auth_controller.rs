@@ -6,14 +6,12 @@ use crate::{
     adapter::delivery::{
         oidc_callback_query_dto::OidcCallbackQueryDto, user_response_dto::UserResponseDto,
     },
-    application::{
-        error::auth_error::AuthError,
-        use_case::{
-            exchange_auth_code_use_case::ExchangeAuthCodeUseCase,
-            get_auth_url_use_case::{AuthUrl, GetAuthUrlUseCase},
-            get_user_use_case::GetUserUseCase,
-        },
+    application::use_case::{
+        exchange_auth_code_use_case::ExchangeAuthCodeUseCase,
+        get_auth_url_use_case::{AuthUrl, GetAuthUrlUseCase},
+        get_user_use_case::GetUserUseCase,
     },
+    domain::error::auth_error::AuthError,
 };
 
 #[async_trait]

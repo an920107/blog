@@ -4,10 +4,10 @@ use async_trait::async_trait;
 
 use crate::{
     application::{
-        error::post_error::PostError, gateway::post_repository::PostRepository,
+        gateway::post_repository::PostRepository,
         use_case::get_post_by_id_use_case::GetPostByIdUseCase,
     },
-    domain::entity::post::Post,
+    domain::{entity::post::Post, error::post_error::PostError},
 };
 
 #[async_trait]

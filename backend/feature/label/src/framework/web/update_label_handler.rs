@@ -7,7 +7,7 @@ use crate::{
         label_controller::LabelController, label_response_dto::LabelResponseDto,
         update_label_request_dto::UpdateLabelRequestDto,
     },
-    application::error::label_error::LabelError,
+    domain::error::label_error::LabelError,
 };
 
 #[utoipa::path(
@@ -17,7 +17,6 @@ use crate::{
     summary = "Update a label by ID",
     responses(
         (status = 200, body = LabelResponseDto),
-        (status = 401, description = LabelError::Unauthorized),
         (status = 404, description = LabelError::NotFound),
         (status = 409, description = LabelError::DuplicatedLabelName),
     ),
@@ -40,7 +39,6 @@ pub async fn update_label_handler(
         Ok(label) => HttpResponse::Ok().json(label),
         Err(e) => match e {
             LabelError::NotFound => HttpResponse::NotFound().finish(),
-            LabelError::Unauthorized => HttpResponse::Unauthorized().finish(),
             LabelError::DuplicatedLabelName => HttpResponse::Conflict().finish(),
             LabelError::Unexpected(e) => {
                 capture_anyhow(&e);

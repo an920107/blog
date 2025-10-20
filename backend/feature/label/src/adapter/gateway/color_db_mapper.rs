@@ -4,8 +4,8 @@ pub struct ColorMapper {
     pub value: u32,
 }
 
-impl ColorMapper {
-    pub fn into_entity(self) -> Color {
+impl Into<Color> for ColorMapper {
+    fn into(self) -> Color {
         Color {
             red: (self.value >> 24) as u8,
             green: ((self.value >> 16) & 0xFF) as u8,

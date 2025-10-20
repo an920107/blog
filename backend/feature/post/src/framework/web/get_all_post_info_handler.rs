@@ -8,7 +8,7 @@ use crate::{
         post_controller::PostController, post_info_query_dto::PostQueryDto,
         post_info_response_dto::PostInfoResponseDto,
     },
-    application::error::post_error::PostError,
+    domain::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -37,7 +37,6 @@ pub async fn get_all_post_info_handler(
         Ok(post_info_list) => HttpResponse::Ok().json(post_info_list),
         Err(e) => match e {
             PostError::NotFound
-            | PostError::Unauthorized
             | PostError::InvalidSemanticId
             | PostError::DuplicatedSemanticId
             | PostError::LabelNotFound => {

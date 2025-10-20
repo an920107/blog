@@ -4,13 +4,13 @@ use async_trait::async_trait;
 use label::application::gateway::label_repository::LabelRepository;
 
 use crate::{
-    application::{error::post_error::PostError, gateway::post_repository::PostRepository},
-    domain::entity::post::Post,
+    application::gateway::{create_post_params::CreatePostParams, post_repository::PostRepository},
+    domain::error::post_error::PostError,
 };
 
 #[async_trait]
 pub trait CreatePostUseCase: Send + Sync {
-    async fn execute(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError>;
+    async fn execute(&self, post: CreatePostParams) -> Result<i32, PostError>;
 }
 
 pub struct CreatePostUseCaseImpl {
@@ -32,16 +32,16 @@ impl CreatePostUseCaseImpl {
 
 #[async_trait]
 impl CreatePostUseCase for CreatePostUseCaseImpl {
-    async fn execute(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError> {
+    async fn execute(&self, post: CreatePostParams) -> Result<i32, PostError> {
         post.validate()?;
 
         // Check if all label IDs exist
-        for &label_id in label_ids {
+        for &label_id in post.label_ids.iter() {
             if let Err(_) = self.label_repository.get_label_by_id(label_id).await {
                 return Err(PostError::LabelNotFound);
             }
         }
 
-        self.post_repository.create_post(post, label_ids).await
+        self.post_repository.create_post(post).await
     }
 }

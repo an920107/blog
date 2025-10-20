@@ -1,4 +1,4 @@
-use crate::application::error::image_error::ImageError;
+use crate::domain::error::image_error::ImageError;
 
 pub trait ImageStorage: Send + Sync {
     fn write_data(&self, id: i32, data: &[u8]) -> Result<(), ImageError>;

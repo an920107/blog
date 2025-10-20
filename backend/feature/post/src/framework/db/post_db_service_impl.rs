@@ -10,7 +10,7 @@ use crate::{
         post_db_mapper::PostMapper, post_db_service::PostDbService,
         post_info_db_mapper::PostInfoMapper,
     },
-    application::error::post_error::PostError,
+    domain::error::post_error::PostError,
 };
 
 use super::{

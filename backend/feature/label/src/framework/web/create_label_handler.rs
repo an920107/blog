@@ -8,7 +8,7 @@ use crate::{
         create_label_request_dto::CreateLabelRequestDto, label_controller::LabelController,
         label_response_dto::LabelResponseDto,
     },
-    application::error::label_error::LabelError,
+    domain::error::label_error::LabelError,
 };
 
 #[utoipa::path(
@@ -18,7 +18,6 @@ use crate::{
     summary = "Create a new label",
     responses(
         (status = 201, body = LabelResponseDto),
-        (status = 401, description = LabelError::Unauthorized),
         (status = 409, description = LabelError::DuplicatedLabelName),
     ),
     security(
@@ -35,7 +34,6 @@ pub async fn create_label_handler(
     match result {
         Ok(label) => HttpResponse::Created().json(label),
         Err(e) => match e {
-            LabelError::Unauthorized => HttpResponse::Unauthorized().finish(),
             LabelError::DuplicatedLabelName => HttpResponse::Conflict().finish(),
             LabelError::NotFound => {
                 capture_anyhow(&anyhow!(e));

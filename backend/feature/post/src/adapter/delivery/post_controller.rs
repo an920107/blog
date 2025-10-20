@@ -7,16 +7,13 @@ use crate::{
         create_post_request_dto::CreatePostRequestDto, post_info_query_dto::PostQueryDto,
         update_post_request_dto::UpdatePostRequestDto,
     },
-    application::{
-        error::post_error::PostError,
-        use_case::{
-            create_post_use_case::CreatePostUseCase,
-            get_all_post_info_use_case::GetAllPostInfoUseCase,
-            get_post_by_id_use_case::GetPostByIdUseCase,
-            get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase,
-            update_post_use_case::UpdatePostUseCase,
-        },
+    application::use_case::{
+        create_post_use_case::CreatePostUseCase, get_all_post_info_use_case::GetAllPostInfoUseCase,
+        get_post_by_id_use_case::GetPostByIdUseCase,
+        get_post_by_semantic_id_use_case::GetPostBySemanticIdUseCase,
+        update_post_use_case::UpdatePostUseCase,
     },
+    domain::error::post_error::PostError,
 };
 
 use super::{post_info_response_dto::PostInfoResponseDto, post_response_dto::PostResponseDto};
@@ -142,13 +139,7 @@ impl PostController for PostControllerImpl {
         post: CreatePostRequestDto,
         user_id: i32,
     ) -> Result<PostResponseDto, PostError> {
-        let label_ids = post.label_ids.clone();
-        let post_entity = post.into_entity();
-
-        let id = self
-            .create_post_use_case
-            .execute(post_entity, &label_ids)
-            .await?;
+        let id = self.create_post_use_case.execute(post.into()).await?;
 
         self.get_post_by_id(id, Some(user_id)).await
     }
@@ -159,12 +150,7 @@ impl PostController for PostControllerImpl {
         post: UpdatePostRequestDto,
         user_id: i32,
     ) -> Result<PostResponseDto, PostError> {
-        let label_ids = post.label_ids.clone();
-        let post_entity = post.into_entity(id);
-
-        self.update_post_use_case
-            .execute(post_entity, &label_ids)
-            .await?;
+        self.update_post_use_case.execute(id, post.into()).await?;
 
         self.get_post_by_id(id, Some(user_id)).await
     }

@@ -7,15 +7,11 @@ use crate::{
         create_label_request_dto::CreateLabelRequestDto, label_response_dto::LabelResponseDto,
         update_label_request_dto::UpdateLabelRequestDto,
     },
-    application::{
-        error::label_error::LabelError,
-        use_case::{
-            create_label_use_case::CreateLabelUseCase,
-            get_all_labels_use_case::GetAllLabelsUseCase,
-            get_label_by_id_use_case::GetLabelByIdUseCase,
-            update_label_use_case::UpdateLabelUseCase,
-        },
+    application::use_case::{
+        create_label_use_case::CreateLabelUseCase, get_all_labels_use_case::GetAllLabelsUseCase,
+        get_label_by_id_use_case::GetLabelByIdUseCase, update_label_use_case::UpdateLabelUseCase,
     },
+    domain::error::label_error::LabelError,
 };
 
 #[async_trait]
@@ -65,14 +61,9 @@ impl LabelController for LabelControllerImpl {
         &self,
         label: CreateLabelRequestDto,
     ) -> Result<LabelResponseDto, LabelError> {
-        let mut label_entity = label.into_entity();
-        let id = self
-            .create_label_use_case
-            .execute(label_entity.clone())
-            .await?;
+        let id = self.create_label_use_case.execute(label.into()).await?;
 
-        label_entity.id = id;
-        Ok(LabelResponseDto::from(label_entity))
+        self.get_label_by_id(id).await
     }
 
     async fn update_label(
@@ -80,12 +71,9 @@ impl LabelController for LabelControllerImpl {
         id: i32,
         label: UpdateLabelRequestDto,
     ) -> Result<LabelResponseDto, LabelError> {
-        let label_entity = label.into_entity(id);
-        self.update_label_use_case
-            .execute(label_entity.clone())
-            .await?;
+        self.update_label_use_case.execute(id, label.into()).await?;
 
-        Ok(LabelResponseDto::from(label_entity))
+        self.get_label_by_id(id).await
     }
 
     async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, LabelError> {

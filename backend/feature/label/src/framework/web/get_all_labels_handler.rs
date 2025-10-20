@@ -4,7 +4,7 @@ use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::{label_controller::LabelController, label_response_dto::LabelResponseDto},
-    application::error::label_error::LabelError,
+    domain::error::label_error::LabelError,
 };
 
 #[utoipa::path(
@@ -24,7 +24,7 @@ pub async fn get_all_labels_handler(
     match result {
         Ok(labels) => HttpResponse::Ok().json(labels),
         Err(e) => match e {
-            LabelError::NotFound | LabelError::Unauthorized | LabelError::DuplicatedLabelName => {
+            LabelError::NotFound | LabelError::DuplicatedLabelName => {
                 capture_anyhow(&anyhow!(e));
                 HttpResponse::InternalServerError().finish()
             }

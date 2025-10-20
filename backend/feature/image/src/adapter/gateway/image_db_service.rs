@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::image_db_mapper::ImageDbMapper, application::error::image_error::ImageError,
+    adapter::gateway::image_db_mapper::ImageDbMapper, domain::error::image_error::ImageError,
 };
 
 #[async_trait]

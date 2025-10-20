@@ -7,7 +7,7 @@ use crate::{
     adapter::delivery::{
         auth_controller::AuthController, oidc_callback_query_dto::OidcCallbackQueryDto,
     },
-    application::error::auth_error::AuthError,
+    domain::error::auth_error::AuthError,
     framework::web::constants::{
         SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE, SESSION_KEY_USER_ID,
     },

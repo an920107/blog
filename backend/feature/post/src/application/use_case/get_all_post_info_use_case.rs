@@ -3,8 +3,8 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::post_error::PostError, gateway::post_repository::PostRepository},
-    domain::entity::post_info::PostInfo,
+    application::gateway::post_repository::PostRepository,
+    domain::{entity::post_info::PostInfo, error::post_error::PostError},
 };
 
 #[async_trait]

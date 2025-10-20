@@ -8,7 +8,7 @@ use crate::{
         post_controller::PostController, post_response_dto::PostResponseDto,
         update_post_request_dto::UpdatePostRequestDto,
     },
-    application::error::post_error::PostError,
+    domain::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -19,7 +19,6 @@ use crate::{
     responses(
         (status = 200, body = PostResponseDto),
         (status = 400, description = PostError::InvalidSemanticId),
-        (status = 401, description = PostError::Unauthorized),
         (status = 404, description = format!("{} | {}", PostError::NotFound, PostError::LabelNotFound)),
     ),
     security(
@@ -41,7 +40,6 @@ pub async fn update_post_handler(
         Ok(post) => HttpResponse::Ok().json(post),
         Err(e) => match e {
             PostError::NotFound | PostError::LabelNotFound => HttpResponse::NotFound().finish(),
-            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
             PostError::DuplicatedSemanticId => {
                 capture_anyhow(&anyhow!(e));

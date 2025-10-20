@@ -3,8 +3,8 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::label_error::LabelError, gateway::label_repository::LabelRepository},
-    domain::entity::label::Label,
+    application::gateway::label_repository::LabelRepository,
+    domain::{entity::label::Label, error::label_error::LabelError},
 };
 
 #[async_trait]

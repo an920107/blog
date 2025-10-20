@@ -6,7 +6,7 @@ use std::{
 use common::framework::error::IOError;
 
 use crate::{
-    adapter::gateway::image_storage::ImageStorage, application::error::image_error::ImageError,
+    adapter::gateway::image_storage::ImageStorage, domain::error::image_error::ImageError,
 };
 
 pub struct ImageStorageImpl {

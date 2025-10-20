@@ -5,7 +5,7 @@ use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::auth_controller::AuthController,
-    application::error::auth_error::AuthError,
+    domain::error::auth_error::AuthError,
     framework::web::constants::{SESSION_KEY_AUTH_NONCE, SESSION_KEY_AUTH_STATE},
 };
 

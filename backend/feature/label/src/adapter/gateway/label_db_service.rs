@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::label_db_mapper::LabelMapper, application::error::label_error::LabelError,
+    adapter::gateway::label_db_mapper::LabelMapper, domain::error::label_error::LabelError,
 };
 
 #[async_trait]

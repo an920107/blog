@@ -1,7 +1,10 @@
 use serde::Deserialize;
 use utoipa::ToSchema;
 
-use crate::{adapter::delivery::color_request_dto::ColorRequestDto, domain::entity::label::Label};
+use crate::{
+    adapter::delivery::color_request_dto::ColorRequestDto,
+    application::gateway::create_or_update_label_params::CreateOrUpdateLabelParams,
+};
 
 #[derive(Deserialize, ToSchema)]
 pub struct CreateLabelRequestDto {
@@ -9,12 +12,11 @@ pub struct CreateLabelRequestDto {
     pub color: ColorRequestDto,
 }
 
-impl CreateLabelRequestDto {
-    pub fn into_entity(self) -> Label {
-        Label {
-            id: -1,
+impl Into<CreateOrUpdateLabelParams> for CreateLabelRequestDto {
+    fn into(self) -> CreateOrUpdateLabelParams {
+        CreateOrUpdateLabelParams {
             name: self.name,
-            color: self.color.into_entity(),
+            color: self.color.into(),
         }
     }
 }

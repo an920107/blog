@@ -5,7 +5,7 @@ use utoipa::ToSchema;
 
 use crate::{
     adapter::delivery::image_controller::ImageController,
-    application::error::image_error::ImageError,
+    domain::error::image_error::ImageError,
 };
 
 #[utoipa::path(

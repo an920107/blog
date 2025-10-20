@@ -4,7 +4,7 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{user_db_mapper::UserMapper, user_db_service::UserDbService},
-    application::error::auth_error::AuthError,
+    domain::error::auth_error::AuthError,
     framework::db::user_record::UserRecord,
 };
 

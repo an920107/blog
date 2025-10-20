@@ -6,11 +6,11 @@ pub struct PostMapper {
     pub content: String,
 }
 
-impl PostMapper {
-    pub fn into_entity(self) -> Post {
+impl Into<Post> for PostMapper {
+    fn into(self) -> Post {
         Post {
             id: self.id,
-            info: self.info.into_entity(),
+            info: self.info.into(),
             content: self.content,
         }
     }

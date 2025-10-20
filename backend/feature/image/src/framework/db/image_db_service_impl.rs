@@ -4,7 +4,7 @@ use sqlx::{Pool, Postgres};
 
 use crate::{
     adapter::gateway::{image_db_mapper::ImageDbMapper, image_db_service::ImageDbService},
-    application::error::image_error::ImageError,
+    domain::error::image_error::ImageError,
     framework::db::image_record::ImageRecord,
 };
 

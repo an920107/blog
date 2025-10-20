@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use utoipa::ToSchema;
 
-use crate::domain::entity::{post::Post, post_info::PostInfo};
+use crate::application::gateway::create_post_params::CreatePostParams;
 
 #[derive(Deserialize, ToSchema, Clone)]
 pub struct CreatePostRequestDto {
@@ -19,23 +19,19 @@ pub struct CreatePostRequestDto {
     pub published_time: Option<String>,
 }
 
-impl CreatePostRequestDto {
-    pub fn into_entity(self) -> Post {
-        Post {
-            id: -1,
-            info: PostInfo {
-                id: -1,
-                semantic_id: self.semantic_id,
-                title: self.title,
-                description: self.description,
-                preview_image_url: self.preview_image_url,
-                labels: Vec::new(),
-                published_time: self
-                    .published_time
-                    .and_then(|time_str| DateTime::parse_from_rfc3339(&time_str).ok())
-                    .map(|dt| dt.with_timezone(&Utc)),
-            },
+impl Into<CreatePostParams> for CreatePostRequestDto {
+    fn into(self) -> CreatePostParams {
+        CreatePostParams {
+            semantic_id: self.semantic_id,
+            title: self.title,
+            description: self.description,
             content: self.content,
+            label_ids: self.label_ids,
+            preview_image_url: self.preview_image_url,
+            published_time: self
+                .published_time
+                .and_then(|time_str| DateTime::parse_from_rfc3339(&time_str).ok())
+                .map(|dt| dt.with_timezone(&Utc)),
         }
     }
 }

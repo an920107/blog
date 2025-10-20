@@ -3,7 +3,6 @@ use std::fmt::Display;
 #[derive(Debug)]
 pub enum PostError {
     NotFound,
-    Unauthorized,
     InvalidSemanticId,
     DuplicatedSemanticId,
     LabelNotFound,
@@ -20,7 +19,6 @@ impl Display for PostError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             PostError::NotFound => write!(f, "Post not found"),
-            PostError::Unauthorized => write!(f, "Unauthorized access"),
             PostError::InvalidSemanticId => write!(
                 f,
                 "Semantic ID shouldn't be numeric and must conform to `^[0-9a-zA-Z_-]+$`"

@@ -7,12 +7,10 @@ use crate::{
         image_info_response_dto::ImageInfoResponseDto, image_request_dto::ImageRequestDto,
         image_response_dto::ImageResponseDto,
     },
-    application::{
-        error::image_error::ImageError,
-        use_case::{
-            get_image_use_case::GetImageUseCase, upload_image_use_case::UploadImageUseCase,
-        },
+    application::use_case::{
+        get_image_use_case::GetImageUseCase, upload_image_use_case::UploadImageUseCase,
     },
+    domain::error::image_error::ImageError,
 };
 
 #[async_trait]
@@ -61,10 +59,7 @@ impl ImageController for ImageControllerImpl {
         }
 
         let mime_type = image.mime_type.clone();
-        let id = self
-            .upload_image_use_case
-            .execute(image.into_entity())
-            .await?;
+        let id = self.upload_image_use_case.execute(image.into()).await?;
         Ok(ImageInfoResponseDto {
             id: id,
             mime_type: mime_type,

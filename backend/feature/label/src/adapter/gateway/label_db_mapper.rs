@@ -6,12 +6,12 @@ pub struct LabelMapper {
     pub color: ColorMapper,
 }
 
-impl LabelMapper {
-    pub fn into_entity(self) -> Label {
+impl Into<Label> for LabelMapper {
+    fn into(self) -> Label {
         Label {
             id: self.id,
             name: self.name,
-            color: self.color.into_entity(),
+            color: self.color.into(),
         }
     }
 }

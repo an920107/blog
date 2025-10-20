@@ -9,7 +9,8 @@ use crate::{
     adapter::gateway::{
         auth_oidc_service::AuthOidcService, oidc_claims_response_dto::OidcClaimsResponseDto,
     },
-    application::{error::auth_error::AuthError, use_case::get_auth_url_use_case::AuthUrl},
+    application::use_case::get_auth_url_use_case::AuthUrl,
+    domain::error::auth_error::AuthError,
 };
 
 type CompleteClient<

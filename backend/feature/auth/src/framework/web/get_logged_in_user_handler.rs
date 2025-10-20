@@ -3,9 +3,7 @@ use anyhow::anyhow;
 use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
-    adapter::delivery::{auth_controller::AuthController, user_response_dto::UserResponseDto},
-    application::error::auth_error::AuthError,
-    framework::web::auth_middleware::UserId,
+    adapter::delivery::{auth_controller::AuthController, user_response_dto::UserResponseDto}, domain::error::auth_error::AuthError, framework::web::auth_middleware::UserId
 };
 
 #[utoipa::path(

@@ -1,8 +1,8 @@
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::auth_error::AuthError, use_case::get_auth_url_use_case::AuthUrl},
-    domain::entity::user::User,
+    application::use_case::get_auth_url_use_case::AuthUrl,
+    domain::{entity::user::User, error::auth_error::AuthError},
 };
 
 #[async_trait]

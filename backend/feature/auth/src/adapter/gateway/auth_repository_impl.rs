@@ -8,10 +8,9 @@ use crate::{
         user_db_service::UserDbService,
     },
     application::{
-        error::auth_error::AuthError, gateway::auth_repository::AuthRepository,
-        use_case::get_auth_url_use_case::AuthUrl,
+        gateway::auth_repository::AuthRepository, use_case::get_auth_url_use_case::AuthUrl,
     },
-    domain::entity::user::User,
+    domain::{entity::user::User, error::auth_error::AuthError},
 };
 
 pub struct AuthRepositoryImpl {
@@ -52,7 +51,7 @@ impl AuthRepository for AuthRepositoryImpl {
         self.user_db_service
             .get_user_by_id(user_id)
             .await
-            .map(|mapper| mapper.into_entity())
+            .map(Into::into)
     }
 
     async fn get_user_by_source_id(
@@ -63,7 +62,7 @@ impl AuthRepository for AuthRepositoryImpl {
         self.user_db_service
             .get_user_by_source_id(issuer, source_id)
             .await
-            .map(|mapper| mapper.into_entity())
+            .map(Into::into)
     }
 
     async fn save_user(&self, user: User) -> Result<i32, AuthError> {

@@ -3,8 +3,8 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::auth_error::AuthError, gateway::auth_repository::AuthRepository},
-    domain::entity::user::User,
+    application::gateway::auth_repository::AuthRepository,
+    domain::{entity::user::User, error::auth_error::AuthError},
 };
 
 #[async_trait]

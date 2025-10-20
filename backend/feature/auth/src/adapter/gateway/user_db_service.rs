@@ -1,8 +1,6 @@
 use async_trait::async_trait;
 
-use crate::{
-    adapter::gateway::user_db_mapper::UserMapper, application::error::auth_error::AuthError,
-};
+use crate::{adapter::gateway::user_db_mapper::UserMapper, domain::error::auth_error::AuthError};
 
 #[async_trait]
 pub trait UserDbService: Send + Sync {

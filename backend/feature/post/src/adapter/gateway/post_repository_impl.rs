@@ -4,8 +4,14 @@ use async_trait::async_trait;
 
 use crate::{
     adapter::gateway::{post_db_mapper::PostMapper, post_info_db_mapper::PostInfoMapper},
-    application::{error::post_error::PostError, gateway::post_repository::PostRepository},
-    domain::entity::{post::Post, post_info::PostInfo},
+    application::gateway::{
+        create_post_params::CreatePostParams, post_repository::PostRepository,
+        update_post_params::UpdatePostParams,
+    },
+    domain::{
+        entity::{post::Post, post_info::PostInfo},
+        error::post_error::PostError,
+    },
 };
 
 use super::post_db_service::PostDbService;
@@ -33,7 +39,7 @@ impl PostRepository for PostRepositoryImpl {
             .map(|mappers| {
                 mappers
                     .into_iter()
-                    .map(|mapper| mapper.into_entity())
+                    .map(Into::into)
                     .collect::<Vec<PostInfo>>()
             })
     }
@@ -42,50 +48,50 @@ impl PostRepository for PostRepositoryImpl {
         self.post_db_service
             .get_post_by_id(id)
             .await
-            .map(|mapper| mapper.into_entity())
+            .map(Into::into)
     }
 
-    async fn create_post(&self, post: Post, label_ids: &[i32]) -> Result<i32, PostError> {
+    async fn create_post(&self, post: CreatePostParams) -> Result<i32, PostError> {
         let info_mapper = PostInfoMapper {
-            id: post.info.id,
-            semantic_id: post.info.semantic_id,
-            title: post.info.title,
-            description: post.info.description,
-            preview_image_url: post.info.preview_image_url,
+            id: -1,
+            semantic_id: post.semantic_id,
+            title: post.title,
+            description: post.description,
+            preview_image_url: post.preview_image_url,
             labels: Vec::new(),
-            published_time: post.info.published_time.map(|dt| dt.naive_utc()),
+            published_time: post.published_time.map(|dt| dt.naive_utc()),
         };
 
         let post_mapper = PostMapper {
-            id: post.id,
+            id: -1,
             info: info_mapper,
             content: post.content,
         };
 
         self.post_db_service
-            .create_post(post_mapper, label_ids)
+            .create_post(post_mapper, &post.label_ids)
             .await
     }
 
-    async fn update_post(&self, post: Post, label_ids: &[i32]) -> Result<(), PostError> {
+    async fn update_post(&self, id: i32, post: UpdatePostParams) -> Result<(), PostError> {
         let info_mapper = PostInfoMapper {
-            id: post.info.id,
-            semantic_id: post.info.semantic_id,
-            title: post.info.title,
-            description: post.info.description,
-            preview_image_url: post.info.preview_image_url,
+            id: id,
+            semantic_id: String::new(),
+            title: post.title,
+            description: post.description,
+            preview_image_url: post.preview_image_url,
             labels: Vec::new(),
-            published_time: post.info.published_time.map(|dt| dt.naive_utc()),
+            published_time: post.published_time.map(|dt| dt.naive_utc()),
         };
 
         let post_mapper = PostMapper {
-            id: post.id,
+            id: id,
             info: info_mapper,
             content: post.content,
         };
 
         self.post_db_service
-            .update_post(post_mapper, label_ids)
+            .update_post(post_mapper, &post.label_ids)
             .await
     }
 

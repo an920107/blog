@@ -3,8 +3,8 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::{error::post_error::PostError, gateway::post_repository::PostRepository},
-    domain::entity::post::Post,
+    application::gateway::post_repository::PostRepository,
+    domain::{entity::post::Post, error::post_error::PostError},
 };
 
 #[async_trait]
@@ -28,7 +28,7 @@ impl GetPostByIdUseCase for GetFullPostUseCaseImpl {
         let post = self.post_repository.get_post_by_id(id).await?;
 
         if post.info.published_time.is_none() && user_id.is_none() {
-            return Err(PostError::Unauthorized);
+            return Err(PostError::NotFound);
         }
 
         Ok(post)

@@ -13,22 +13,18 @@ pub struct PostInfoMapper {
     pub labels: Vec<LabelMapper>,
 }
 
-impl PostInfoMapper {
-    pub fn into_entity(self) -> PostInfo {
+impl Into<PostInfo> for PostInfoMapper {
+    fn into(self) -> PostInfo {
         PostInfo {
             id: self.id,
             semantic_id: self.semantic_id,
-            title: self.title.clone(),
-            description: self.description.clone(),
-            preview_image_url: self.preview_image_url.clone(),
+            title: self.title,
+            description: self.description,
+            preview_image_url: self.preview_image_url,
             published_time: self
                 .published_time
                 .map(|dt| DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc)),
-            labels: self
-                .labels
-                .into_iter()
-                .map(LabelMapper::into_entity)
-                .collect(),
+            labels: self.labels.into_iter().map(Into::into).collect(),
         }
     }
 }

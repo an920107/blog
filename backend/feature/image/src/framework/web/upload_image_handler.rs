@@ -11,7 +11,7 @@ use crate::{
         image_controller::ImageController, image_info_response_dto::ImageInfoResponseDto,
         image_request_dto::ImageRequestDto,
     },
-    application::error::image_error::ImageError,
+    domain::error::image_error::ImageError,
 };
 
 #[utoipa::path(

@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use crate::application::{error::auth_error::AuthError, gateway::auth_repository::AuthRepository};
+use crate::{
+    application::gateway::auth_repository::AuthRepository, domain::error::auth_error::AuthError,
+};
 
 pub trait GetAuthUrlUseCase: Send + Sync {
     fn execute(&self) -> Result<AuthUrl, AuthError>;

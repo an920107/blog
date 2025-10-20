@@ -5,7 +5,7 @@ use sentry::integrations::anyhow::capture_anyhow;
 
 use crate::{
     adapter::delivery::{post_controller::PostController, post_response_dto::PostResponseDto},
-    application::error::post_error::PostError,
+    domain::error::post_error::PostError,
 };
 
 #[utoipa::path(
@@ -16,7 +16,6 @@ use crate::{
     description = "Only authenticated users can access unpublished posts. Accepts either numeric ID or semantic ID.",
     responses (
         (status = 200, body = PostResponseDto),
-        (status = 401, description = PostError::Unauthorized),
         (status = 404, description = PostError::NotFound),
     )
 )]
@@ -34,7 +33,6 @@ pub async fn get_post_by_id_handler(
         Ok(post) => HttpResponse::Ok().json(post),
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
-            PostError::Unauthorized => HttpResponse::Unauthorized().finish(),
             PostError::InvalidSemanticId
             | PostError::DuplicatedSemanticId
             | PostError::LabelNotFound => {
