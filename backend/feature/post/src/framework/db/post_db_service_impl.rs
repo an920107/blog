@@ -44,6 +44,7 @@ impl PostDbService for PostDbServiceImpl {
                     p.description,
                     p.preview_image_url,
                     p.published_time,
+                    p.updated_time,
                     l.id AS label_id,
                     l.name AS label_name,
                     l.color AS label_color
@@ -69,7 +70,7 @@ impl PostDbService for PostDbServiceImpl {
             query_builder.push(r#")"#);
         }
 
-        query_builder.push(r#" ORDER BY p.id, pl."order""#);
+        query_builder.push(r#" ORDER BY p.published_time DESC NULLS FIRST, p.updated_time DESC, pl."order""#);
 
         let records = query_builder
             .build_query_as::<PostInfoWithLabelRecord>()
