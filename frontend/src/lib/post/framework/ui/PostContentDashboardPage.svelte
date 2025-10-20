@@ -12,7 +12,7 @@
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
-	import MardownRenderer from '$lib/post/framework/ui/MardownRenderer.svelte';
+	import MarkdownRenderer from '$lib/post/framework/ui/MarkdownRenderer.svelte';
 	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
 	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
 	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
@@ -146,6 +146,6 @@
 	</Table>
 
 	<div class="mt-16 max-w-3xl">
-		<MardownRenderer content={post?.content ?? ''} />
+		<MarkdownRenderer content={post?.content ?? ''} />
 	</div>
 </div>

@@ -11,6 +11,7 @@
 	import markdownit from 'markdown-it';
 	import CryptoJS from 'crypto-js';
 	import type { Attachment } from 'svelte/attachments';
+	import hljs from 'highlight.js';
 
 	const {
 		content,
@@ -20,7 +21,20 @@
 		onHeadingUpdate?: (headings: HeadingItem[]) => void;
 	} = $props();
 
-	const md = markdownit();
+	const md = markdownit({
+		highlight: (str, lang) => {
+			if (!lang || !hljs.getLanguage(lang)) {
+				const escapedCode: string = md.utils.escapeHtml(str);
+				return `<pre class="hljs"><code>${escapedCode}</code></pre>`;
+			}
+
+			const highlightedCode = hljs.highlight(str, {
+				language: lang,
+				ignoreIllegals: true,
+			}).value;
+			return `<pre class="hljs"><code>${highlightedCode}</code></pre>`;
+		},
+	});
 	const parsedContent = $derived(md.render(content));
 
 	const attachment: Attachment = (element) => {

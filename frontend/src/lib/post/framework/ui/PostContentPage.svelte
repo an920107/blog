@@ -3,7 +3,9 @@
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
-	import MardownRenderer, { type HeadingItem } from '$lib/post/framework/ui/MardownRenderer.svelte';
+	import MarkdownRenderer, {
+		type HeadingItem,
+	} from '$lib/post/framework/ui/MarkdownRenderer.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
@@ -99,7 +101,7 @@
 	<article class="prose max-w-3xl prose-gray lg:flex-1">
 		{@render header()}
 		<hr />
-		<MardownRenderer {content} onHeadingUpdate={(val) => (headings = val)} />
+		<MarkdownRenderer {content} onHeadingUpdate={(val) => (headings = val)} />
 	</article>
 	{@render toc()}
 </div>

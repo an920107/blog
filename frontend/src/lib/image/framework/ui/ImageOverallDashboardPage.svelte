@@ -13,7 +13,6 @@
 
 		if (state.isSuccess()) {
 			const imageInfo = state.data;
-			console.log('Image URL', imageInfo.url.href);
 
 			let copiedToClipboard: boolean;
 			try {

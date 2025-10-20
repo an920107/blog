@@ -14,9 +14,7 @@
 		"lint": "prettier --check . && eslint ."
 	},
 	"dependencies": {
-		"@sentry/sveltekit": "^10.1.0",
-		"@types/crypto-js": "^4.2.2",
-		"crypto-js": "^4.2.0"
+		"@sentry/sveltekit": "^10.1.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -30,14 +28,17 @@
 		"@sveltejs/vite-plugin-svelte": "^6.0.0",
 		"@tailwindcss/typography": "^0.5.15",
 		"@tailwindcss/vite": "^4.0.0",
+		"@types/crypto-js": "^4.2.2",
 		"@types/markdown-it": "^14.1.2",
 		"@types/sanitize-html": "^2.16.0",
 		"bits-ui": "^2.11.5",
 		"clsx": "^2.1.1",
+		"crypto-js": "^4.2.0",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
 		"globals": "^16.0.0",
+		"highlight.js": "^11.11.1",
 		"markdown-it": "^14.1.0",
 		"mode-watcher": "^1.1.0",
 		"prettier": "^3.4.2",
