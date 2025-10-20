@@ -15,7 +15,7 @@
 		content: z.string(),
 		labelIds: z.array(z.number()),
 		previewImageUrl: z
-			.httpUrl()
+			.url()
 			.nullable()
 			.transform((s) => (s ? new URL(s) : null)),
 		publishedTime: z
