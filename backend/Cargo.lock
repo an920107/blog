@@ -420,7 +420,7 @@ dependencies = [
 
 [[package]]
 name = "auth"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "actix-session",
  "actix-web",
@@ -621,7 +621,7 @@ dependencies = [
 
 [[package]]
 name = "common"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "sqlx",
 ]
@@ -1743,7 +1743,7 @@ dependencies = [
 
 [[package]]
 name = "image"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "actix-multipart",
  "actix-web",
@@ -1878,7 +1878,7 @@ dependencies = [
 
 [[package]]
 name = "label"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -2414,7 +2414,7 @@ dependencies = [
 
 [[package]]
 name = "post"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -3186,7 +3186,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "actix-session",
  "actix-web",
