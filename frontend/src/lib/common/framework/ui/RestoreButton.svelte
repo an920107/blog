@@ -18,8 +18,8 @@
 		const input = document.getElementById(htmlFor) as HTMLInputElement | null;
 		if (input) {
 			input.value = defaultValue;
-			input.dispatchEvent(new Event('input'));
-			input.dispatchEvent(new Event('change'));
+			input.dispatchEvent(new Event('input', { bubbles: true }));
+			input.dispatchEvent(new Event('change', { bubbles: true }));
 		}
 		postAction?.();
 	}

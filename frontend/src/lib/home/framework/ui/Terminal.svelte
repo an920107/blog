@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/common/framework/components/utils';
 	import TerminalLastLine from '$lib/home/framework/ui/TerminalLastLine.svelte';
 	import TerminalNormalLine from '$lib/home/framework/ui/TerminalNormalLine.svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -60,9 +61,14 @@
 >
 	<div
 		bind:this={element}
-		class="flex w-full flex-col gap-y-1.5 rounded-2xl border-4 border-true-gray-800 bg-true-gray-700 p-4 pb-28 font-mono font-medium text-gray-50 shadow-lg transition-opacity duration-300 md:gap-y-2.5 md:rounded-3xl md:border-8 md:p-8 md:pb-32 md:text-lg md:shadow-xl {isReady
-			? 'opacity-100'
-			: 'opacity-0'}"
+		class={cn(
+			'flex w-full flex-col gap-y-1.5 p-4 pb-28 md:gap-y-2.5 md:p-8 md:pb-32',
+			'border-true-gray-800 bg-true-gray-700',
+			'rounded-2xl border-4 shadow-lg md:rounded-3xl md:border-8 md:shadow-xl',
+			'font-mono font-medium text-gray-50 md:text-lg',
+			'transition-opacity duration-300',
+			isReady ? 'opacity-100' : 'opacity-0'
+		)}
 	>
 		{#each lines.slice(0, currentIndex) as line, index (index)}
 			<TerminalNormalLine text={line} />

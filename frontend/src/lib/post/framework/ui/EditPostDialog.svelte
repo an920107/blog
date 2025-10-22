@@ -43,6 +43,18 @@
 	import Textarea from '$lib/common/framework/components/ui/textarea/textarea.svelte';
 	import InputEnabledToggle from '$lib/common/framework/ui/InputEnabledToggle.svelte';
 	import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
+	import { getContext, onMount, tick } from 'svelte';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { Popover } from '$lib/common/framework/components/ui/popover';
+	import PopoverTrigger from '$lib/common/framework/components/ui/popover/popover-trigger.svelte';
+	import PopoverContent from '$lib/common/framework/components/ui/popover/popover-content.svelte';
+	import Command from '$lib/common/framework/components/ui/command/command.svelte';
+	import CommandInput from '$lib/common/framework/components/ui/command/command-input.svelte';
+	import CommandList from '$lib/common/framework/components/ui/command/command-list.svelte';
+	import CommandGroup from '$lib/common/framework/components/ui/command/command-group.svelte';
+	import CommandItem from '$lib/common/framework/components/ui/command/command-item.svelte';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 
 	const {
 		mode,
@@ -73,9 +85,53 @@
 	let formData: FormParams = $state(defaultValues);
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
-	let labelIds = $state(JSON.stringify(defaultValues.labelIds));
 	let previewImageUrl = $state(defaultValues.previewImageUrl?.href ?? '');
 	let publishedTime = $state(defaultValues.publishedTime?.toDateTimeInputValue() ?? '');
+
+	const labelsListedStore =
+		getContext<LabelsListedStore | undefined>(LabelsListedStore.name) ?? null;
+	const labelsListedState = $derived(labelsListedStore ? $labelsListedStore : null);
+	const listLabels = labelsListedStore?.trigger ?? null;
+
+	let labelIdsInputElement: HTMLInputElement | null = null;
+	async function labelOperation(method: 'remove' | 'add' | 'previous' | 'next', labelId: number) {
+		switch (method) {
+			case 'remove':
+				formData.labelIds = formData.labelIds.filter((id) => id !== labelId);
+				break;
+			case 'add':
+				if (!formData.labelIds.includes(labelId)) {
+					formData.labelIds = [...formData.labelIds, labelId];
+				}
+				break;
+			case 'previous': {
+				const index = formData.labelIds.indexOf(labelId);
+				if (index > 0) {
+					const newLabelIds = [...formData.labelIds];
+					[newLabelIds[index - 1], newLabelIds[index]] = [
+						newLabelIds[index],
+						newLabelIds[index - 1],
+					];
+					formData.labelIds = newLabelIds;
+				}
+				break;
+			}
+			case 'next': {
+				const index = formData.labelIds.indexOf(labelId);
+				if (index >= 0 && index < formData.labelIds.length - 1) {
+					const newLabelIds = [...formData.labelIds];
+					[newLabelIds[index + 1], newLabelIds[index]] = [
+						newLabelIds[index],
+						newLabelIds[index + 1],
+					];
+					formData.labelIds = newLabelIds;
+				}
+				break;
+			}
+		}
+		await tick();
+		labelIdsInputElement?.dispatchEvent(new Event('input'));
+	}
 
 	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
@@ -83,7 +139,6 @@
 
 		const parseResult = formSchema.safeParse({
 			...formData,
-			labelIds: JSON.parse(labelIds) as number[],
 			previewImageUrl: previewImageUrl || null,
 			publishedTime: publishedTime ? new Date(publishedTime) : null,
 		});
@@ -106,9 +161,10 @@
 		}
 
 		formData = defaultValues;
-		labelIds = defaultValues.labelIds.join(',');
 		open = false;
 	}
+
+	onMount(() => listLabels?.());
 </script>
 
 <Dialog bind:open>
@@ -190,12 +246,25 @@
 	<div>
 		<Label for={id} class="pb-2">Label IDs</Label>
 		<div class="flex flex-row items-center gap-x-2">
-			<Input
+			<input
 				{id}
+				bind:this={labelIdsInputElement}
+				hidden
+				readonly
 				type="text"
 				aria-invalid={formErrors.labelIds !== undefined}
-				bind:value={labelIds}
+				value={JSON.stringify(formData.labelIds)}
+				oninput={(e) => (formData.labelIds = JSON.parse((e.target as HTMLInputElement).value))}
 			/>
+			{@render labelSearchPopover()}
+			<div class="flex w-full flex-row flex-wrap items-center gap-2">
+				{#each formData.labelIds as labelId (labelId)}
+					{@const label = labelsListedState?.data?.find((l) => l.id === labelId)}
+					{#if label}
+						{@render labelItem(label)}
+					{/if}
+				{/each}
+			</div>
 			<RestoreButton
 				for={id}
 				defaultValue={JSON.stringify(defaultValues.labelIds)}
@@ -296,5 +365,64 @@
 			/>
 		</div>
 		<InputError message={formErrors.publishedTime} />
+	</div>
+{/snippet}
+
+{#snippet labelSearchPopover()}
+	<Popover>
+		<PopoverTrigger class={buttonVariants({ variant: 'secondary', size: 'icon-sm' })}>
+			<i class="fa-solid fa-plus"></i>
+		</PopoverTrigger>
+		<PopoverContent class="max-w-52 p-0">
+			<Command>
+				<CommandInput />
+				<CommandList>
+					<CommandGroup>
+						{#each labelsListedState?.data ?? [] as label (label.id)}
+							{#if !formData.labelIds.includes(label.id)}
+								<CommandItem
+									class="cursor-pointer"
+									value={label.name}
+									onclick={() => labelOperation('add', label.id)}
+								>
+									<PostLabel {label} />
+								</CommandItem>
+							{/if}
+						{/each}
+					</CommandGroup>
+				</CommandList>
+			</Command>
+		</PopoverContent>
+	</Popover>
+{/snippet}
+
+{#snippet labelItem(label: LabelViewModel)}
+	{@const style = `color: ${label.color.darken(0.6).hex};`}
+	<div class="group flex flex-row items-center">
+		<button
+			type="button"
+			title="Move previous"
+			class="hidden group-hover:block"
+			onclick={() => labelOperation('previous', label.id)}
+		>
+			<i class="fa-solid fa-chevron-left" {style}></i>
+		</button>
+		<PostLabel {label} />
+		<button
+			type="button"
+			title="Move next"
+			class="hidden group-hover:block"
+			onclick={() => labelOperation('next', label.id)}
+		>
+			<i class="fa-solid fa-chevron-right" {style}></i>
+		</button>
+		<button
+			type="button"
+			title="Remove"
+			class="hidden group-hover:block"
+			onclick={() => labelOperation('remove', label.id)}
+		>
+			<i class="fa-solid fa-trash-can" {style}></i>
+		</button>
 	</div>
 {/snippet}
