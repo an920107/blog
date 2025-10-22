@@ -20,11 +20,19 @@
 </script>
 
 <a
-	class="flex cursor-pointer flex-col gap-y-6"
+	class={cn(
+		'flex cursor-pointer flex-col gap-y-6',
+		'group transition-transform duration-300 hover:scale-[1.02] hover:transform'
+	)}
 	href="/post/{postInfo.semanticId}"
 	title={postInfo.title}
 >
-	<div class="relative aspect-video overflow-hidden rounded-2xl bg-gray-200">
+	<div
+		class={cn(
+			'relative aspect-video overflow-hidden rounded-2xl bg-gray-200',
+			'transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-black/5'
+		)}
+	>
 		<img
 			class={cn(
 				'h-full w-full rounded-2xl object-cover object-center transition-opacity duration-300',
