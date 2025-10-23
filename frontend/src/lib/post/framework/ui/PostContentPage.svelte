@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContext, onDestroy, onMount } from 'svelte';
+	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
@@ -11,12 +11,18 @@
 	import { cn } from '$lib/common/framework/components/utils';
 	import OpenGraph from './OpenGraph.svelte';
 	import { Environment } from '$lib/environment';
+	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 
 	const { id }: { id: string } = $props();
 
 	const pageLoadedstore = getContext<PostLoadedStore>(PostLoadedStore.name);
 	const pageLoadedstate = $derived($pageLoadedstore);
 	const { trigger: loadPost } = pageLoadedstore;
+
+	const drawerConfiguredStore = getContext<DrawerConfiguredStore>(DrawerConfiguredStore.name);
+	const drawerConfiguredState = $derived($drawerConfiguredStore);
+	const drawerViewModel = $derived(drawerConfiguredState?.data);
+	const { trigger: configureDrawer } = drawerConfiguredStore;
 
 	const post = $derived(pageLoadedstate.data);
 	const postInfo = $derived(post?.info);
@@ -25,7 +31,12 @@
 	let headings: HeadingItem[] = $state([]);
 	let activeHeadingId: string | null = $state(null);
 
-	function smoothScrollToHeading(headingId: string) {
+	async function smoothScrollToHeading(headingId: string) {
+		if (drawerViewModel?.isOpen) {
+			configureDrawer(drawerViewModel.copyWith({ isOpen: false }));
+			await tick();
+		}
+
 		const element = document.getElementById(headingId);
 		if (element) {
 			element.scrollIntoView({
@@ -66,6 +77,9 @@
 
 	onMount(() => {
 		loadPost(id);
+		if (drawerViewModel) {
+			configureDrawer(drawerViewModel.copyWith({ content: tocWithPadding }));
+		}
 
 		const handleScroll = () => updateActiveHeading();
 		window.addEventListener('scroll', handleScroll);
@@ -73,37 +87,56 @@
 			window.removeEventListener('scroll', handleScroll);
 		});
 	});
+
+	onDestroy(() => {
+		if (drawerViewModel) {
+			configureDrawer(drawerViewModel.copyWith({ isOpen: false, content: null }));
+		}
+	});
 </script>
 
 <svelte:head>
 	<title>{generateTitle(postInfo?.title)}</title>
 	{#if postInfo}
 		<meta name="description" content={postInfo.description} />
-		{#if postInfo.isPublished}
-			<StructuredData
-				headline={postInfo.title}
-				description={postInfo.description}
-				datePublished={postInfo.publishedTime!}
-				image={postInfo.previewImageUrl}
-			/>
-			<OpenGraph
-				title={postInfo.title}
-				description={postInfo.description}
-				publishedTime={postInfo.publishedTime!}
-				labels={postInfo.labels.map((label) => label.name)}
-				url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
-				image={postInfo.previewImageUrl}
-			/>
-		{/if}
 	{/if}
 </svelte:head>
-<div class="content-container pb-16 lg:flex lg:flex-row lg:gap-12">
-	<article class="prose max-w-3xl prose-gray lg:flex-1">
+
+{#if postInfo?.isPublished}
+	<StructuredData
+		headline={postInfo.title}
+		description={postInfo.description}
+		datePublished={postInfo.publishedTime!}
+		image={postInfo.previewImageUrl}
+	/>
+	<OpenGraph
+		title={postInfo.title}
+		description={postInfo.description}
+		publishedTime={postInfo.publishedTime!}
+		labels={postInfo.labels.map((label) => label.name)}
+		url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
+		image={postInfo.previewImageUrl}
+	/>
+{/if}
+
+<div class="content-container pb-16 md:flex md:flex-row md:gap-6">
+	<article
+		class={cn(
+			'prose max-w-screen prose-gray',
+			'md:max-w-lg min-[50rem]:max-w-xl min-[56rem]:max-w-2xl lg:max-w-3xl'
+		)}
+	>
 		{@render header()}
 		<hr />
 		<MarkdownRenderer {content} onHeadingUpdate={(val) => (headings = val)} />
 	</article>
-	{@render toc()}
+	{#if headings.length > 0}
+		<div transition:fade class="ms-auto max-w-xs min-w-0 pt-32 max-md:hidden">
+			<div class="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto">
+				{@render toc()}
+			</div>
+		</div>
+	{/if}
 </div>
 
 {#snippet header()}
@@ -122,26 +155,29 @@
 {/snippet}
 
 {#snippet toc()}
-	{#if headings.length > 0}
-		<div transition:fade class="ms-auto max-w-xs min-w-0 pt-32 max-lg:hidden">
-			<div class="sticky top-toolbar-height max-h-content-height space-y-1">
-				<p class="mb-2 truncate font-medium text-gray-600">章節目錄</p>
-				{#each headings as heading (heading.id)}
-					{@const padding = (heading.level - 2) * 1.5}
-					{@const isActive = activeHeadingId === heading.id}
-					<div style="padding-left: {padding}rem;">
-						<button
-							class={cn(
-								'w-fit max-w-full overflow-hidden text-left font-light text-nowrap text-ellipsis decoration-gray-400 hover:underline',
-								isActive ? 'text-gray-900' : 'text-gray-400'
-							)}
-							onclick={() => smoothScrollToHeading(heading.id)}
-						>
-							{heading.text}
-						</button>
-					</div>
-				{/each}
+	<div class="space-y-1">
+		<p class="mb-2 truncate font-medium text-gray-800">章節目錄</p>
+		{#each headings as heading (heading.id)}
+			{@const padding = (heading.level - 2) * 1.5}
+			{@const isActive = activeHeadingId === heading.id}
+			<div style="padding-left: {padding}rem;">
+				<button
+					class={cn(
+						'w-fit max-w-full overflow-hidden text-left',
+						'font-light text-nowrap text-ellipsis decoration-gray-400 hover:underline',
+						isActive ? 'text-gray-900' : 'text-gray-400'
+					)}
+					onclick={() => smoothScrollToHeading(heading.id)}
+				>
+					{heading.text}
+				</button>
 			</div>
-		</div>
-	{/if}
+		{/each}
+	</div>
+{/snippet}
+
+{#snippet tocWithPadding()}
+	<div class="px-2.5">
+		{@render toc()}
+	</div>
 {/snippet}

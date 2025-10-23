@@ -37,6 +37,7 @@ import { GetPostUseCase } from '$lib/post/application/useCase/getPostUseCase';
 import { PostApiServiceImpl } from '$lib/post/framework/api/postApiServiceImpl';
 import { GetLabelUseCase } from '$lib/label/application/useCase/getLabelUseCase';
 import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
+import { DrawerConfiguredStore } from './common/adapter/presenter/drawerConfiguredStore';
 
 export class Container {
 	private useCases: UseCases;
@@ -45,6 +46,10 @@ export class Container {
 		const apiServices = new ApiServices(fetchFn);
 		const repositories = new Repositories(apiServices);
 		this.useCases = new UseCases(repositories);
+	}
+
+	createDrawerConfiguredStore(): DrawerConfiguredStore {
+		return new DrawerConfiguredStore();
 	}
 
 	createAuthLoadedStore(): AuthLoadedStore {

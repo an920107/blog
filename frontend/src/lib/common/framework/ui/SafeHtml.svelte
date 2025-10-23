@@ -7,7 +7,7 @@
 
 	const sanitizedHtml = $derived(
 		sanitizeHtml(html, {
-			allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'style']),
+			allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 			allowedAttributes: {
 				...sanitizeHtml.defaults.allowedAttributes,
 				pre: ['class'],

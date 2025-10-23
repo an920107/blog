@@ -17,7 +17,7 @@
 		image: URL | null;
 	} = $props();
 
-	const section = labels.length > 0 ? labels[0] : 'Blog';
+	const section = $derived(labels.length > 0 ? labels[0] : 'Blog');
 </script>
 
 <svelte:head>
