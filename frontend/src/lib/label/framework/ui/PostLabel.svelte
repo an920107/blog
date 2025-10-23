@@ -5,9 +5,9 @@
 </script>
 
 <div
-	class="flex h-fit w-fit flex-row items-center gap-x-1 rounded-full px-2 py-0.5"
+	class="flex h-fit w-fit flex-row flex-nowrap items-center gap-x-1 rounded-full px-2 py-0.5"
 	style="background-color: {label.color.hex};"
 >
 	<div class="size-2 rounded-full" style="background-color: {label.color.darken(0.2).hex};"></div>
-	<span class="text-xs">{label.name}</span>
+	<span class="text-xs text-nowrap">{label.name}</span>
 </div>

@@ -141,7 +141,7 @@
 
 {#snippet header()}
 	<div class="flex flex-col pt-9 md:pt-20">
-		<div class="mb-4 flex flex-row gap-2">
+		<div class="mb-4 flex flex-row flex-wrap gap-2">
 			{#each postInfo?.labels ?? [] as label (label.id)}
 				<PostLabel {label} />
 			{/each}
