@@ -101,7 +101,11 @@
 				'transition-colors duration-200',
 				isSelected ? 'hover:bg-blue-700' : 'hover:bg-gray-100'
 			)}
-			onclick={() => setTimeout(() => setDrawerOpen(false), 200)}
+			onclick={() => {
+				// Reseting scroll position by set `top` as 0 since drawer prevents scrolling
+				document.body.style.top = '0px';
+				setTimeout(() => setDrawerOpen(false), 200);
+			}}
 		>
 			{label}
 		</a>
