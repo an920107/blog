@@ -5,7 +5,7 @@
 		type EditPostDialogFormParams,
 	} from '$lib/post/framework/ui/EditPostDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
@@ -16,8 +16,6 @@
 	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
 	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
 	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
-
-	const { id }: { id: number } = $props();
 
 	const postLoadedStore = getContext<PostLoadedStore>(PostLoadedStore.name);
 	const postLoadedState = $derived($postLoadedStore);
@@ -63,10 +61,6 @@
 
 		return true;
 	}
-
-	onMount(() => {
-		loadPost(id);
-	});
 </script>
 
 <div class="dashboard-container mb-10">

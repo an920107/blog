@@ -13,11 +13,8 @@
 	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 
-	const { id }: { id: string } = $props();
-
 	const pageLoadedstore = getContext<PostLoadedStore>(PostLoadedStore.name);
 	const pageLoadedstate = $derived($pageLoadedstore);
-	const { trigger: loadPost } = pageLoadedstore;
 
 	const drawerConfiguredStore = getContext<DrawerConfiguredStore>(DrawerConfiguredStore.name);
 	const drawerConfiguredState = $derived($drawerConfiguredStore);
@@ -76,7 +73,6 @@
 	});
 
 	onMount(() => {
-		loadPost(id);
 		if (drawerViewModel) {
 			configureDrawer(drawerViewModel.copyWith({ content: tocWithPadding }));
 		}

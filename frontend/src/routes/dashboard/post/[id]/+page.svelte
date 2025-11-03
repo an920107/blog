@@ -9,7 +9,6 @@
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 
 	const { data }: PageProps = $props();
-	const { id } = data;
 
 	const container = getContext<Container>(Container.name);
 	const postLoadedStore = container.createPostLoadedStore(
@@ -23,4 +22,4 @@
 	setContext(LabelsListedStore.name, labelsLiestedStore);
 </script>
 
-<PostContentDashboardPage {id} />
+<PostContentDashboardPage />

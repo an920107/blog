@@ -10,7 +10,7 @@
 		type EditLabelDialogFormParams,
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { TableCell } from '$lib/common/framework/components/ui/table';
 	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
@@ -45,8 +45,6 @@
 
 		return true;
 	}
-
-	onMount(() => loadLabels());
 </script>
 
 <div class="dashboard-container mb-10">

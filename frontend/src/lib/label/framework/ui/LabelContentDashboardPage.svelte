@@ -8,14 +8,12 @@
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
-
-	const { id }: { id: number } = $props();
 
 	const labelLoadedStore = getContext<LabelLoadedStore>(LabelLoadedStore.name);
 	const labelLoadedState = $derived($labelLoadedStore);
@@ -28,7 +26,6 @@
 
 	const relatedPostsStore = getContext<PostsListedStore>(PostsListedStore.name);
 	const relatedPostsState = $derived($relatedPostsStore);
-	const { trigger: loadRelatedPosts } = relatedPostsStore;
 
 	const formDefaultValues: EditLabelDialogFormParams | null = $derived.by(() => {
 		if (labelLoadedState.data === null) {
@@ -69,11 +66,6 @@
 
 		return true;
 	}
-
-	onMount(() => {
-		loadLabel(id);
-		loadRelatedPosts({ showUnpublished: true, labelId: id });
-	});
 </script>
 
 <div class="dashboard-container mb-10">

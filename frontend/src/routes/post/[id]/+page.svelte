@@ -6,8 +6,7 @@
 	import { Container } from '$lib/container';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 
-	const { data, params }: PageProps = $props();
-	const { id } = params;
+	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);
 
 	const initialData = PostViewModel.rehydrate(data.dehydratedData);
@@ -15,4 +14,4 @@
 	setContext(PostLoadedStore.name, store);
 </script>
 
-<PostContentPage {id} />
+<PostContentPage />

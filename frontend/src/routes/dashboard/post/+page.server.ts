@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const store = container.createPostsListedStore();
 	const { trigger: loadPosts } = store;
 
-	const state = await loadPosts();
+	const state = await loadPosts({ showUnpublished: true });
 
 	return {
 		dehydratedData: state.data?.map((post) => post.dehydrate()),

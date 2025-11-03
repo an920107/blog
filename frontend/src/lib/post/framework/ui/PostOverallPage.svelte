@@ -2,13 +2,10 @@
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 
 	const store = getContext<PostsListedStore>(PostsListedStore.name);
 	const state = $derived($store);
-	const { trigger: loadPosts } = store;
-
-	onMount(() => loadPosts());
 </script>
 
 <svelte:head>

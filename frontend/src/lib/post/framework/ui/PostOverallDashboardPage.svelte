@@ -11,7 +11,7 @@
 		type EditPostDialogFormParams,
 	} from '$lib/post/framework/ui/EditPostDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
 	const postCreatedStore = getContext<PostCreatedStore>(PostCreatedStore.name);
@@ -37,8 +37,6 @@
 
 		return true;
 	}
-
-	onMount(() => loadPosts({ showUnpublished: true }));
 </script>
 
 <div class="dashboard-container mb-10">
