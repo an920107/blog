@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
+	import generateTitle from '$lib/common/framework/ui/generateTitle';
+	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 	import MarkdownRenderer, {
 		type HeadingItem,
@@ -7,6 +9,8 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
+	import OpenGraph from './OpenGraph.svelte';
+	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 
 	const pageLoadedstore = getContext<PostLoadedStore>(PostLoadedStore.name);
@@ -86,6 +90,30 @@
 		}
 	});
 </script>
+
+<svelte:head>
+	<title>{generateTitle(postInfo?.title)}</title>
+	{#if postInfo}
+		<meta name="description" content={postInfo.description} />
+	{/if}
+</svelte:head>
+
+{#if postInfo?.isPublished}
+	<StructuredData
+		headline={postInfo.title}
+		description={postInfo.description}
+		datePublished={postInfo.publishedTime!}
+		image={postInfo.previewImageUrl}
+	/>
+	<OpenGraph
+		title={postInfo.title}
+		description={postInfo.description}
+		publishedTime={postInfo.publishedTime!}
+		labels={postInfo.labels.map((label) => label.name)}
+		url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
+		image={postInfo.previewImageUrl}
+	/>
+{/if}
 
 <div class="content-container pb-16 md:flex md:flex-row md:gap-6">
 	<article

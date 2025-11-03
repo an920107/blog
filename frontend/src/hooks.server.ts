@@ -13,7 +13,17 @@ Sentry.init({
 export const handle: Handle = sequence(Sentry.sentryHandle(), ({ event, resolve }) => {
 	event.locals.container ??= new Container(event.fetch);
 
-	return resolve(event);
+	const userAgent = event.request.headers.get('user-agent') || '';
+	const isGoogleBot = userAgent.toLowerCase().includes('googlebot');
+
+	return resolve(event, {
+		transformPageChunk: ({ html }) => {
+			if (isGoogleBot) {
+				return html.replace(/<link\s+rel="modulepreload"\s+as="script".+\/>/, '');
+			}
+			return html;
+		},
+	});
 });
 
 export const handleError = Sentry.handleErrorWithSentry();
