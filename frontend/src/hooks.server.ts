@@ -19,7 +19,7 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), ({ event, resolve 
 	return resolve(event, {
 		transformPageChunk: ({ html }) => {
 			if (isGoogleBot) {
-				return html.replace(/<link\s+rel="modulepreload"\s+as="script".+\/>/, '');
+				return html.replace(/<link\s+rel="modulepreload"\s+as="script".+\/>/g, '');
 			}
 			return html;
 		},
