@@ -9,7 +9,9 @@
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
 
-	const { data }: PageProps = $props();
+	const { data, params }: PageProps = $props();
+	const { id } = params;
+	const numericId = $derived(Number(id));
 
 	const container = getContext<Container>(Container.name);
 
@@ -25,4 +27,4 @@
 	setContext(PostsListedStore.name, postsListedStore);
 </script>
 
-<LabelContentDashboardPage />
+<LabelContentDashboardPage id={numericId} />
