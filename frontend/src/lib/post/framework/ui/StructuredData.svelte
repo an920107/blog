@@ -27,6 +27,4 @@
 	);
 </script>
 
-<svelte:head>
-	{@html jsonLdScript}
-</svelte:head>
+{@html jsonLdScript}

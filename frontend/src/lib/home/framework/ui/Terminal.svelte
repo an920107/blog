@@ -1,10 +1,5 @@
-<script lang="ts">
-	import { cn } from '$lib/common/framework/components/utils';
-	import TerminalLastLine from '$lib/home/framework/ui/TerminalLastLine.svelte';
-	import TerminalNormalLine from '$lib/home/framework/ui/TerminalNormalLine.svelte';
-	import { onDestroy, onMount } from 'svelte';
-
-	const lines = [
+<script module lang="ts">
+	export const lines = [
 		'大家好，我是 Squid 魷魚',
 		'身為一位軟體工程師',
 		'平常最喜歡埋首於程式碼的世界',
@@ -14,6 +9,13 @@
 		'還有各式各樣實用工具的評測與介紹',
 		'一起探索數位世界的無限可能吧！',
 	];
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/common/framework/components/utils';
+	import TerminalLastLine from '$lib/home/framework/ui/TerminalLastLine.svelte';
+	import TerminalNormalLine from '$lib/home/framework/ui/TerminalNormalLine.svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let isReady: boolean = $state(false);
 	let currentIndex: number = $state(0);
@@ -53,9 +55,6 @@
 	}
 </script>
 
-<svelte:head>
-	<meta name="description" content={lines.join('，')} />
-</svelte:head>
 <div
 	class="content-container flex flex-col items-center justify-center gap-y-2.5 py-32 md:gap-y-8 md:px-24 md:py-32"
 >
