@@ -102,13 +102,13 @@
 	<StructuredData
 		headline={postInfo.title}
 		description={postInfo.description}
-		datePublished={postInfo.publishedTime!}
+		datePublished={postInfo.publishedTime!.nativeDate}
 		image={postInfo.previewImageUrl}
 	/>
 	<OpenGraph
 		title={postInfo.title}
 		description={postInfo.description}
-		publishedTime={postInfo.publishedTime!}
+		publishedTime={postInfo.publishedTime!.nativeDate}
 		labels={postInfo.labels.map((label) => label.name)}
 		url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
 		image={postInfo.previewImageUrl}

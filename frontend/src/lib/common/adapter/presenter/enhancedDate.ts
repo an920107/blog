@@ -1,4 +1,59 @@
-export class EnhancedDate extends Date {
+export class EnhancedDate {
+	// Using composition over inheritance to avoid issues with hydration in SvelteKit
+	private date: Date;
+
+	constructor(date?: Date | number | string) {
+		if (date === undefined) {
+			this.date = new Date();
+			return;
+		}
+		this.date = new Date(date);
+	}
+
+	get nativeDate(): Date {
+		return this.date;
+	}
+
+	getFullYear(): number {
+		return this.date.getFullYear();
+	}
+
+	getMonth(): number {
+		return this.date.getMonth();
+	}
+
+	getDate(): number {
+		return this.date.getDate();
+	}
+
+	getHours(): number {
+		return this.date.getHours();
+	}
+
+	getMinutes(): number {
+		return this.date.getMinutes();
+	}
+
+	getSeconds(): number {
+		return this.date.getSeconds();
+	}
+
+	getMilliseconds(): number {
+		return this.date.getMilliseconds();
+	}
+
+	getTimezoneOffset(): number {
+		return this.date.getTimezoneOffset();
+	}
+
+	getTime(): number {
+		return this.date.getTime();
+	}
+
+	toISOString(): string {
+		return this.date.toISOString();
+	}
+
 	toLocalISOString(): string {
 		const pad = (n: number, z = 2) => String(n).padStart(z, '0');
 		const year = this.getFullYear();
