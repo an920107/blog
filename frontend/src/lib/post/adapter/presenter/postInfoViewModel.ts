@@ -45,9 +45,9 @@ export class PostInfoViewModel {
 	}
 
 	static rehydrate(props: DehydratedPostInfoProps): PostInfoViewModel {
-		let publishedTime: Date | null = null;
+		let publishedTime: EnhancedDate | null = null;
 		if (props.publishedTime !== null) {
-			publishedTime = new Date(props.publishedTime);
+			publishedTime = new EnhancedDate(props.publishedTime);
 		}
 
 		let previewImageUrl: URL | null = null;
@@ -62,7 +62,7 @@ export class PostInfoViewModel {
 			description: props.description,
 			previewImageUrl: previewImageUrl,
 			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
-			publishedTime: publishedTime ? new EnhancedDate(publishedTime) : null,
+			publishedTime: publishedTime,
 		});
 	}
 

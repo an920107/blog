@@ -49,7 +49,13 @@
 			return false;
 		}
 
-		const state = await updatePost({ id: post.id, params });
+		const state = await updatePost({
+			id: post.id,
+			params: {
+				...params,
+				publishedTime: params.publishedTime?.nativeDate ?? null,
+			},
+		});
 
 		if (state.isSuccess()) {
 			loadPost(post.id);
