@@ -11,7 +11,7 @@
 	}: {
 		title: string;
 		description: string;
-		publishedTime: Date;
+		publishedTime?: Date;
 		labels: string[];
 		url: URL;
 		image: URL | null;
@@ -26,7 +26,9 @@
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={url.href} />
-	<meta property="og:article:published_time" content={publishedTime.toISOString()} />
+	{#if publishedTime}
+		<meta property="og:article:published_time" content={publishedTime.toISOString()} />
+	{/if}
 	{#if section}
 		<meta property="og:article:section" content={section} />
 	{/if}

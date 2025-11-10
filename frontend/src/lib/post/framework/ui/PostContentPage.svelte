@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
-	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
+	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 	import MarkdownRenderer, {
 		type HeadingItem,
@@ -9,7 +9,7 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
-	import OpenGraph from './OpenGraph.svelte';
+	import OpenGraph from '../../../common/framework/ui/OpenGraph.svelte';
 	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 
@@ -104,10 +104,16 @@
 
 {#if postInfo?.isPublished}
 	<StructuredData
-		headline={postInfo.title}
-		description={postInfo.description}
-		datePublished={postInfo.publishedTime!.nativeDate}
-		image={postInfo.previewImageUrl}
+		props={{
+			type: 'BlogPosting',
+			url: new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL),
+			headline: postInfo.title,
+			name: postInfo.title,
+			description: postInfo.description,
+			datePublished: postInfo.publishedTime!.nativeDate,
+			image: postInfo.previewImageUrl,
+			articleSection: postInfo.labels.map((label) => label.name),
+		}}
 	/>
 	<OpenGraph
 		title={postInfo.title}
