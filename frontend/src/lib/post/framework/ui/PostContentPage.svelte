@@ -9,7 +9,7 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
-	import OpenGraph from '../../../common/framework/ui/OpenGraph.svelte';
+	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
 	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 
