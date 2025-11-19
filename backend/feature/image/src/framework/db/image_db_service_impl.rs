@@ -63,4 +63,29 @@ impl ImageDbService for ImageDbServiceImpl {
             Err(e) => Err(ImageError::Unexpected(DatabaseError(e).into())),
         }
     }
+
+    async fn list_image_info(&self) -> Result<Vec<ImageDbMapper>, ImageError> {
+        let image_records = sqlx::query_as!(
+            ImageRecord,
+            r#"
+                SELECT id, mime_type
+                FROM image
+                WHERE deleted_time IS NULL
+                ORDER BY id
+            "#
+        )
+        .fetch_all(&self.db_pool)
+        .await;
+
+        match image_records {
+            Ok(records) => Ok(records
+                .into_iter()
+                .map(|record| ImageDbMapper {
+                    id: record.id,
+                    mime_type: record.mime_type,
+                })
+                .collect()),
+            Err(e) => Err(ImageError::Unexpected(DatabaseError(e).into())),
+        }
+    }
 }

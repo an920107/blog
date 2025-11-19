@@ -1,5 +1,6 @@
+use super::image_info::ImageInfo;
+
 pub struct Image {
-    pub id: i32,
-    pub mime_type: String,
+    pub info: ImageInfo,
     pub data: Vec<u8>,
 }
