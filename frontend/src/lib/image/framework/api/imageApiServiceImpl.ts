@@ -25,6 +25,19 @@ export class ImageApiServiceImpl implements ImageApiService {
 		return ImageInfoResponseDto.fromJson(data);
 	}
 
+	async listImages(): Promise<ImageInfoResponseDto[]> {
+		const url = new URL('image', Environment.API_BASE_URL);
+
+		const response = await this.fetchFn(url);
+
+		if (!response.ok) {
+			throw new HttpError(response.status, url);
+		}
+
+		const data = await response.json();
+		return data.map(ImageInfoResponseDto.fromJson);
+	}
+
 	getUrlFromId(id: number): URL {
 		return new URL(`image/${id}`, Environment.API_BASE_URL);
 	}

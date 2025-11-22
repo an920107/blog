@@ -13,4 +13,9 @@ export class ImageRepositoryImpl implements ImageRepository {
 			url: this.imageApiService.getUrlFromId(dto.id),
 		});
 	}
+
+	async listImages(): Promise<ImageInfo[]> {
+		const dtos = await this.imageApiService.listImages();
+		return dtos.map((dto) => dto.toEntity(this.imageApiService.getUrlFromId(dto.id)));
+	}
 }
