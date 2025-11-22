@@ -12,11 +12,13 @@ import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel
 import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 import type { LabelRepository } from '$lib/label/application/gateway/labelRepository';
 import { CreateLabelUseCase } from '$lib/label/application/useCase/createLabelUseCase';
+import { GetImageInfoUseCase } from '$lib/image/application/useCase/getImageInfoUseCase';
 import { GetAllLabelsUseCase } from '$lib/label/application/useCase/getAllLabelsUseCase';
 import { UpdateLabelUseCase } from '$lib/label/application/useCase/updateLabelUseCase';
 import { LabelApiServiceImpl } from '$lib/label/framework/api/labelApiServiceImpl';
 import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
 import { ImageRepositoryImpl } from '$lib/image/adapter/gateway/imageRepositoryImpl';
+import { ImageLoadedStore } from '$lib/image/adapter/presenter/imageLoadedStore';
 import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
 import { ImagesListedStore } from '$lib/image/adapter/presenter/imagesListedStore';
 import type { ImageRepository } from '$lib/image/application/gateway/imageRepository';
@@ -65,6 +67,10 @@ export class Container {
 
 	createImagesListedStore(initialData?: readonly ImageInfoViewModel[]): ImagesListedStore {
 		return new ImagesListedStore(this.useCases.listImagesUseCase, initialData);
+	}
+
+	createImageLoadedStore(initialData?: ImageInfoViewModel): ImageLoadedStore {
+		return new ImageLoadedStore(this.useCases.getImageInfoUseCase, initialData);
 	}
 
 	createPostsListedStore(initialData?: readonly PostInfoViewModel[]): PostsListedStore {
@@ -172,6 +178,7 @@ class UseCases {
 	private _getCurrentUserUseCase?: GetCurrentUserUseCase;
 	private _uploadImageUseCase?: UploadImageUseCase;
 	private _listImagesUseCase?: ListImagesUseCase;
+	private _getImageInfoUseCase?: GetImageInfoUseCase;
 	private _getAllPostsUseCase?: GetAllPostsUseCase;
 	private _getPostUseCase?: GetPostUseCase;
 	private _createPostUseCase?: CreatePostUseCase;
@@ -198,6 +205,11 @@ class UseCases {
 	get listImagesUseCase(): ListImagesUseCase {
 		this._listImagesUseCase ??= new ListImagesUseCase(this.repositories.imageRepository);
 		return this._listImagesUseCase;
+	}
+
+	get getImageInfoUseCase(): GetImageInfoUseCase {
+		this._getImageInfoUseCase ??= new GetImageInfoUseCase(this.repositories.imageRepository);
+		return this._getImageInfoUseCase;
 	}
 
 	get getAllPostsUseCase(): GetAllPostsUseCase {

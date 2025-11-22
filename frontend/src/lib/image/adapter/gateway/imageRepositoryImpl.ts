@@ -15,7 +15,12 @@ export class ImageRepositoryImpl implements ImageRepository {
 	}
 
 	async listImages(): Promise<ImageInfo[]> {
-		const dtos = await this.imageApiService.listImages();
-		return dtos.map((dto) => dto.toEntity(this.imageApiService.getUrlFromId(dto.id)));
+		const responseDtos = await this.imageApiService.listImages();
+		return responseDtos.map((dto) => dto.toEntity(this.imageApiService.getUrlFromId(dto.id)));
+	}
+
+	async getImageInfo(id: number): Promise<ImageInfo> {
+		const responseDto = await this.imageApiService.getImageInfo(id);
+		return responseDto.toEntity(this.imageApiService.getUrlFromId(id));
 	}
 }
