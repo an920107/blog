@@ -57,6 +57,14 @@ impl ImageRepository for ImageRepositoryImpl {
         })
     }
 
+    async fn get_image_info_by_id(&self, id: i32) -> Result<ImageInfo, ImageError> {
+        let image_mapper = self.image_db_service.get_image_info_by_id(id).await?;
+        Ok(ImageInfo {
+            id: image_mapper.id,
+            mime_type: image_mapper.mime_type,
+        })
+    }
+
     async fn list_images(&self) -> Result<Vec<ImageInfo>, ImageError> {
         let image_mappers = self.image_db_service.list_image_info().await?;
         
