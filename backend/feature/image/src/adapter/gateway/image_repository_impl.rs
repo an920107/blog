@@ -10,7 +10,7 @@ use crate::{
     application::gateway::{
         create_image_params::CreateImageParams, image_repository::ImageRepository,
     },
-    domain::{entity::image::Image, error::image_error::ImageError},
+    domain::{entity::{image::Image, image_info::ImageInfo}, error::image_error::ImageError},
 };
 
 pub struct ImageRepositoryImpl {
@@ -49,9 +49,31 @@ impl ImageRepository for ImageRepositoryImpl {
         let image_mapper = self.image_db_service.get_image_info_by_id(id).await?;
         let data = self.image_storage.read_data(id)?;
         Ok(Image {
-            id: image_mapper.id,
-            mime_type: image_mapper.mime_type,
+            info: ImageInfo {
+                id: image_mapper.id,
+                mime_type: image_mapper.mime_type,
+            },
             data,
         })
+    }
+
+    async fn get_image_info_by_id(&self, id: i32) -> Result<ImageInfo, ImageError> {
+        let image_mapper = self.image_db_service.get_image_info_by_id(id).await?;
+        Ok(ImageInfo {
+            id: image_mapper.id,
+            mime_type: image_mapper.mime_type,
+        })
+    }
+
+    async fn list_images(&self) -> Result<Vec<ImageInfo>, ImageError> {
+        let image_mappers = self.image_db_service.list_image_info().await?;
+        
+        Ok(image_mappers
+            .into_iter()
+            .map(|image_mapper| ImageInfo {
+                id: image_mapper.id,
+                mime_type: image_mapper.mime_type,
+            })
+            .collect())
     }
 }
