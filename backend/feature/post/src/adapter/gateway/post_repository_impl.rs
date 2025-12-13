@@ -32,14 +32,24 @@ impl PostRepository for PostRepositoryImpl {
         &self,
         is_published_only: bool,
         label_id: Option<i32>,
+        keyword: Option<String>,
     ) -> Result<Vec<PostInfo>, PostError> {
         self.post_db_service
             .get_all_post_info(is_published_only, label_id)
             .await
-            .map(|mappers| {
+            .map(|mappers: Vec<PostInfoMapper>| {
                 mappers
                     .into_iter()
                     .map(Into::into)
+                    // TODO: For now, I'm using filters to filter only the titles;
+                    // I'll switch to embeddings for searching later.
+                    .filter(|post: &PostInfo| {
+                        if let Some(keyword) = &keyword {
+                            post.title.to_lowercase().contains(&keyword.to_lowercase())
+                        } else {
+                            true
+                        }
+                    })
                     .collect::<Vec<PostInfo>>()
             })
     }

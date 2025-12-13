@@ -7,4 +7,6 @@ pub struct PostQueryDto {
     pub is_published_only: Option<bool>,
 
     pub label_id: Option<i32>,
+
+    pub keyword: Option<String>,
 }

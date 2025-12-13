@@ -16,6 +16,7 @@ pub trait PostRepository: Send + Sync {
         &self,
         is_published_only: bool,
         label_id: Option<i32>,
+        keyword: Option<String>,
     ) -> Result<Vec<PostInfo>, PostError>;
     async fn get_post_by_id(&self, id: i32) -> Result<Post, PostError>;
     async fn create_post(&self, post: CreatePostParams) -> Result<i32, PostError>;

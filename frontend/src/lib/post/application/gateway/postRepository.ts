@@ -2,7 +2,7 @@ import type { Post } from '$lib/post/domain/entity/post';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
 export interface PostRepository {
-	getAllPosts(showUnpublished: boolean, labelId?: number): Promise<PostInfo[]>;
+	getAllPosts(showUnpublished: boolean, labelId?: number, keyword?: string): Promise<PostInfo[]>;
 	getPost(id: string | number): Promise<Post | null>;
 	createPost(params: CreatePostParams): Promise<Post>;
 	updatePost(id: number, params: UpdatePostParams): Promise<Post>;

@@ -107,6 +107,7 @@ impl PostController for PostControllerImpl {
             .execute(
                 query.is_published_only.unwrap_or(true),
                 query.label_id,
+                query.keyword,
                 user_id,
             )
             .await;
