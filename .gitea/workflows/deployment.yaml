@@ -30,6 +30,8 @@ jobs:
           push: true
           provenance: false
           context: ./frontend
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache,mode=max
           tags: |
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:latest
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:${{ gitea.event.release.tag_name }}
@@ -40,6 +42,20 @@ jobs:
           push: true
           provenance: false
           context: ./backend
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache,mode=max
           tags: |
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:latest
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:${{ gitea.event.release.tag_name }}
+
+      - name: Build and push (Toolbox)
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          provenance: false
+          context: ./script/toolbox
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache,mode=max
+          tags: |
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:latest
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:${{ gitea.event.release.tag_name }}
