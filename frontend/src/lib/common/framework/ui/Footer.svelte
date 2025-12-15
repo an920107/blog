@@ -2,7 +2,7 @@
 	import { Environment } from '$lib/environment';
 </script>
 
-<div class="border-t border-gray-300">
+<footer class="border-t border-gray-300">
 	<div
 		class="mx-auto flex max-w-screen-xl flex-col items-center justify-center gap-4 px-4 py-12 text-gray-600 md:flex-row md:px-6"
 	>
@@ -25,4 +25,4 @@
 		</div>
 		<span class="text-sm">Copyright © 2025 SquidSpirit</span>
 	</div>
-</div>
+</footer>

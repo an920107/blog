@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
 	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { Environment } from '$lib/environment';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import FilteringDialog, {
+		type FilteringDialogFormParams,
+	} from '$lib/post/framework/ui/FilteringDialog.svelte';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
-	import SearchBar from '$lib/post/framework/ui/SearchBar.svelte';
 	import { getContext, onMount } from 'svelte';
+
+	const { keyword, labelId }: { keyword?: string; labelId?: number } = $props();
 
 	const store = getContext<PostsListedStore>(PostsListedStore.name);
 	const state = $derived($store);
@@ -15,11 +21,24 @@
 	const description =
 		'探索 魚之魷魂 SquidSpirit 的所有文章，這裡是您尋找最新技術洞見與實用教學的園地。';
 
-	function handleSearch(keyword: string) {
-		loadPosts({ showUnpublished: false, keyword: keyword || undefined });
+	function handleSubmit(params: FilteringDialogFormParams) {
+		const url = new URL(page.url);
+		if (params.keyword) {
+			url.searchParams.set('keyword', params.keyword);
+		} else {
+			url.searchParams.delete('keyword');
+		}
+
+		if (params.labelId !== undefined) {
+			url.searchParams.set('label_id', params.labelId.toString());
+		} else {
+			url.searchParams.delete('label_id');
+		}
+
+		goto(url, { keepFocus: true });
 	}
 
-	onMount(() => loadPosts());
+	onMount(() => loadPosts({ showUnpublished: false, keyword, labelId }));
 </script>
 
 <svelte:head>
@@ -60,13 +79,11 @@
 />
 
 <div class="content-container pb-10">
-	<h1 class="pt-9 pb-2 text-center text-3xl font-bold text-gray-800 md:pt-20 md:pb-4 md:text-5xl">
-		文章
-	</h1>
-	<SearchBar onSearch={handleSearch} />
+	<h1 class="py-9 text-center text-3xl font-bold text-gray-800 md:py-20 md:text-5xl">文章</h1>
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-y-8 lg:grid-cols-3">
 		{#each state.data ?? [] as postInfo (postInfo.id)}
 			<PostPreview {postInfo} />
 		{/each}
 	</div>
 </div>
+<FilteringDialog defaultValues={{ keyword, labelId }} onSubmit={handleSubmit} />

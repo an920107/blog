@@ -30,12 +30,14 @@
 
 <script lang="ts">
 	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
-	import { Dialog } from '$lib/common/framework/components/ui/dialog';
-	import DialogContent from '$lib/common/framework/components/ui/dialog/dialog-content.svelte';
-	import DialogFooter from '$lib/common/framework/components/ui/dialog/dialog-footer.svelte';
-	import DialogHeader from '$lib/common/framework/components/ui/dialog/dialog-header.svelte';
-	import DialogTitle from '$lib/common/framework/components/ui/dialog/dialog-title.svelte';
-	import DialogTrigger from '$lib/common/framework/components/ui/dialog/dialog-trigger.svelte';
+	import {
+		Dialog,
+		DialogContent,
+		DialogFooter,
+		DialogHeader,
+		DialogTitle,
+		DialogTrigger,
+	} from '$lib/common/framework/components/ui/dialog';
 	import Input from '$lib/common/framework/components/ui/input/input.svelte';
 	import Label from '$lib/common/framework/components/ui/label/label.svelte';
 	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
@@ -46,14 +48,18 @@
 	import { getContext, onMount, tick } from 'svelte';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { Popover } from '$lib/common/framework/components/ui/popover';
-	import PopoverTrigger from '$lib/common/framework/components/ui/popover/popover-trigger.svelte';
-	import PopoverContent from '$lib/common/framework/components/ui/popover/popover-content.svelte';
-	import Command from '$lib/common/framework/components/ui/command/command.svelte';
-	import CommandInput from '$lib/common/framework/components/ui/command/command-input.svelte';
-	import CommandList from '$lib/common/framework/components/ui/command/command-list.svelte';
-	import CommandGroup from '$lib/common/framework/components/ui/command/command-group.svelte';
-	import CommandItem from '$lib/common/framework/components/ui/command/command-item.svelte';
+	import {
+		Popover,
+		PopoverContent,
+		PopoverTrigger,
+	} from '$lib/common/framework/components/ui/popover';
+	import {
+		Command,
+		CommandGroup,
+		CommandInput,
+		CommandItem,
+		CommandList,
+	} from '$lib/common/framework/components/ui/command';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 
 	const {

@@ -31,6 +31,10 @@ export class PostsListedStore
 			this.loadPosts(options?.showUnpublished, options?.labelId, options?.keyword);
 	}
 
+	setData(data: readonly PostInfoViewModel[]) {
+		this.state.set(AsyncState.success(data));
+	}
+
 	private async loadPosts(
 		showUnpublished?: boolean,
 		labelId?: number,

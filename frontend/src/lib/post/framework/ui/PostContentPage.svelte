@@ -12,6 +12,7 @@
 	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
 	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+	import { Strings } from '$lib/strings';
 
 	const { id }: { id: string } = $props();
 
@@ -67,6 +68,12 @@
 		}
 
 		activeHeadingId = currentHeadingId;
+	}
+
+	function getLabelFilteringUrl(labelId: number): URL {
+		const url = new URL('/post', window.location.origin);
+		url.searchParams.set('label_id', labelId.toString());
+		return url;
 	}
 
 	$effect(() => {
@@ -149,7 +156,13 @@
 	<div class="flex flex-col pt-9 md:pt-20">
 		<div class="mb-4 flex flex-row flex-wrap gap-2">
 			{#each postInfo?.labels ?? [] as label (label.id)}
-				<PostLabel {label} />
+				<a
+					href={getLabelFilteringUrl(label.id).href}
+					class="not-prose"
+					title={Strings.LOOK_FOR_POSTS_WITH_SAME_LABEL}
+				>
+					<PostLabel {label} />
+				</a>
 			{/each}
 		</div>
 		<h1 class="text-3xl leading-tight font-bold text-gray-800 sm:text-4xl md:text-5xl">
