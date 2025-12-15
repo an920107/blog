@@ -71,7 +71,7 @@
 	}
 
 	function getLabelFilteringUrl(labelId: number): URL {
-		const url = new URL('/post', window.location.origin);
+		const url = new URL('post', Environment.APP_BASE_URL);
 		url.searchParams.set('label_id', labelId.toString());
 		return url;
 	}
