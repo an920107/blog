@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
-	import StructuredData from '$lib/post/framework/ui/StructuredData.svelte';
+	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 	import MarkdownRenderer, {
 		type HeadingItem,
@@ -9,9 +9,10 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/common/framework/components/utils';
-	import OpenGraph from './OpenGraph.svelte';
+	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
 	import { Environment } from '$lib/environment';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+	import { Strings } from '$lib/strings';
 
 	const { id }: { id: string } = $props();
 
@@ -69,6 +70,12 @@
 		activeHeadingId = currentHeadingId;
 	}
 
+	function getLabelFilteringUrl(labelId: number): URL {
+		const url = new URL('/post', window.location.origin);
+		url.searchParams.set('label_id', labelId.toString());
+		return url;
+	}
+
 	$effect(() => {
 		if (headings.length > 0) {
 			updateActiveHeading();
@@ -104,10 +111,16 @@
 
 {#if postInfo?.isPublished}
 	<StructuredData
-		headline={postInfo.title}
-		description={postInfo.description}
-		datePublished={postInfo.publishedTime!.nativeDate}
-		image={postInfo.previewImageUrl}
+		props={{
+			type: 'BlogPosting',
+			url: new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL),
+			headline: postInfo.title,
+			name: postInfo.title,
+			description: postInfo.description,
+			datePublished: postInfo.publishedTime!.nativeDate,
+			image: postInfo.previewImageUrl,
+			articleSection: postInfo.labels.map((label) => label.name),
+		}}
 	/>
 	<OpenGraph
 		title={postInfo.title}
@@ -143,7 +156,13 @@
 	<div class="flex flex-col pt-9 md:pt-20">
 		<div class="mb-4 flex flex-row flex-wrap gap-2">
 			{#each postInfo?.labels ?? [] as label (label.id)}
-				<PostLabel {label} />
+				<a
+					href={getLabelFilteringUrl(label.id).href}
+					class="not-prose"
+					title={Strings.LOOK_FOR_POSTS_WITH_SAME_LABEL}
+				>
+					<PostLabel {label} />
+				</a>
 			{/each}
 		</div>
 		<h1 class="text-3xl leading-tight font-bold text-gray-800 sm:text-4xl md:text-5xl">

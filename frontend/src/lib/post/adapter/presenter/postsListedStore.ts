@@ -8,7 +8,8 @@ import { get, writable } from 'svelte/store';
 type PostListState = AsyncState<readonly PostInfoViewModel[]>;
 
 export class PostsListedStore
-	implements BaseStore<PostListState, { showUnpublished: boolean; labelId?: number }>
+	implements
+		BaseStore<PostListState, { showUnpublished: boolean; labelId?: number; keyword?: string }>
 {
 	private readonly state = writable<PostListState>(AsyncState.idle([]));
 
@@ -26,16 +27,24 @@ export class PostsListedStore
 	}
 
 	get trigger() {
-		return (options?: { showUnpublished: boolean; labelId?: number }) =>
-			this.loadPosts(options?.showUnpublished, options?.labelId);
+		return (options?: { showUnpublished: boolean; labelId?: number; keyword?: string }) =>
+			this.loadPosts(options?.showUnpublished, options?.labelId, options?.keyword);
 	}
 
-	private async loadPosts(showUnpublished?: boolean, labelId?: number): Promise<PostListState> {
+	setData(data: readonly PostInfoViewModel[]) {
+		this.state.set(AsyncState.success(data));
+	}
+
+	private async loadPosts(
+		showUnpublished?: boolean,
+		labelId?: number,
+		keyword?: string
+	): Promise<PostListState> {
 		this.state.set(AsyncState.loading(get(this.state).data));
 
 		let result: PostListState;
 		try {
-			const posts = await this.getAllPostsUseCase.execute(showUnpublished, labelId);
+			const posts = await this.getAllPostsUseCase.execute(showUnpublished, labelId, keyword);
 			const postViewModels = posts.map((post) => PostInfoViewModel.fromEntity(post));
 			result = AsyncState.success(postViewModels);
 		} catch (e) {

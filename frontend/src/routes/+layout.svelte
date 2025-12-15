@@ -8,7 +8,7 @@
 	import { Container } from '$lib/container';
 	import { setContext } from 'svelte';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
-	import Drawer from '$lib/common/framework/ui/Drawer.svelte';
+	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
 
 	const container = new Container(fetch);
 	setContext(Container.name, container);
@@ -29,7 +29,7 @@
 <div class="min-h-screen">
 	<Toaster theme="light" />
 	<Navbar actions={navigationActions} />
-	<Drawer />
+	<NavigationDrawer />
 	<main class="pt-toolbar-height">
 		<slot />
 	</main>

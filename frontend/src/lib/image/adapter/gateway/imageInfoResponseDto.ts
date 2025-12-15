@@ -1,3 +1,4 @@
+import { ImageInfo } from '$lib/image/domain/entity/imageInfo';
 import z from 'zod';
 
 export const imageInfoResponseSchema = z.object({
@@ -19,6 +20,14 @@ export class ImageInfoResponseDto {
 		return new ImageInfoResponseDto({
 			id: parsedJson.id,
 			mimeType: parsedJson.mime_type,
+		});
+	}
+
+	toEntity(url: URL): ImageInfo {
+		return new ImageInfo({
+			id: this.id,
+			mimeType: this.mimeType,
+			url: url,
 		});
 	}
 }

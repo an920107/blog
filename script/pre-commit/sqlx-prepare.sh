@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
-cd "$SCRIPT_DIR/../backend"
+cd "$SCRIPT_DIR/../../backend"
 
 # Generate sqlx-data.json
 cargo sqlx prepare --workspace

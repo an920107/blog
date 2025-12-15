@@ -13,6 +13,7 @@ pub trait GetAllPostInfoUseCase: Send + Sync {
         &self,
         is_published_only: bool,
         label_id: Option<i32>,
+        keyword: Option<String>,
         user_id: Option<i32>,
     ) -> Result<Vec<PostInfo>, PostError>;
 }
@@ -33,6 +34,7 @@ impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
         &self,
         is_published_only: bool,
         label_id: Option<i32>,
+        keyword: Option<String>,
         user_id: Option<i32>,
     ) -> Result<Vec<PostInfo>, PostError> {
         let has_logged_in = user_id.is_some();
@@ -46,7 +48,7 @@ impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
         let is_published_only = is_published_only || !has_logged_in;
 
         self.post_repository
-            .get_all_post_info(is_published_only, label_id)
+            .get_all_post_info(is_published_only, label_id, keyword)
             .await
     }
 }
