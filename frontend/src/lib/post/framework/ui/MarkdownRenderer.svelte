@@ -9,6 +9,7 @@
 <script lang="ts">
 	import SafeHtml from '$lib/common/framework/ui/SafeHtml.svelte';
 	import markdownit from 'markdown-it';
+	import markdownitAttrs from 'markdown-it-attrs';
 	import CryptoJS from 'crypto-js';
 	import type { Attachment } from 'svelte/attachments';
 	import hljs from 'highlight.js';
@@ -35,6 +36,7 @@
 			return `<pre class="hljs"><code>${highlightedCode}</code></pre>`;
 		},
 	});
+	md.use(markdownitAttrs);
 	const parsedContent = $derived(md.render(content));
 
 	const attachment: Attachment = (element) => {

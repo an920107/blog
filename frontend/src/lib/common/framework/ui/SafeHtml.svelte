@@ -10,8 +10,7 @@
 			allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 			allowedAttributes: {
 				...sanitizeHtml.defaults.allowedAttributes,
-				pre: ['class'],
-				span: ['class'],
+				'*': ['style', 'class'],
 			},
 		})
 	);
