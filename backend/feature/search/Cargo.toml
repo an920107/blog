@@ -1,0 +1,9 @@
+[package]
+name = "search"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+fastembed.workspace = true
+qdrant-client.workspace = true
+text-splitter.workspace = true
