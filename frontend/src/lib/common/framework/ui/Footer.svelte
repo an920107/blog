@@ -1,5 +1,7 @@
 <script>
 	import { Environment } from '$lib/environment';
+
+	const currentYear = new Date().getFullYear();
 </script>
 
 <footer class="border-t border-gray-300">
@@ -23,6 +25,6 @@
 		<div class="max-md:hidden">
 			<div class="h-4 w-0.5 bg-gray-300"></div>
 		</div>
-		<span class="text-sm">Copyright © 2025 SquidSpirit</span>
+		<span class="text-sm">Copyright © {currentYear} SquidSpirit</span>
 	</div>
 </footer>

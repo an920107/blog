@@ -423,7 +423,7 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "auth"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "actix-session",
  "actix-web",
@@ -642,7 +642,7 @@ dependencies = [
 
 [[package]]
 name = "common"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "sqlx",
 ]
@@ -1821,7 +1821,7 @@ dependencies = [
 
 [[package]]
 name = "image"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "actix-multipart",
  "actix-web",
@@ -1959,7 +1959,7 @@ dependencies = [
 
 [[package]]
 name = "label"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -2675,7 +2675,7 @@ dependencies = [
 
 [[package]]
 name = "post"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -3514,7 +3514,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "actix-session",
  "actix-web",
