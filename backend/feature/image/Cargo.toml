@@ -8,6 +8,7 @@ actix-multipart.workspace = true
 actix-web.workspace = true
 anyhow.workspace = true
 async-trait.workspace = true
+fnv_rs.workspace = true
 futures.workspace = true
 sentry.workspace = true
 serde.workspace = true
