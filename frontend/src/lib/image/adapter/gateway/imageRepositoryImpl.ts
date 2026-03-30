@@ -11,6 +11,7 @@ export class ImageRepositoryImpl implements ImageRepository {
 			id: dto.id,
 			mimeType: dto.mimeType,
 			url: this.imageApiService.getUrlFromId(dto.id),
+			isReferred: dto.isReferred,
 		});
 	}
 
@@ -22,5 +23,9 @@ export class ImageRepositoryImpl implements ImageRepository {
 	async getImageInfo(id: number): Promise<ImageInfo> {
 		const responseDto = await this.imageApiService.getImageInfo(id);
 		return responseDto.toEntity(this.imageApiService.getUrlFromId(id));
+	}
+
+	async deleteImage(id: number): Promise<void> {
+		return this.imageApiService.deleteImage(id);
 	}
 }

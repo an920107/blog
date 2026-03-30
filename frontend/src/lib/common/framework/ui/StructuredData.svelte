@@ -17,7 +17,7 @@
 		name: string;
 		description: string;
 		datePublished: Date;
-		image: URL | null;
+		image: URL | string | null;
 		articleSection: string[];
 	}
 
@@ -73,7 +73,7 @@
 			name: props.name,
 			description: props.description,
 			datePublished: props.datePublished.toISOString(),
-			image: props.image?.href,
+			image: props.image instanceof URL ? props.image.href : props.image,
 			articleSection: props.articleSection.length > 0 ? props.articleSection : 'Blog',
 		};
 	}

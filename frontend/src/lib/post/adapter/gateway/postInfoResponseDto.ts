@@ -7,7 +7,7 @@ export const postInfoResponseSchema = z.object({
 	semantic_id: z.string(),
 	title: z.string(),
 	description: z.string(),
-	preview_image_url: z.url().nullable(),
+	preview_image_url: z.string().nullable(),
 	labels: z.array(labelResponseSchema),
 	published_time: z.iso.datetime({ offset: true }).nullable(),
 });
@@ -17,7 +17,7 @@ export class PostInfoResponseDto {
 	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
-	readonly previewImageUrl: URL | null;
+	readonly previewImageUrl: string | null;
 	readonly labels: readonly LabelResponseDto[];
 	readonly publishedTime: Date | null;
 
@@ -26,7 +26,7 @@ export class PostInfoResponseDto {
 		semanticId: string;
 		title: string;
 		description: string;
-		previewImageUrl: URL | null;
+		previewImageUrl: string | null;
 		labels: LabelResponseDto[];
 		publishedTime: Date | null;
 	}) {
@@ -47,17 +47,12 @@ export class PostInfoResponseDto {
 			published_time = new Date(parsedJson.published_time);
 		}
 
-		let preview_image_url: URL | null = null;
-		if (parsedJson.preview_image_url !== null) {
-			preview_image_url = new URL(parsedJson.preview_image_url);
-		}
-
 		return new PostInfoResponseDto({
 			id: parsedJson.id,
 			semanticId: parsedJson.semantic_id,
 			title: parsedJson.title,
 			description: parsedJson.description,
-			previewImageUrl: preview_image_url,
+			previewImageUrl: parsedJson.preview_image_url,
 			labels: parsedJson.labels.map((label) => LabelResponseDto.fromJson(label)),
 			publishedTime: published_time,
 		});

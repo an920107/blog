@@ -3,12 +3,9 @@ use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
 
-use crate::{
-    adapter::delivery::{
-        post_controller::PostController, post_info_query_dto::PostQueryDto,
-        post_info_response_dto::PostInfoResponseDto,
-    },
-    domain::error::post_error::PostError,
+use crate::adapter::delivery::{
+    post_controller::PostController, post_info_query_dto::PostQueryDto,
+    post_info_response_dto::PostInfoResponseDto,
 };
 
 #[utoipa::path(
@@ -35,18 +32,9 @@ pub async fn get_all_post_info_handler(
 
     match result {
         Ok(post_info_list) => HttpResponse::Ok().json(post_info_list),
-        Err(e) => match e {
-            PostError::NotFound
-            | PostError::InvalidSemanticId
-            | PostError::DuplicatedSemanticId
-            | PostError::LabelNotFound => {
-                capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            PostError::Unexpected(e) => {
-                capture_anyhow(&e);
-                HttpResponse::InternalServerError().finish()
-            }
-        },
+        Err(e) => {
+            capture_anyhow(&anyhow!(e));
+            HttpResponse::InternalServerError().finish()
+        }
     }
 }

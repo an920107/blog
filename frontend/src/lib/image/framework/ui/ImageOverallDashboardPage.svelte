@@ -7,6 +7,7 @@
 	import { Button } from '$lib/common/framework/components/ui/button';
 	import { cn } from '$lib/common/framework/components/utils';
 	import { copyToClipboard } from '$lib/common/framework/ui/copyToClipboard';
+	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
 
 	const imageUploadedStore = getContext<ImageUploadedStore>(ImageUploadedStore.name);
 	const imageUploadedState = $derived($imageUploadedStore);
@@ -15,6 +16,10 @@
 	const imagesListedStore = getContext<ImagesListedStore>(ImagesListedStore.name);
 	const imagesState = $derived($imagesListedStore);
 	const { trigger: listImages } = imagesListedStore;
+
+	const imageDeletedStore = getContext<ImageDeletedStore>(ImageDeletedStore.name);
+	const imageDeletedState = $derived($imageDeletedStore);
+	const { trigger: deleteImage } = imageDeletedStore;
 
 	async function onUploadImageDialogSubmit(file: File) {
 		const state = await uploadImage(file);
@@ -28,6 +33,19 @@
 			listImages();
 		} else if (state.isError()) {
 			toast.error('Failed to upload image', {
+				description: state.error?.message ?? 'Unknown error',
+			});
+		}
+	}
+
+	async function onDeleteImageButtonClick(imageId: number) {
+		const state = await deleteImage(imageId);
+
+		if (state.isSuccess()) {
+			toast.success('Image deleted successfully');
+			await listImages();
+		} else if (state.isError()) {
+			toast.error('Failed to delete image', {
 				description: state.error?.message ?? 'Unknown error',
 			});
 		}
@@ -86,6 +104,16 @@
 							size="icon"
 						>
 							<i class="fa-regular fa-eye"></i>
+						</Button>
+						<Button
+							title={image.isReferred ? 'Image is in use and cannot be deleted' : 'Delete Image'}
+							type="button"
+							variant="destructive"
+							size="icon"
+							disabled={image.isReferred || imageDeletedState.isLoading()}
+							onclick={() => onDeleteImageButtonClick(image.id)}
+						>
+							<i class="fa-solid fa-trash-can"></i>
 						</Button>
 					</div>
 				</div>

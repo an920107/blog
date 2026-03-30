@@ -14,7 +14,7 @@
 		publishedTime?: Date;
 		labels: string[];
 		url: URL;
-		image: URL | null;
+		image: URL | string | null;
 	} = $props();
 
 	const section = $derived(labels.length > 0 ? labels[0] : 'Blog');
@@ -36,6 +36,6 @@
 		<meta property="og:article:tag" content={label} />
 	{/each}
 	{#if image}
-		<meta property="og:image" content={image.href} />
+		<meta property="og:image" content={image instanceof URL ? image.href : image} />
 	{/if}
 </svelte:head>

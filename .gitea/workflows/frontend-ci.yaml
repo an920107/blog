@@ -30,3 +30,6 @@ jobs:
 
       - name: ESLint
         run: pnpm run lint
+
+      - name: Check
+        run: pnpm run check

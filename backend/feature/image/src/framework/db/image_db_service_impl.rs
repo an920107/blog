@@ -39,7 +39,7 @@ impl ImageDbService for ImageDbServiceImpl {
         }
     }
 
-    async fn get_image_info_by_id(&self, id: i32) -> Result<ImageDbMapper, ImageError> {
+    async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageDbMapper, ImageError> {
         let image_record = sqlx::query_as!(
             ImageRecord,
             r#"
@@ -64,7 +64,7 @@ impl ImageDbService for ImageDbServiceImpl {
         }
     }
 
-    async fn list_image_info(&self) -> Result<Vec<ImageDbMapper>, ImageError> {
+    async fn list_image_meta_data(&self) -> Result<Vec<ImageDbMapper>, ImageError> {
         let image_records = sqlx::query_as!(
             ImageRecord,
             r#"
@@ -86,6 +86,33 @@ impl ImageDbService for ImageDbServiceImpl {
                 })
                 .collect()),
             Err(e) => Err(ImageError::Unexpected(DatabaseError(e).into())),
+        }
+    }
+
+    async fn delete_image(&self, id: i32) -> Result<(), ImageError> {
+        let result = sqlx::query!(
+            r#"
+                DELETE FROM image
+                WHERE id = $1
+            "#,
+            id,
+        )
+        .execute(&self.db_pool)
+        .await;
+
+        match result {
+            Ok(query_result) => {
+                if query_result.rows_affected() == 0 {
+                    return Err(ImageError::NotFound);
+                }
+                Ok(())
+            }
+            Err(e) => match &e {
+                sqlx::Error::Database(db_error) if db_error.constraint().is_some() => {
+                    Err(ImageError::ReferencedImage)
+                }
+                _ => Err(ImageError::Unexpected(DatabaseError(e).into())),
+            },
         }
     }
 }

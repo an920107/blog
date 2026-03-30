@@ -18,6 +18,6 @@ export interface UpdatePostParams {
 	description: string;
 	content: string;
 	labelIds: number[];
-	previewImageUrl: URL | null;
+	previewImageUrl: string | null;
 	publishedTime: Date | null;
 }

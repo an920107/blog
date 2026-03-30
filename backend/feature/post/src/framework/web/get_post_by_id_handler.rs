@@ -33,14 +33,8 @@ pub async fn get_post_by_id_handler(
         Ok(post) => HttpResponse::Ok().json(post),
         Err(e) => match e {
             PostError::NotFound => HttpResponse::NotFound().finish(),
-            PostError::InvalidSemanticId
-            | PostError::DuplicatedSemanticId
-            | PostError::LabelNotFound => {
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            PostError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

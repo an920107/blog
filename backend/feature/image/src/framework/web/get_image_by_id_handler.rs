@@ -4,8 +4,7 @@ use sentry::integrations::anyhow::capture_anyhow;
 use utoipa::ToSchema;
 
 use crate::{
-    adapter::delivery::image_controller::ImageController,
-    domain::error::image_error::ImageError,
+    adapter::delivery::image_controller::ImageController, domain::error::image_error::ImageError,
 };
 
 #[utoipa::path(
@@ -31,12 +30,8 @@ pub async fn get_image_by_id_handler(
             .body(image_response.data),
         Err(e) => match e {
             ImageError::NotFound => HttpResponse::NotFound().finish(),
-            ImageError::UnsupportedMimeType(_) => {
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

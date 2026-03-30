@@ -6,13 +6,16 @@ repos:
         language: script
         entry: ./script/pre-commit/sqlx-prepare.sh
         pass_filenames: false
+        files: ^backend/
       - id: backend-check
         name: backend check
         language: script
         entry: ./script/pre-commit/backend-check.sh
         pass_filenames: false
+        files: ^backend/
       - id: frontend-lint
         name: frontend lint
         language: script
         entry: ./script/pre-commit/frontend-lint.sh
         pass_filenames: false
+        files: ^frontend/

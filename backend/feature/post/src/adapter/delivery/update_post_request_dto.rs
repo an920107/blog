@@ -2,7 +2,10 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use utoipa::ToSchema;
 
-use crate::application::gateway::update_post_params::UpdatePostParams;
+use crate::{
+    application::gateway::update_post_params::UpdatePostParams,
+    application::service::image_extractor::ImageExtractor,
+};
 
 #[derive(Deserialize, ToSchema, Clone)]
 pub struct UpdatePostRequestDto {
@@ -20,6 +23,8 @@ pub struct UpdatePostRequestDto {
 
 impl Into<UpdatePostParams> for UpdatePostRequestDto {
     fn into(self) -> UpdatePostParams {
+        let image_ids = ImageExtractor::extract_image_ids(&self.content, &self.preview_image_url);
+
         UpdatePostParams {
             title: self.title,
             description: self.description,
@@ -30,6 +35,7 @@ impl Into<UpdatePostParams> for UpdatePostRequestDto {
                 .published_time
                 .and_then(|time_str| DateTime::parse_from_rfc3339(&time_str).ok())
                 .map(|dt| dt.with_timezone(&Utc)),
+            image_ids,
         }
     }
 }

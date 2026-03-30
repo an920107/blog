@@ -6,7 +6,7 @@ export class CreatePostRequestDto {
 	readonly description: string;
 	readonly content: string;
 	readonly labelIds: number[];
-	readonly previewImageUrl: URL | null;
+	readonly previewImageUrl: string | null;
 	readonly publishedTime: Date | null;
 
 	private constructor(props: {
@@ -15,7 +15,7 @@ export class CreatePostRequestDto {
 		description: string;
 		content: string;
 		labelIds: number[];
-		previewImageUrl: URL | null;
+		previewImageUrl: string | null;
 		publishedTime: Date | null;
 	}) {
 		this.semanticId = props.semanticId;

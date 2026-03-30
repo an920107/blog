@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO post_image (\n                    post_id, image_id\n                ) VALUES ($1, $2)\n                ON CONFLICT DO NOTHING\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ddf748360886e0e9161d8812e2d17efaa80eedb259fc9f98c7600476c5b3a84b"
+}

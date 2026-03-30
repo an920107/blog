@@ -168,6 +168,7 @@
 			<Input
 				{id}
 				type="text"
+				class="px-4 py-2 text-sm placeholder:text-gray-500"
 				placeholder={Strings.SEARCH_POST_PLACEHOLDER}
 				aria-invalid={formErrors.keyword !== undefined}
 				bind:value={formData.keyword}

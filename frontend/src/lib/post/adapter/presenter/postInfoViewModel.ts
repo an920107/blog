@@ -10,7 +10,7 @@ export class PostInfoViewModel {
 	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
-	readonly previewImageUrl: URL | null;
+	readonly previewImageUrl: string | null;
 	readonly labels: readonly LabelViewModel[];
 	readonly publishedTime: EnhancedDate | null;
 
@@ -19,7 +19,7 @@ export class PostInfoViewModel {
 		semanticId: string;
 		title: string;
 		description: string;
-		previewImageUrl: URL | null;
+		previewImageUrl: string | null;
 		labels: readonly LabelViewModel[];
 		publishedTime: EnhancedDate | null;
 	}) {
@@ -50,17 +50,12 @@ export class PostInfoViewModel {
 			publishedTime = new EnhancedDate(props.publishedTime);
 		}
 
-		let previewImageUrl: URL | null = null;
-		if (props.previewImageUrl) {
-			previewImageUrl = new URL(props.previewImageUrl);
-		}
-
 		return new PostInfoViewModel({
 			id: props.id,
 			semanticId: props.semanticId,
 			title: props.title,
 			description: props.description,
-			previewImageUrl: previewImageUrl,
+			previewImageUrl: props.previewImageUrl,
 			labels: props.labels.map((label) => LabelViewModel.rehydrate(label)),
 			publishedTime: publishedTime,
 		});
@@ -77,7 +72,7 @@ export class PostInfoViewModel {
 			semanticId: this.semanticId,
 			title: this.title,
 			description: this.description,
-			previewImageUrl: this.previewImageUrl?.href ?? null,
+			previewImageUrl: this.previewImageUrl,
 			labels: this.labels.map((label) => label.dehydrate()),
 			publishedTime: this.publishedTime?.getTime() ?? null,
 		};

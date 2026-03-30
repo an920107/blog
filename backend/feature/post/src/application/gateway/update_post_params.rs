@@ -7,4 +7,5 @@ pub struct UpdatePostParams {
     pub label_ids: Vec<i32>,
     pub preview_image_url: Option<String>,
     pub published_time: Option<DateTime<Utc>>,
+    pub image_ids: Vec<i32>,
 }

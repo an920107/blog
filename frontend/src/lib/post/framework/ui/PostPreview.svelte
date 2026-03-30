@@ -39,7 +39,7 @@
 				isImageLoading ? 'opacity-0' : 'opacity-100',
 				isImageError ? 'hidden' : ''
 			)}
-			src={postInfo.previewImageUrl?.href}
+			src={postInfo.previewImageUrl}
 			alt={postInfo.title}
 			onload={onImageLoad}
 			onerror={onImageError}

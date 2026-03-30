@@ -16,4 +16,5 @@ utoipa.workspace = true
 
 auth.workspace = true
 common.workspace = true
+image.workspace = true
 label.workspace = true

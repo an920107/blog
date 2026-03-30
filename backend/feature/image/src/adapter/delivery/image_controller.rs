@@ -8,8 +8,9 @@ use crate::{
         image_response_dto::ImageResponseDto,
     },
     application::use_case::{
-        get_image_info_use_case::GetImageInfoUseCase, get_image_use_case::GetImageUseCase,
-        list_images_use_case::ListImagesUseCase, upload_image_use_case::UploadImageUseCase,
+        delete_image_use_case::DeleteImageUseCase, get_image_info_use_case::GetImageInfoUseCase,
+        get_image_use_case::GetImageUseCase, list_images_use_case::ListImagesUseCase,
+        upload_image_use_case::UploadImageUseCase,
     },
     domain::error::image_error::ImageError,
 };
@@ -25,6 +26,8 @@ pub trait ImageController: Send + Sync {
     async fn get_image_info(&self, id: i32) -> Result<ImageInfoResponseDto, ImageError>;
 
     async fn list_images(&self) -> Result<Vec<ImageInfoResponseDto>, ImageError>;
+
+    async fn delete_image(&self, id: i32) -> Result<(), ImageError>;
 }
 
 pub struct ImageControllerImpl {
@@ -32,6 +35,7 @@ pub struct ImageControllerImpl {
     get_image_use_case: Arc<dyn GetImageUseCase>,
     get_image_info_use_case: Arc<dyn GetImageInfoUseCase>,
     list_images_use_case: Arc<dyn ListImagesUseCase>,
+    delete_image_use_case: Arc<dyn DeleteImageUseCase>,
 
     mime_type_whitelist: Vec<String>,
 }
@@ -42,12 +46,14 @@ impl ImageControllerImpl {
         get_image_use_case: Arc<dyn GetImageUseCase>,
         get_image_info_use_case: Arc<dyn GetImageInfoUseCase>,
         list_images_use_case: Arc<dyn ListImagesUseCase>,
+        delete_image_use_case: Arc<dyn DeleteImageUseCase>,
     ) -> Self {
         Self {
             upload_image_use_case,
             get_image_use_case,
             get_image_info_use_case,
             list_images_use_case,
+            delete_image_use_case,
             mime_type_whitelist: vec![
                 "image/jpeg".to_string(),
                 "image/png".to_string(),
@@ -73,6 +79,7 @@ impl ImageController for ImageControllerImpl {
         Ok(ImageInfoResponseDto {
             id: id,
             mime_type: mime_type,
+            is_referred: false,
         })
     }
 
@@ -90,6 +97,7 @@ impl ImageController for ImageControllerImpl {
         Ok(ImageInfoResponseDto {
             id: image_info.id,
             mime_type: image_info.mime_type,
+            is_referred: image_info.is_referred,
         })
     }
 
@@ -100,7 +108,12 @@ impl ImageController for ImageControllerImpl {
             .map(|info| ImageInfoResponseDto {
                 id: info.id,
                 mime_type: info.mime_type,
+                is_referred: info.is_referred,
             })
             .collect())
+    }
+
+    async fn delete_image(&self, id: i32) -> Result<(), ImageError> {
+        self.delete_image_use_case.execute(id).await
     }
 }

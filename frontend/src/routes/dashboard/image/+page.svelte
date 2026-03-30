@@ -6,12 +6,16 @@
 	import { getContext, setContext } from 'svelte';
 	import type { PageProps } from './$types';
 	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
+	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
 
 	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);
 
-	const store = container.createImageUploadedStore();
-	setContext(ImageUploadedStore.name, store);
+	const imageUploadedStore = container.createImageUploadedStore();
+	setContext(ImageUploadedStore.name, imageUploadedStore);
+
+	const imageDeletedStore = container.createImageDeletedStore();
+	setContext(ImageDeletedStore.name, imageDeletedStore);
 
 	const initialData = data.dehydratedData?.map((image) => ImageInfoViewModel.rehydrate(image));
 	const imagesListedStore = container.createImagesListedStore(initialData);
