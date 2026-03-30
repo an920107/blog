@@ -14,10 +14,7 @@
 			.transform((s) => s.replaceAll('\n', '')),
 		content: z.string(),
 		labelIds: z.array(z.number()),
-		previewImageUrl: z
-			.url()
-			.nullable()
-			.transform((s) => (s ? new URL(s) : null)),
+		previewImageUrl: z.string().nullable(),
 		publishedTime: z
 			.date()
 			.nullable()
@@ -91,7 +88,7 @@
 	let formData: FormParams = $state(defaultValues);
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
-	let previewImageUrl = $state(defaultValues.previewImageUrl?.href ?? '');
+	let previewImageUrl = $state(defaultValues.previewImageUrl ?? '');
 	let publishedTime = $state(defaultValues.publishedTime?.toDateTimeInputValue() ?? '');
 
 	const labelsListedStore =
@@ -325,7 +322,7 @@
 
 {#snippet previewImageUrlInput()}
 	{@const id = 'preview-image-url-input'}
-	{@const defaultValue = defaultValues.previewImageUrl?.href ?? ''}
+	{@const defaultValue = defaultValues.previewImageUrl ?? ''}
 	<div>
 		<Label for={id} class="pb-2">Preview Image URL (optional)</Label>
 		<div class="flex flex-row items-center gap-x-2">

@@ -78,12 +78,10 @@ pub async fn upload_image_handler(
             ImageError::UnsupportedMimeType(mime_type) => {
                 HttpResponse::BadRequest().body(format!("Unsupported MIME type: {}", mime_type))
             }
-            ImageError::NotFound => {
+            ImageError::ReferencedImage => HttpResponse::BadRequest()
+                .body("Image is referenced by one or more posts and cannot be deleted"),
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

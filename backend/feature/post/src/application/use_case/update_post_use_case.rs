@@ -4,7 +4,10 @@ use async_trait::async_trait;
 use label::application::gateway::label_repository::LabelRepository;
 
 use crate::{
-    application::gateway::{post_repository::PostRepository, update_post_params::UpdatePostParams},
+    application::{
+        gateway::{post_repository::PostRepository, update_post_params::UpdatePostParams},
+        service::label_relation_service::LabelRelationService,
+    },
     domain::error::post_error::PostError,
 };
 
@@ -33,12 +36,8 @@ impl UpdatePostUseCaseImpl {
 #[async_trait]
 impl UpdatePostUseCase for UpdatePostUseCaseImpl {
     async fn execute(&self, id: i32, post: UpdatePostParams) -> Result<(), PostError> {
-        // Check if all label IDs exist
-        for &label_id in post.label_ids.iter() {
-            if let Err(_) = self.label_repository.get_label_by_id(label_id).await {
-                return Err(PostError::LabelNotFound);
-            }
-        }
+        LabelRelationService::validate_labels_exist(self.label_repository.clone(), &post.label_ids)
+            .await?;
 
         self.post_repository.update_post(id, post).await
     }

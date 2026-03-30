@@ -50,6 +50,15 @@ export class ImageApiServiceImpl implements ImageApiService {
 		return ImageInfoResponseDto.fromJson(data);
 	}
 
+	async deleteImage(id: number): Promise<void> {
+		const url = new URL(`image/${id}`, Environment.API_BASE_URL);
+		const response = await this.fetchFn(url, { method: 'DELETE' });
+
+		if (!response.ok) {
+			throw new HttpError(response.status, url);
+		}
+	}
+
 	getUrlFromId(id: number): URL {
 		return new URL(`image/${id}`, Environment.API_BASE_URL);
 	}

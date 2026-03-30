@@ -27,7 +27,7 @@ export class UpdatePostRequestDto {
 	static fromParams(params: UpdatePostParams): UpdatePostRequestDto {
 		return new UpdatePostRequestDto({
 			...params,
-			previewImageUrl: params.previewImageUrl?.href ?? null,
+			previewImageUrl: params.previewImageUrl ?? null,
 			publishedTime: params.publishedTime?.toISOString() ?? null,
 		});
 	}

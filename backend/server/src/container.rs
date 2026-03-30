@@ -20,6 +20,7 @@ use image::{
         gateway::image_repository_impl::ImageRepositoryImpl,
     },
     application::use_case::{
+        delete_image_use_case::DeleteImageUseCaseImpl,
         get_image_info_use_case::GetImageInfoUseCaseImpl, get_image_use_case::GetImageUseCaseImpl,
         list_images_use_case::ListImagesUseCaseImpl, upload_image_use_case::UploadImageUseCaseImpl,
     },
@@ -157,15 +158,22 @@ impl Container {
 
         let upload_image_use_case = Arc::new(UploadImageUseCaseImpl::new(image_repository.clone()));
         let get_image_use_case = Arc::new(GetImageUseCaseImpl::new(image_repository.clone()));
-        let get_image_info_use_case =
-            Arc::new(GetImageInfoUseCaseImpl::new(image_repository.clone()));
-        let list_images_use_case = Arc::new(ListImagesUseCaseImpl::new(image_repository.clone()));
+        let get_image_info_use_case = Arc::new(GetImageInfoUseCaseImpl::new(
+            image_repository.clone(),
+            post_repository.clone(),
+        ));
+        let list_images_use_case = Arc::new(ListImagesUseCaseImpl::new(
+            image_repository.clone(),
+            post_repository.clone(),
+        ));
+        let delete_image_use_case = Arc::new(DeleteImageUseCaseImpl::new(image_repository.clone()));
 
         let image_controller = Arc::new(ImageControllerImpl::new(
             upload_image_use_case,
             get_image_use_case,
             get_image_info_use_case,
             list_images_use_case,
+            delete_image_use_case,
         ));
 
         // Return the container with all controllers

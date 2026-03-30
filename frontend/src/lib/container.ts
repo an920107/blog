@@ -43,6 +43,8 @@ import { PostApiServiceImpl } from '$lib/post/framework/api/postApiServiceImpl';
 import { GetLabelUseCase } from '$lib/label/application/useCase/getLabelUseCase';
 import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
 import { DrawerConfiguredStore } from './common/adapter/presenter/drawerConfiguredStore';
+import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
+import { DeleteImageUseCase } from '$lib/image/application/useCase/deleteImageUseCase';
 
 export class Container {
 	private useCases: UseCases;
@@ -71,6 +73,10 @@ export class Container {
 
 	createImageLoadedStore(initialData?: ImageInfoViewModel): ImageLoadedStore {
 		return new ImageLoadedStore(this.useCases.getImageInfoUseCase, initialData);
+	}
+
+	createImageDeletedStore(): ImageDeletedStore {
+		return new ImageDeletedStore(this.useCases.deleteImageUseCase);
 	}
 
 	createPostsListedStore(initialData?: readonly PostInfoViewModel[]): PostsListedStore {
@@ -179,6 +185,7 @@ class UseCases {
 	private _uploadImageUseCase?: UploadImageUseCase;
 	private _listImagesUseCase?: ListImagesUseCase;
 	private _getImageInfoUseCase?: GetImageInfoUseCase;
+	private _deleteImageInfoUseCase?: DeleteImageUseCase;
 	private _getAllPostsUseCase?: GetAllPostsUseCase;
 	private _getPostUseCase?: GetPostUseCase;
 	private _createPostUseCase?: CreatePostUseCase;
@@ -210,6 +217,11 @@ class UseCases {
 	get getImageInfoUseCase(): GetImageInfoUseCase {
 		this._getImageInfoUseCase ??= new GetImageInfoUseCase(this.repositories.imageRepository);
 		return this._getImageInfoUseCase;
+	}
+
+	get deleteImageUseCase(): DeleteImageUseCase {
+		this._deleteImageInfoUseCase ??= new DeleteImageUseCase(this.repositories.imageRepository);
+		return this._deleteImageInfoUseCase;
 	}
 
 	get getAllPostsUseCase(): GetAllPostsUseCase {

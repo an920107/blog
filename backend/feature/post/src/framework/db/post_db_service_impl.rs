@@ -70,7 +70,9 @@ impl PostDbService for PostDbServiceImpl {
             query_builder.push(r#")"#);
         }
 
-        query_builder.push(r#" ORDER BY p.published_time DESC NULLS FIRST, p.updated_time DESC, pl."order""#);
+        query_builder.push(
+            r#" ORDER BY p.published_time DESC NULLS FIRST, p.updated_time DESC, pl."order""#,
+        );
 
         let records = query_builder
             .build_query_as::<PostInfoWithLabelRecord>()
@@ -198,7 +200,12 @@ impl PostDbService for PostDbServiceImpl {
         }
     }
 
-    async fn create_post(&self, post: PostMapper, label_ids: &[i32]) -> Result<i32, PostError> {
+    async fn create_post(
+        &self,
+        post: PostMapper,
+        label_ids: &[i32],
+        image_ids: &[i32],
+    ) -> Result<i32, PostError> {
         let mut tx = self
             .db_pool
             .begin()
@@ -247,6 +254,22 @@ impl PostDbService for PostDbServiceImpl {
             .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
         }
 
+        for &image_id in image_ids {
+            sqlx::query!(
+                r#"
+                INSERT INTO post_image (
+                    post_id, image_id
+                ) VALUES ($1, $2)
+                ON CONFLICT DO NOTHING
+                "#,
+                post_id,
+                image_id,
+            )
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        }
+
         tx.commit()
             .await
             .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
@@ -254,7 +277,12 @@ impl PostDbService for PostDbServiceImpl {
         Ok(post_id)
     }
 
-    async fn update_post(&self, post: PostMapper, label_ids: &[i32]) -> Result<(), PostError> {
+    async fn update_post(
+        &self,
+        post: PostMapper,
+        label_ids: &[i32],
+        image_ids: &[i32],
+    ) -> Result<(), PostError> {
         let mut tx = self
             .db_pool
             .begin()
@@ -323,6 +351,33 @@ impl PostDbService for PostDbServiceImpl {
             .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
         }
 
+        sqlx::query!(
+            r#"
+            DELETE FROM post_image
+            WHERE post_id = $1
+            "#,
+            post.id,
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+
+        for &image_id in image_ids {
+            sqlx::query!(
+                r#"
+                INSERT INTO post_image (
+                    post_id, image_id
+                ) VALUES ($1, $2)
+                ON CONFLICT DO NOTHING
+                "#,
+                post.id,
+                image_id,
+            )
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+        }
+
         tx.commit()
             .await
             .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
@@ -347,5 +402,50 @@ impl PostDbService for PostDbServiceImpl {
             Some(id) => Ok(id),
             None => Err(PostError::NotFound),
         }
+    }
+
+    async fn count_by_image_id(&self, image_id: i32) -> Result<i64, PostError> {
+        let count = sqlx::query_scalar!(
+            r#"
+            SELECT
+                count(*)
+            FROM
+                post_image
+            WHERE
+                image_id = $1
+            "#,
+            image_id,
+        )
+        .fetch_one(&self.db_pool)
+        .await
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+
+        Ok(count.unwrap_or(0))
+    }
+
+    async fn count_by_image_ids(&self, image_ids: &[i32]) -> Result<HashMap<i32, i64>, PostError> {
+        if image_ids.is_empty() {
+            return Ok(HashMap::new());
+        }
+
+        let records = sqlx::query_as::<_, (i32, i64)>(
+            r#"
+            SELECT
+                image_id,
+                count(*)::BIGINT AS reference_count
+            FROM
+                post_image
+            WHERE
+                image_id = ANY($1)
+            GROUP BY
+                image_id
+            "#,
+        )
+        .bind(image_ids)
+        .fetch_all(&self.db_pool)
+        .await
+        .map_err(|e| PostError::Unexpected(DatabaseError(e).into()))?;
+
+        Ok(records.into_iter().collect())
     }
 }

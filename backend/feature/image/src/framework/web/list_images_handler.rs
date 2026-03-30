@@ -1,13 +1,10 @@
 use actix_web::{HttpResponse, Responder, web};
+use anyhow::anyhow;
 use auth::framework::web::auth_middleware::UserId;
 use sentry::integrations::anyhow::capture_anyhow;
-use anyhow::anyhow;
 
-use crate::{
-    adapter::delivery::{
-        image_controller::ImageController, image_info_response_dto::ImageInfoResponseDto,
-    },
-    domain::error::image_error::ImageError,
+use crate::adapter::delivery::{
+    image_controller::ImageController, image_info_response_dto::ImageInfoResponseDto,
 };
 
 #[utoipa::path(
@@ -27,19 +24,9 @@ pub async fn list_images_handler(
 
     match result {
         Ok(images) => HttpResponse::Ok().json(images),
-        Err(e) => match e {
-            ImageError::NotFound => {
-                capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            ImageError::UnsupportedMimeType(_) => {
-                capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
-                HttpResponse::InternalServerError().finish()
-            }
-        },
+        Err(e) => {
+            capture_anyhow(&anyhow!(e));
+            HttpResponse::InternalServerError().finish()
+        }
     }
 }

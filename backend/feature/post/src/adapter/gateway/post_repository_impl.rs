@@ -1,6 +1,11 @@
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use image::{
+    application::gateway::image_reference_checker::ImageReferenceChecker,
+    domain::error::image_error::ImageError,
+};
 
 use crate::{
     adapter::gateway::{post_db_mapper::PostMapper, post_info_db_mapper::PostInfoMapper},
@@ -79,7 +84,7 @@ impl PostRepository for PostRepositoryImpl {
         };
 
         self.post_db_service
-            .create_post(post_mapper, &post.label_ids)
+            .create_post(post_mapper, &post.label_ids, &post.image_ids)
             .await
     }
 
@@ -101,7 +106,7 @@ impl PostRepository for PostRepositoryImpl {
         };
 
         self.post_db_service
-            .update_post(post_mapper, &post.label_ids)
+            .update_post(post_mapper, &post.label_ids, &post.image_ids)
             .await
     }
 
@@ -109,5 +114,28 @@ impl PostRepository for PostRepositoryImpl {
         self.post_db_service
             .get_id_by_semantic_id(semantic_id)
             .await
+    }
+
+    async fn count_by_image_id(&self, image_id: i32) -> Result<i64, PostError> {
+        self.post_db_service.count_by_image_id(image_id).await
+    }
+}
+
+#[async_trait]
+impl ImageReferenceChecker for PostRepositoryImpl {
+    async fn get_reference_counts(
+        &self,
+        image_ids: &[i32],
+    ) -> Result<HashMap<i32, i64>, ImageError> {
+        self.post_db_service
+            .count_by_image_ids(image_ids)
+            .await
+            .map_err(|e| ImageError::ReferenceCheckFailed(e.to_string()))
+    }
+
+    async fn is_image_referenced(&self, image_id: i32) -> Result<bool, ImageError> {
+        let reference_counts = self.get_reference_counts(&[image_id]).await?;
+
+        Ok(reference_counts.get(&image_id).copied().unwrap_or(0) > 0)
     }
 }

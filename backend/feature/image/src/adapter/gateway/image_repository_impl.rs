@@ -10,7 +10,10 @@ use crate::{
     application::gateway::{
         create_image_params::CreateImageParams, image_repository::ImageRepository,
     },
-    domain::{entity::{image::Image, image_info::ImageInfo}, error::image_error::ImageError},
+    domain::{
+        entity::{image::Image, image_meta_data::ImageMetaData},
+        error::image_error::ImageError,
+    },
 };
 
 pub struct ImageRepositoryImpl {
@@ -46,34 +49,40 @@ impl ImageRepository for ImageRepositoryImpl {
     }
 
     async fn get_image_by_id(&self, id: i32) -> Result<Image, ImageError> {
-        let image_mapper = self.image_db_service.get_image_info_by_id(id).await?;
+        let image_db_mapper = self.image_db_service.get_image_meta_data_by_id(id).await?;
         let data = self.image_storage.read_data(id)?;
         Ok(Image {
-            info: ImageInfo {
-                id: image_mapper.id,
-                mime_type: image_mapper.mime_type,
+            info: ImageMetaData {
+                id: image_db_mapper.id,
+                mime_type: image_db_mapper.mime_type,
             },
             data,
         })
     }
 
-    async fn get_image_info_by_id(&self, id: i32) -> Result<ImageInfo, ImageError> {
-        let image_mapper = self.image_db_service.get_image_info_by_id(id).await?;
-        Ok(ImageInfo {
-            id: image_mapper.id,
-            mime_type: image_mapper.mime_type,
+    async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageMetaData, ImageError> {
+        let image_db_mapper = self.image_db_service.get_image_meta_data_by_id(id).await?;
+        Ok(ImageMetaData {
+            id: image_db_mapper.id,
+            mime_type: image_db_mapper.mime_type,
         })
     }
 
-    async fn list_images(&self) -> Result<Vec<ImageInfo>, ImageError> {
-        let image_mappers = self.image_db_service.list_image_info().await?;
-        
-        Ok(image_mappers
+    async fn list_image_meta_data(&self) -> Result<Vec<ImageMetaData>, ImageError> {
+        let image_db_mappers = self.image_db_service.list_image_meta_data().await?;
+
+        Ok(image_db_mappers
             .into_iter()
-            .map(|image_mapper| ImageInfo {
-                id: image_mapper.id,
-                mime_type: image_mapper.mime_type,
+            .map(|image_db_mapper| ImageMetaData {
+                id: image_db_mapper.id,
+                mime_type: image_db_mapper.mime_type,
             })
             .collect())
+    }
+
+    async fn delete_image(&self, id: i32) -> Result<(), ImageError> {
+        self.image_db_service.delete_image(id).await?;
+        self.image_storage.delete_data(id)?;
+        Ok(())
     }
 }

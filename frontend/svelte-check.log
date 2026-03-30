@@ -1,0 +1,9 @@
+
+> squidspirit-blog@0.5.6 check /Users/an920107/Documents/blog/frontend
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /Users/an920107/Documents/blog/frontend
+Getting Svelte diagnostics...
+
+[Sentry] Enabled source map generation in the build options with `build.sourcemap: "hidden"`.
+svelte-check found 0 errors and 0 warnings

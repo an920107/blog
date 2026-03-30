@@ -128,11 +128,11 @@
 					{#if post?.info.previewImageUrl}
 						{@const url = post.info.previewImageUrl}
 						<HoverCard>
-							<HoverCardTrigger href={url.href} target="_blank" class="text-wrap underline">
-								{post?.info.previewImageUrl?.toString() ?? 'None'}
+							<HoverCardTrigger href={url} target="_blank" class="text-wrap underline">
+								{post?.info.previewImageUrl ?? 'None'}
 							</HoverCardTrigger>
 							<HoverCardContent class="aspect-video w-96">
-								<img src={url.href} alt="Preview" class="h-full w-full object-cover" />
+								<img src={url} alt="Preview" class="h-full w-full object-cover" />
 							</HoverCardContent>
 						</HoverCard>
 					{:else}

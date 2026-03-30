@@ -41,12 +41,9 @@ pub async fn update_post_handler(
         Err(e) => match e {
             PostError::NotFound | PostError::LabelNotFound => HttpResponse::NotFound().finish(),
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
-            PostError::DuplicatedSemanticId => {
+            PostError::LabelError(_) => HttpResponse::BadRequest().finish(),
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            PostError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

@@ -41,12 +41,9 @@ pub async fn create_post_handler(
             PostError::InvalidSemanticId => HttpResponse::BadRequest().finish(),
             PostError::DuplicatedSemanticId => HttpResponse::Conflict().finish(),
             PostError::LabelNotFound => HttpResponse::NotFound().finish(),
-            PostError::NotFound => {
+            PostError::LabelError(_) => HttpResponse::BadRequest().finish(),
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            PostError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

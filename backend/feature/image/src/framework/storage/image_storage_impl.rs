@@ -40,4 +40,10 @@ impl ImageStorage for ImageStorageImpl {
         let data = fs::read(&file_path).map_err(|e| ImageError::Unexpected(IOError(e).into()))?;
         Ok(data)
     }
+
+    fn delete_data(&self, id: i32) -> Result<(), ImageError> {
+        let file_path = format!("{}/images/{}", self.sotrage_path, id);
+        fs::remove_file(&file_path).map_err(|e| ImageError::Unexpected(IOError(e).into()))?;
+        Ok(())
+    }
 }

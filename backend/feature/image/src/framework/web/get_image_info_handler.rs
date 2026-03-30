@@ -30,12 +30,8 @@ pub async fn get_image_info_handler(
         Ok(image_info) => HttpResponse::Ok().json(image_info),
         Err(e) => match e {
             ImageError::NotFound => HttpResponse::NotFound().finish(),
-            ImageError::UnsupportedMimeType(_) => {
+            _ => {
                 capture_anyhow(&anyhow!(e));
-                HttpResponse::InternalServerError().finish()
-            }
-            ImageError::Unexpected(e) => {
-                capture_anyhow(&e);
                 HttpResponse::InternalServerError().finish()
             }
         },

@@ -1,3 +1,4 @@
+use label::domain::error::label_error::LabelError;
 use std::fmt::Display;
 
 #[derive(Debug)]
@@ -6,6 +7,7 @@ pub enum PostError {
     InvalidSemanticId,
     DuplicatedSemanticId,
     LabelNotFound,
+    LabelError(LabelError),
     Unexpected(anyhow::Error),
 }
 
@@ -25,6 +27,7 @@ impl Display for PostError {
             ),
             PostError::DuplicatedSemanticId => write!(f, "Semantic ID already exists"),
             PostError::LabelNotFound => write!(f, "One or more labels not found"),
+            PostError::LabelError(e) => write!(f, "Label error: {}", e),
             PostError::Unexpected(e) => write!(f, "Unexpected error: {}", e),
         }
     }

@@ -1,6 +1,6 @@
-use super::image_info::ImageInfo;
+use super::image_meta_data::ImageMetaData;
 
 pub struct Image {
-    pub info: ImageInfo,
+    pub info: ImageMetaData,
     pub data: Vec<u8>,
 }

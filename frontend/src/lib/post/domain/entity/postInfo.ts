@@ -5,7 +5,7 @@ export class PostInfo {
 	readonly semanticId: string;
 	readonly title: string;
 	readonly description: string;
-	readonly previewImageUrl: URL | null;
+	readonly previewImageUrl: string | null;
 	readonly labels: readonly Label[];
 	readonly publishedTime: Date | null;
 
@@ -14,7 +14,7 @@ export class PostInfo {
 		semanticId: string;
 		title: string;
 		description: string;
-		previewImageUrl: URL | null;
+		previewImageUrl: string | null;
 		labels: readonly Label[];
 		publishedTime: Date | null;
 	}) {
