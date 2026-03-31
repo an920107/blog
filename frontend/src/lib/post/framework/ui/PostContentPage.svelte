@@ -175,7 +175,7 @@
 
 {#snippet toc()}
 	<div class="space-y-1">
-		<p class="mb-2 truncate font-medium text-gray-800">章節目錄</p>
+		<p class="mb-2 truncate font-medium text-gray-800">{Strings.TOC}</p>
 		{#each headings as heading (heading.id)}
 			{@const padding = (heading.level - 2) * 1.5}
 			{@const isActive = activeHeadingId === heading.id}
