@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { LayoutProps } from './$types';
-	import ErrorPage from '$lib/common/framework/ui/ErrorPage.svelte';
+	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
 	import DashboardNavbar from '$lib/dashboard/framework/ui/DashboardNavbar.svelte';
 	import type { DashboardLink } from '$lib/dashboard/framework/ui/dashboardLink';
 	import { Container } from '$lib/container';
 	import { AuthLoadedStore } from '$lib/auth/adapter/presenter/authLoadedStore';
+	import { Strings } from '$lib/strings';
 
 	const { children }: LayoutProps = $props();
 	const container = getContext<Container>(Container.name);
@@ -29,7 +30,7 @@
 {#if state.isIdle() || state.isLoading()}
 	<div></div>
 {:else if !isAuthenticated}
-	<ErrorPage />
+	<NotFoundPage title={Strings.NOT_FOUND_CODE} />
 {:else}
 	<div class="grid min-h-content-height grid-cols-[auto_1fr]">
 		<DashboardNavbar {links} />

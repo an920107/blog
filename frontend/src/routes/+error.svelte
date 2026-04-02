@@ -1,5 +1,6 @@
 <script lang="ts">
-	import ErrorPage from '$lib/common/framework/ui/ErrorPage.svelte';
+	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
+	import { Strings } from '$lib/strings';
 </script>
 
-<ErrorPage />
+<NotFoundPage title={Strings.NOT_FOUND_CODE} />

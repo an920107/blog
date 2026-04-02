@@ -54,7 +54,7 @@
 		</div>
 	{/if}
 
-	<button
+	<div
 		class={cn(
 			'relative size-12 content-center rounded-full text-center',
 			'border border-gray-200 bg-white/80 shadow-sm backdrop-blur-md'
@@ -62,7 +62,7 @@
 		aria-label="Search & Filter"
 	>
 		<i class="fa-solid fa-magnifying-glass size-8 content-center text-gray-500"></i>
-	</button>
+	</div>
 </div>
 
 <style>
