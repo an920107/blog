@@ -15,6 +15,7 @@
 	import { TableCell } from '$lib/common/framework/components/ui/table';
 	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { resolve } from '$app/paths';
 
 	const labelCreatedStore = getContext<LabelCreatedStore>(LabelCreatedStore.name);
 	const labelCreatedState = $derived($labelCreatedStore);
@@ -72,7 +73,10 @@
 			{#each labelsListedState.data ?? [] as label (label.id)}
 				<TableRow>
 					<TableHead>
-						<a href={`/dashboard/label/${label.id}`} class="underline">{label.id}</a>
+						<a
+							href={resolve('/dashboard/label/[id]', { id: label.id.toString() })}
+							class="underline">{label.id}</a
+						>
 					</TableHead>
 					<TableCell>
 						<span class="text-wrap"> {label.name}</span>

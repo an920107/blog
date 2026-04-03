@@ -12,8 +12,8 @@
 		valueOnEnable: string;
 	} = $props();
 
-	let enabled = $state(defaultValue.length > 0);
-	let lastValue = defaultValue;
+	let enabled = $derived(defaultValue.length > 0);
+	let lastValue = $derived(defaultValue);
 
 	$effect(() => {
 		const input = document.getElementById(htmlFor) as HTMLInputElement | null;

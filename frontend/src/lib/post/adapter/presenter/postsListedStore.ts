@@ -7,10 +7,10 @@ import { get, writable } from 'svelte/store';
 
 type PostListState = AsyncState<readonly PostInfoViewModel[]>;
 
-export class PostsListedStore
-	implements
-		BaseStore<PostListState, { showUnpublished: boolean; labelId?: number; keyword?: string }>
-{
+export class PostsListedStore implements BaseStore<
+	PostListState,
+	{ showUnpublished: boolean; labelId?: number; keyword?: string }
+> {
 	private readonly state = writable<PostListState>(AsyncState.idle([]));
 
 	constructor(

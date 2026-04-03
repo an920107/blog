@@ -13,8 +13,9 @@
 	const postCreatedStore = container.createPostCreatedStore();
 	setContext(PostCreatedStore.name, postCreatedStore);
 
-	const initialData = data.dehydratedData?.map((post) => PostInfoViewModel.rehydrate(post));
-	const postsListedStore = container.createPostsListedStore(initialData);
+	const getInitialData = () =>
+		data.dehydratedData?.map((post) => PostInfoViewModel.rehydrate(post));
+	const postsListedStore = container.createPostsListedStore(getInitialData());
 	setContext(PostsListedStore.name, postsListedStore);
 </script>
 

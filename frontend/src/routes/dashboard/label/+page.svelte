@@ -13,8 +13,8 @@
 	const labelCreatedStore = container.createLabelCreatedStore();
 	setContext(LabelCreatedStore.name, labelCreatedStore);
 
-	const initialData = data.dehydratedData?.map((label) => LabelViewModel.rehydrate(label));
-	const labelsListedStore = container.createLabelsListedStore(initialData);
+	const getInitialData = () => data.dehydratedData?.map((label) => LabelViewModel.rehydrate(label));
+	const labelsListedStore = container.createLabelsListedStore(getInitialData());
 	setContext(LabelsListedStore.name, labelsListedStore);
 </script>
 

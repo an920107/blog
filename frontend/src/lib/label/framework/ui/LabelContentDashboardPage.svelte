@@ -14,6 +14,7 @@
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
+	import { resolve } from '$app/paths';
 
 	const { id }: { id: number } = $props();
 
@@ -120,7 +121,10 @@
 				<TableCell>
 					{#each relatedPostsState.data ?? [] as postInfo (postInfo.id)}
 						<p>
-							<a href="/dashboard/post/{postInfo.id}" class="underline">
+							<a
+								href={resolve('/dashboard/post/[id]', { id: postInfo.id.toString() })}
+								class="underline"
+							>
 								{postInfo.title}
 							</a>
 						</p>

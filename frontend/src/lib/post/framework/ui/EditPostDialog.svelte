@@ -85,11 +85,11 @@
 
 	let open = $state(false);
 
-	let formData: FormParams = $state(defaultValues);
+	let formData: FormParams = $state((() => defaultValues)());
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
-	let previewImageUrl = $state(defaultValues.previewImageUrl ?? '');
-	let publishedTime = $state(defaultValues.publishedTime?.toDateTimeInputValue() ?? '');
+	let previewImageUrl = $state((() => defaultValues.previewImageUrl ?? '')());
+	let publishedTime = $state((() => defaultValues.publishedTime?.toDateTimeInputValue() ?? '')());
 
 	const labelsListedStore =
 		getContext<LabelsListedStore | undefined>(LabelsListedStore.name) ?? null;

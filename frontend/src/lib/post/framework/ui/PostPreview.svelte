@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { cn } from '$lib/common/framework/components/utils';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
@@ -24,7 +25,7 @@
 		'flex cursor-pointer flex-col gap-y-6',
 		'group transition-transform duration-300 hover:scale-[1.02] hover:transform'
 	)}
-	href="/post/{postInfo.semanticId}"
+	href={resolve('/post/[id]', { id: postInfo.semanticId })}
 	title={postInfo.title}
 >
 	<div

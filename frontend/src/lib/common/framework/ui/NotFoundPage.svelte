@@ -8,7 +8,7 @@
 	<title>{generateTitle(title)}</title>
 </svelte:head>
 <div
-	class="mx-auto flex min-h-content-height max-w-screen-xl flex-col items-center justify-center px-4 md:px-6"
+	class="mx-auto flex min-h-content-height max-w-7xl flex-col items-center justify-center px-4 md:px-6"
 >
 	<div class="flex flex-row flex-wrap items-end justify-center gap-4 md:gap-x-6">
 		<h1 class="shrink-0 text-5xl font-extrabold text-gray-800 underline md:text-7xl">{title}</h1>

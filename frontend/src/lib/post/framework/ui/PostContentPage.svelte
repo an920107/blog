@@ -1,4 +1,6 @@
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
+
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';

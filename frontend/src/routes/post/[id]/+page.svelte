@@ -6,12 +6,12 @@
 	import { Container } from '$lib/container';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 
-	const { data, params }: PageProps = $props();
-	const { id } = params;
+	const { data }: PageProps = $props();
+	const id = $derived(data.id);
 	const container = getContext<Container>(Container.name);
 
-	const initialData = PostViewModel.rehydrate(data.dehydratedData);
-	const store = container.createPostLoadedStore(initialData);
+	const getInitialData = () => PostViewModel.rehydrate(data.dehydratedData);
+	const store = container.createPostLoadedStore(getInitialData());
 	setContext(PostLoadedStore.name, store);
 </script>
 

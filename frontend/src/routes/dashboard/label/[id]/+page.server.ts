@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const posts = await loadPosts(container, label.id);
 
 	return {
+		id: numericId,
 		dehydratedLabel: label.dehydrate(),
 		dehydratedPosts: posts.map((post) => post.dehydrate()),
 	};

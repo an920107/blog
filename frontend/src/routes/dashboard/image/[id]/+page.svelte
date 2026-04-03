@@ -9,11 +9,10 @@
 	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);
 
-	const initialData = data.dehydratedData
-		? ImageInfoViewModel.rehydrate(data.dehydratedData)
-		: undefined;
+	const getInitialData = () =>
+		data.dehydratedData ? ImageInfoViewModel.rehydrate(data.dehydratedData) : undefined;
 
-	const imageLoadedStore = container.createImageLoadedStore(initialData);
+	const imageLoadedStore = container.createImageLoadedStore(getInitialData());
 	setContext(ImageLoadedStore.name, imageLoadedStore);
 </script>
 

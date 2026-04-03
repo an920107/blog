@@ -14,12 +14,12 @@
 	const keyword = $derived(data.searchParams.keyword);
 	const labelId = $derived(data.searchParams.labelId);
 
-	const initialData = {
-		posts: data.dehydratedData.posts?.map((post) => PostInfoViewModel.rehydrate(post)),
-		labels: data.dehydratedData.labels?.map((label) => LabelViewModel.rehydrate(label)),
-	};
-	const postListedStore = container.createPostsListedStore(initialData.posts);
-	const labelListedStore = container.createLabelsListedStore(initialData.labels);
+	const getInitialPosts = () =>
+		data.dehydratedData.posts?.map((post) => PostInfoViewModel.rehydrate(post));
+	const getInitialLabels = () =>
+		data.dehydratedData.labels?.map((label) => LabelViewModel.rehydrate(label));
+	const postListedStore = container.createPostsListedStore(getInitialPosts());
+	const labelListedStore = container.createLabelsListedStore(getInitialLabels());
 	setContext(PostsListedStore.name, postListedStore);
 	setContext(LabelsListedStore.name, labelListedStore);
 

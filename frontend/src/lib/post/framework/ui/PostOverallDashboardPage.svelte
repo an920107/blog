@@ -13,6 +13,7 @@
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
+	import { resolve } from '$app/paths';
 
 	const postCreatedStore = getContext<PostCreatedStore>(PostCreatedStore.name);
 	const postCreatedState = $derived($postCreatedStore);
@@ -65,7 +66,10 @@
 			{#each postsListedState.data ?? [] as postInfo (postInfo.id)}
 				<TableRow>
 					<TableHead>
-						<a href="/dashboard/post/{postInfo.id}" class="underline">{postInfo.id}</a>
+						<a
+							href={resolve('/dashboard/post/[id]', { id: postInfo.id.toString() })}
+							class="underline">{postInfo.id}</a
+						>
 					</TableHead>
 					<TableCell>
 						<span class="text-wrap">{postInfo.semanticId}</span>

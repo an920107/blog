@@ -13,6 +13,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	}
 
 	return {
+		id: params.id,
 		dehydratedData: state.data.dehydrate(),
 	};
 };

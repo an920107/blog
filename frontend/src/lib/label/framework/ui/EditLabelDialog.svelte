@@ -48,7 +48,7 @@
 
 	let open = $state(false);
 
-	let formData: FormParams = $state(defaultValues);
+	let formData: FormParams = $state((() => defaultValues)());
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
 	const previewLabel = $derived(

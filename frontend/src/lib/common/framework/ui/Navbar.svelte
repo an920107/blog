@@ -6,10 +6,13 @@
 </script>
 
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
+
 	import { page } from '$app/state';
 	import { cn } from '$lib/common/framework/components/utils';
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+	import { resolve } from '$app/paths';
 
 	const { actions }: { actions: NavigationActionProps[] } = $props();
 
@@ -71,11 +74,11 @@
 >
 	<div
 		class={cn(
-			'mx-auto h-toolbar-height max-w-screen-xl px-4 md:px-6',
+			'mx-auto h-toolbar-height max-w-7xl px-4 md:px-6',
 			'flex flex-row items-center justify-between'
 		)}
 	>
-		<a class="flex flex-row items-center gap-x-2" href="/">
+		<a class="flex flex-row items-center gap-x-2" href={resolve('/')}>
 			<img class="mt-1 size-10" src="/icon/logo-light.svg" alt="SquidSpirit" />
 			<span class="text-2xl font-black text-gray-800">魚之魷魂</span>
 		</a>

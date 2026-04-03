@@ -9,6 +9,7 @@
 	import { setContext } from 'svelte';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
+	import { resolve } from '$app/paths';
 
 	const container = new Container(fetch);
 	setContext(Container.name, container);
@@ -17,8 +18,8 @@
 	setContext(DrawerConfiguredStore.name, drawerConfiguredStore);
 
 	const navigationActions: NavigationActionProps[] = [
-		{ href: '/', label: '首頁' },
-		{ href: '/post', label: '文章' },
+		{ href: resolve('/'), label: '首頁' },
+		{ href: resolve('/post'), label: '文章' },
 	];
 </script>
 

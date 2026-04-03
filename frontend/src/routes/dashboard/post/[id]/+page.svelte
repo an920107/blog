@@ -9,12 +9,11 @@
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 
 	const { data }: PageProps = $props();
-	const { id } = data;
+	const id = $derived(data.id);
 
 	const container = getContext<Container>(Container.name);
-	const postLoadedStore = container.createPostLoadedStore(
-		PostViewModel.rehydrate(data.dehydratedData)
-	);
+	const getInitialData = () => PostViewModel.rehydrate(data.dehydratedData);
+	const postLoadedStore = container.createPostLoadedStore(getInitialData());
 	const postUpdatedStore = container.createPostUpdatedStore();
 	const labelsLiestedStore = container.createLabelsListedStore();
 

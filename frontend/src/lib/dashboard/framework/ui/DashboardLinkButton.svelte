@@ -1,4 +1,6 @@
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
+
 	import { page } from '$app/state';
 	import { Button } from '$lib/common/framework/components/ui/button';
 	import type { DashboardLink } from '$lib/dashboard/framework/ui/dashboardLink';

@@ -1,4 +1,6 @@
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';

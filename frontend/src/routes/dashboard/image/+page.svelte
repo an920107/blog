@@ -17,8 +17,9 @@
 	const imageDeletedStore = container.createImageDeletedStore();
 	setContext(ImageDeletedStore.name, imageDeletedStore);
 
-	const initialData = data.dehydratedData?.map((image) => ImageInfoViewModel.rehydrate(image));
-	const imagesListedStore = container.createImagesListedStore(initialData);
+	const getInitialData = () =>
+		data.dehydratedData?.map((image) => ImageInfoViewModel.rehydrate(image));
+	const imagesListedStore = container.createImagesListedStore(getInitialData());
 	setContext(ImagesListedStore.name, imagesListedStore);
 </script>
 
