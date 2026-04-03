@@ -510,7 +510,7 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "auth"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "actix-session",
  "actix-web",
@@ -885,7 +885,7 @@ dependencies = [
 
 [[package]]
 name = "common"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "sqlx",
 ]
@@ -2496,7 +2496,7 @@ dependencies = [
 
 [[package]]
 name = "image"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "actix-multipart",
  "actix-web",
@@ -2721,7 +2721,7 @@ dependencies = [
 
 [[package]]
 name = "label"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -3738,7 +3738,7 @@ dependencies = [
 
 [[package]]
 name = "post"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "actix-web",
  "anyhow",
@@ -3746,7 +3746,7 @@ dependencies = [
  "auth",
  "chrono",
  "common",
- "image 0.6.0",
+ "image 0.7.0",
  "label",
  "regex",
  "sentry",
@@ -4537,7 +4537,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "search"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4851,7 +4851,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "actix-session",
  "actix-web",
@@ -4861,7 +4861,7 @@ dependencies = [
  "env_logger",
  "fastembed",
  "hex",
- "image 0.6.0",
+ "image 0.7.0",
  "label",
  "openidconnect",
  "percent-encoding",
