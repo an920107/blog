@@ -9,14 +9,20 @@ use actix_web::{
     web,
 };
 use auth::framework::web::auth_web_routes::configure_auth_routes;
+use fastembed::TextEmbedding;
 use image::framework::web::image_web_routes::configure_image_routes;
 use label::framework::web::label_web_routes::configure_label_routes;
 use openidconnect::reqwest;
 use post::framework::web::post_web_routes::configure_post_routes;
+use qdrant_client::Qdrant;
 use server::{
     api_doc::configure_api_doc_routes, configuration::Configuration, container::Container,
 };
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
+use text_splitter::MarkdownSplitter;
+use tokenizers::Tokenizer;
+use tokio::sync::Mutex;
 
 fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
@@ -43,10 +49,19 @@ fn main() -> std::io::Result<()> {
         let session_key = configuration.session.session_key.clone();
         let session_store = configuration.session.create_session_store().await;
 
+        let qdrant_client = Arc::new(configuration.qdrant.create_client().await);
+        let text_embedding_model = Arc::new(Mutex::new(
+            configuration.embedding.create_embedding_options(),
+        ));
+        let markdown_splitter = Arc::new(configuration.embedding.create_markdown_splitter());
+
         HttpServer::new(move || {
             create_app(
                 db_pool.clone(),
+                qdrant_client.clone(),
                 http_client.clone(),
+                text_embedding_model.clone(),
+                markdown_splitter.clone(),
                 sentry::integrations::actix::Sentry::builder()
                     .capture_server_errors(true)
                     .start_transaction(true),
@@ -64,7 +79,10 @@ fn main() -> std::io::Result<()> {
 
 fn create_app(
     db_pool: Pool<Postgres>,
+    qdrant_client: Arc<Qdrant>,
     http_client: reqwest::Client,
+    text_embedding_model: Arc<Mutex<TextEmbedding>>,
+    markdown_splitter: Arc<MarkdownSplitter<Tokenizer>>,
     sentry_builder: sentry::integrations::actix::SentryBuilder,
     session_middleware_builder: SessionMiddlewareBuilder<RedisSessionStore>,
     configuration: Configuration,
@@ -77,7 +95,14 @@ fn create_app(
         Error = Error,
     >,
 > {
-    let container = Container::new(db_pool, http_client, configuration);
+    let container = Container::new(
+        db_pool,
+        qdrant_client,
+        http_client,
+        text_embedding_model,
+        markdown_splitter,
+        configuration,
+    );
 
     App::new()
         // The middlewares are executed in opposite order as registration.

@@ -4,6 +4,7 @@ use regex::Regex;
 
 use crate::domain::error::post_error::PostError;
 
+#[derive(Clone)]
 pub struct PostInfo {
     pub id: i32,
     pub semantic_id: String,

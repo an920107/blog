@@ -1,9 +1,9 @@
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use async_trait::async_trait;
 
 use crate::{
-    application::gateway::post_repository::PostRepository,
+    application::gateway::{post_repository::PostRepository, search_service::SearchService},
     domain::{entity::post_info::PostInfo, error::post_error::PostError},
 };
 
@@ -20,11 +20,18 @@ pub trait GetAllPostInfoUseCase: Send + Sync {
 
 pub struct GetAllPostInfoUseCaseImpl {
     post_repository: Arc<dyn PostRepository>,
+    search_service: Arc<dyn SearchService>,
 }
 
 impl GetAllPostInfoUseCaseImpl {
-    pub fn new(post_repository: Arc<dyn PostRepository>) -> Self {
-        Self { post_repository }
+    pub fn new(
+        post_repository: Arc<dyn PostRepository>,
+        search_service: Arc<dyn SearchService>,
+    ) -> Self {
+        Self {
+            post_repository,
+            search_service,
+        }
     }
 }
 
@@ -47,8 +54,26 @@ impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
         // | F                 | F             | T      |
         let is_published_only = is_published_only || !has_logged_in;
 
-        self.post_repository
-            .get_all_post_info(is_published_only, label_id, keyword)
-            .await
+        let posts = self
+            .post_repository
+            .get_all_post_info(is_published_only, label_id)
+            .await?;
+
+        if let Some(keyword) = keyword {
+            let post_map: HashMap<i32, PostInfo> =
+                HashMap::from_iter(posts.into_iter().map(|post_info| (post_info.id, post_info)));
+
+            let search_results: Vec<i32> = self
+                .search_service
+                .search_posts(&keyword, &Some(post_map.keys().copied().collect()))
+                .await?;
+
+            Ok(search_results
+                .into_iter()
+                .filter_map(|post_id| post_map.get(&post_id).cloned())
+                .collect())
+        } else {
+            Ok(posts)
+        }
     }
 }

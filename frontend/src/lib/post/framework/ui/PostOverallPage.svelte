@@ -24,7 +24,7 @@
 		'探索 魚之魷魂 SquidSpirit 的所有文章，這裡是您尋找最新技術洞見與實用教學的園地。';
 
 	const isPostsEmpty = $derived(
-		state.isSuccess() && state.data !== null && state.data.length === 0
+		(state.isSuccess() && state.data !== null && state.data.length === 0) || state.isError()
 	);
 
 	function handleSubmit(params: FilteringDialogFormParams) {

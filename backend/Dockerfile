@@ -4,7 +4,7 @@ RUN apk add --no-cache build-base openssl-dev openssl-libs-static
 FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN cargo build --release
+RUN cargo build --release -j2
 
 FROM alpine:latest AS runner
 WORKDIR /app

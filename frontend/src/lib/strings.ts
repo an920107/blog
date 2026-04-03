@@ -15,7 +15,9 @@ export abstract class Strings {
 	static readonly NOT_FOUND_CODE: string = '404';
 	static readonly POST: string = '文章';
 	static readonly SEARCH_AND_FILTER_TITLE: string = '搜尋與篩選';
-	static readonly SEARCH_LABEL_PLACEHOLDER: string = '搜尋標籤...';
-	static readonly SEARCH_POST_PLACEHOLDER: string = '搜尋文章標題...';
+	static readonly SEARCH_LABEL_PLACEHOLDER: string = '搜尋標籤';
+	static readonly SEARCH_POST_PLACEHOLDER: string = '搜尋文章內容或直接提問';
+	static readonly SEARCH_POST_HINT: string =
+		'輸入文章內容片段，或直接提出具體問題，系統將會以 AI (RAG) 來搜尋相關的文章內容，搜尋結果根據相關性排序。';
 	static readonly TOC: string = '章節目錄';
 }

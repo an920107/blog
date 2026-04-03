@@ -48,6 +48,9 @@
 	import { MediaQuery } from 'svelte/reactivity';
 	import { getContext, onMount } from 'svelte';
 	import { Strings } from '$lib/strings';
+	import Tooltip from '$lib/common/framework/components/ui/tooltip/tooltip.svelte';
+	import TooltipTrigger from '$lib/common/framework/components/ui/tooltip/tooltip-trigger.svelte';
+	import TooltipContent from '$lib/common/framework/components/ui/tooltip/tooltip-content.svelte';
 
 	const {
 		defaultValues = {},
@@ -109,7 +112,7 @@
 {#if isDesktop.current}
 	<Dialog bind:open>
 		<DialogTrigger><FilteringButton {showRanbowRing} /></DialogTrigger>
-		<DialogContent showCloseButton={false}>
+		<DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
 			<DialogHeader class="mb-4">
 				<DialogTitle>{Strings.SEARCH_AND_FILTER_TITLE}</DialogTitle>
 			</DialogHeader>
@@ -163,7 +166,15 @@
 {#snippet keywordInput()}
 	{@const id = 'keyword-input'}
 	<div>
-		<Label for={id} class="pb-2">{Strings.KEYWORD}</Label>
+		<div class="flex flex-row items-center gap-1 pb-2">
+			<Label for={id}>{Strings.KEYWORD}</Label>
+			<Tooltip delayDuration={200}>
+				<TooltipTrigger class="inline-flex !cursor-help items-center">
+					<i class="fa-solid fa-circle-info pt-0.5 text-[0.75rem] text-gray-500"></i>
+				</TooltipTrigger>
+				<TooltipContent>{Strings.SEARCH_POST_HINT}</TooltipContent>
+			</Tooltip>
+		</div>
 		<div class="flex flex-row items-center gap-x-2">
 			<Input
 				{id}

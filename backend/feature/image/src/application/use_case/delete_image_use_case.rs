@@ -3,8 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::gateway::image_repository::ImageRepository,
-    domain::error::image_error::ImageError,
+    application::gateway::image_repository::ImageRepository, domain::error::image_error::ImageError,
 };
 
 #[async_trait]

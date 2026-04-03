@@ -14,6 +14,7 @@ use auth::{
         oidc::auth_oidc_service_impl::AuthOidcServiceImpl,
     },
 };
+use fastembed::TextEmbedding;
 use image::{
     adapter::{
         delivery::image_controller::{ImageController, ImageControllerImpl},
@@ -57,7 +58,21 @@ use post::{
     },
     framework::db::post_db_service_impl::PostDbServiceImpl,
 };
+use qdrant_client::Qdrant;
+use search::{
+    adapter::{
+        gateway::search_repository_impl::SearchRepositoryImpl,
+        service::search_service_impl::SearchServiceImpl,
+    },
+    application::use_case::{
+        index_post_use_case::IndexPostUseCaseImpl, search_posts_use_case::SearchPostsUseCaseImpl,
+    },
+    framework::db::search_vector_db_service_impl::SearchVectorDbServiceImpl,
+};
 use sqlx::{Pool, Postgres};
+use text_splitter::MarkdownSplitter;
+use tokenizers::Tokenizer;
+use tokio::sync::Mutex;
 
 use crate::configuration::Configuration;
 
@@ -71,7 +86,10 @@ pub struct Container {
 impl Container {
     pub fn new(
         db_pool: Pool<Postgres>,
+        qdrant_client: Arc<Qdrant>,
         http_client: reqwest::Client,
+        text_embedding_model: Arc<Mutex<TextEmbedding>>,
+        markdown_splitter: Arc<MarkdownSplitter<Tokenizer>>,
         configuration: Configuration,
     ) -> Self {
         // Auth
@@ -117,13 +135,37 @@ impl Container {
             get_label_by_id_use_case,
         ));
 
+        // Search
+        let search_vector_db_service = Arc::new(SearchVectorDbServiceImpl::new(
+            qdrant_client,
+            &configuration.qdrant.post_collection_name,
+            configuration.qdrant.search_threshold,
+            configuration.qdrant.search_limit,
+        ));
+
+        let search_repository = Arc::new(SearchRepositoryImpl::new(
+            search_vector_db_service,
+            markdown_splitter,
+            text_embedding_model,
+        ));
+
+        let index_post_use_case = Arc::new(IndexPostUseCaseImpl::new(search_repository.clone()));
+        let query_posts_use_case = Arc::new(SearchPostsUseCaseImpl::new(search_repository.clone()));
+
+        let search_service = Arc::new(SearchServiceImpl::new(
+            index_post_use_case,
+            query_posts_use_case,
+        ));
+
         // Post
         let post_db_service = Arc::new(PostDbServiceImpl::new(db_pool.clone()));
 
         let post_repository = Arc::new(PostRepositoryImpl::new(post_db_service.clone()));
 
-        let get_all_post_info_use_case =
-            Arc::new(GetAllPostInfoUseCaseImpl::new(post_repository.clone()));
+        let get_all_post_info_use_case = Arc::new(GetAllPostInfoUseCaseImpl::new(
+            post_repository.clone(),
+            search_service.clone(),
+        ));
         let get_post_by_id_use_case =
             Arc::new(GetFullPostUseCaseImpl::new(post_repository.clone()));
         let get_post_by_semantic_id_use_case = Arc::new(GetPostBySemanticIdUseCaseImpl::new(
@@ -133,10 +175,12 @@ impl Container {
         let create_post_use_case = Arc::new(CreatePostUseCaseImpl::new(
             post_repository.clone(),
             label_repository.clone(),
+            search_service.clone(),
         ));
         let update_post_use_case = Arc::new(UpdatePostUseCaseImpl::new(
             post_repository.clone(),
             label_repository.clone(),
+            search_service.clone(),
         ));
 
         let post_controller = Arc::new(PostControllerImpl::new(

@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 
 use crate::domain::{entity::post_info::PostInfo, error::post_error::PostError};
 
+#[derive(Clone)]
 pub struct CreatePostParams {
     pub semantic_id: String,
     pub title: String,
