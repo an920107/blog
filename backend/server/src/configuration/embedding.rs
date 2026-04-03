@@ -15,7 +15,7 @@ pub struct EmbeddingConfiguration {
 
 impl EmbeddingConfiguration {
     pub fn new() -> Self {
-        let cache_dir = std::env::var("EMBEDDING_CACHE_DIR")
+        let cache_dir = std::env::var("EMBEDDING_CACHE_PATH")
             .unwrap_or_else(|_| "./embedding_cache".to_string());
 
         Self {
@@ -45,5 +45,9 @@ impl EmbeddingConfiguration {
             .expect("Failed to set overlap for chunk config");
 
         MarkdownSplitter::new(chunk_config)
+    }
+
+    pub fn model_revision(&self) -> String {
+        self.hf_model_name.clone()
     }
 }

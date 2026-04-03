@@ -19,11 +19,15 @@ debug = true
 
 [workspace.dependencies]
 actix-multipart = "0.7.2"
-actix-session = { version = "0.11.0", features = ["redis-session"] }
+actix-session = { version = "0.11.0", features = [
+    "redis-session",
+    "redis-pool",
+] }
 actix-web = "4.13.0"
 anyhow = "1.0.102"
 async-trait = "0.1.89"
 chrono = "0.4.44"
+deadpool-redis = "0.22.0"
 dotenv = "0.15.0"
 env_logger = "0.11.10"
 fastembed = "5.13.0"
@@ -37,9 +41,15 @@ openidconnect = { version = "4.0.1", features = [
 ] }
 percent-encoding = "2.3.2"
 qdrant-client = { version = "1.17.0", features = ["serde"] }
+redis = { version = "0.32.7", features = [
+    "aio",
+    "connection-manager",
+    "tokio-comp",
+] }
 regex = "1.12.3"
 sentry = { version = "0.47.0", features = ["actix", "anyhow"] }
 serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
 sqlx = { version = "0.8.6", features = [
     "chrono",
     "macros",

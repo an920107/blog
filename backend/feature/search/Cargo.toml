@@ -6,9 +6,13 @@ edition.workspace = true
 [dependencies]
 anyhow.workspace = true
 async-trait.workspace = true
+deadpool-redis.workspace = true
 fastembed.workspace = true
+fnv_rs.workspace = true
 qdrant-client.workspace = true
+redis.workspace = true
 serde.workspace = true
+serde_json.workspace = true
 text-splitter.workspace = true
 tokenizers.workspace = true
 tokio.workspace = true

@@ -61,15 +61,19 @@ use post::{
 use qdrant_client::Qdrant;
 use search::{
     adapter::{
+        gateway::search_query_embedding_cache::SearchQueryEmbeddingCache,
         gateway::search_repository_impl::SearchRepositoryImpl,
         service::search_service_impl::SearchServiceImpl,
     },
     application::use_case::{
         index_post_use_case::IndexPostUseCaseImpl, search_posts_use_case::SearchPostsUseCaseImpl,
     },
-    framework::db::search_vector_db_service_impl::SearchVectorDbServiceImpl,
+    framework::{
+        cache::search_query_embedding_cache_redis_impl::SearchQueryEmbeddingCacheRedisImpl,
+        db::search_vector_db_service_impl::SearchVectorDbServiceImpl,
+    },
 };
-use sqlx::{Pool, Postgres};
+use sqlx::Postgres;
 use text_splitter::MarkdownSplitter;
 use tokenizers::Tokenizer;
 use tokio::sync::Mutex;
@@ -85,7 +89,8 @@ pub struct Container {
 
 impl Container {
     pub fn new(
-        db_pool: Pool<Postgres>,
+        db_pool: sqlx::Pool<Postgres>,
+        redis_pool: deadpool_redis::Pool,
         qdrant_client: Arc<Qdrant>,
         http_client: reqwest::Client,
         text_embedding_model: Arc<Mutex<TextEmbedding>>,
@@ -143,10 +148,18 @@ impl Container {
             configuration.qdrant.search_limit,
         ));
 
+        let query_embedding_cache: Arc<dyn SearchQueryEmbeddingCache> =
+            Arc::new(SearchQueryEmbeddingCacheRedisImpl::new(
+                redis_pool,
+                &configuration.redis.search_query_embedding_prefix,
+                &configuration.embedding.model_revision(),
+            ));
+
         let search_repository = Arc::new(SearchRepositoryImpl::new(
             search_vector_db_service,
             markdown_splitter,
             text_embedding_model,
+            query_embedding_cache,
         ));
 
         let index_post_use_case = Arc::new(IndexPostUseCaseImpl::new(search_repository.clone()));

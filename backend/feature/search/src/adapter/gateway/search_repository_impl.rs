@@ -9,7 +9,10 @@ use tokenizers::Tokenizer;
 use tokio::{sync::Mutex, task::spawn_blocking};
 
 use crate::{
-    adapter::gateway::search_vector_db_service::SearchVectorDbService,
+    adapter::gateway::{
+        search_query_embedding_cache::SearchQueryEmbeddingCache,
+        search_vector_db_service::SearchVectorDbService,
+    },
     application::gateway::search_repository::SearchRepository,
     domain::error::search_error::SearchError,
 };
@@ -21,6 +24,7 @@ pub struct SearchRepositoryImpl {
     search_vector_db_service: Arc<dyn SearchVectorDbService>,
     markdown_splitter: Arc<MarkdownSplitter<Tokenizer>>,
     text_embedding_model: Arc<Mutex<TextEmbedding>>,
+    query_embedding_cache: Arc<dyn SearchQueryEmbeddingCache>,
 }
 
 impl SearchRepositoryImpl {
@@ -28,11 +32,13 @@ impl SearchRepositoryImpl {
         search_vector_db_service: Arc<dyn SearchVectorDbService>,
         markdown_splitter: Arc<MarkdownSplitter<Tokenizer>>,
         text_embedding_model: Arc<Mutex<TextEmbedding>>,
+        query_embedding_cache: Arc<dyn SearchQueryEmbeddingCache>,
     ) -> Self {
         Self {
             search_vector_db_service,
             markdown_splitter,
             text_embedding_model,
+            query_embedding_cache,
         }
     }
 }
@@ -61,13 +67,7 @@ impl SearchRepository for SearchRepositoryImpl {
         scope: &Option<Vec<i32>>,
     ) -> Result<Vec<i32>, SearchError> {
         let query_string = format!("{}{}", QUERY_INSTRUCTION, keyword);
-        let embeddings = self.embed_chunks(&vec![query_string]).await?;
-        let query_vector = embeddings
-            .into_iter()
-            .next()
-            .ok_or(SearchError::Unexpected(anyhow!(
-                "Failed to generate embedding for query"
-            )))?;
+        let query_vector = self.get_query_embedding(&query_string).await?;
 
         self.search_vector_db_service
             .search_similar_posts(&query_vector, scope)
@@ -81,6 +81,27 @@ impl SearchRepositoryImpl {
             .chunks(&markdown)
             .map(|s| s.to_string())
             .collect()
+    }
+
+    async fn get_query_embedding(&self, query_string: &str) -> Result<Vec<f32>, SearchError> {
+        if let Ok(Some(cached_embedding)) = self.query_embedding_cache.get_by_query_string(query_string).await {
+            return Ok(cached_embedding);
+        }
+
+        let embeddings = self.embed_chunks(&vec![query_string.to_string()]).await?;
+        let query_vector = embeddings
+            .into_iter()
+            .next()
+            .ok_or(SearchError::Unexpected(anyhow!(
+                "Failed to generate embedding for query"
+            )))?;
+
+        let _ = self
+            .query_embedding_cache
+            .set_by_query_string(query_string, &query_vector)
+            .await;
+
+        Ok(query_vector)
     }
 
     async fn embed_chunks(&self, chunks: &Vec<String>) -> Result<Vec<Vec<f32>>, SearchError> {

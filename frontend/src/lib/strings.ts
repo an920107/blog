@@ -18,6 +18,6 @@ export abstract class Strings {
 	static readonly SEARCH_LABEL_PLACEHOLDER: string = '搜尋標籤';
 	static readonly SEARCH_POST_PLACEHOLDER: string = '搜尋文章內容或直接提問';
 	static readonly SEARCH_POST_HINT: string =
-		'輸入文章內容片段，或直接提出具體問題，系統將會以 AI (RAG) 來搜尋相關的文章內容，搜尋結果根據相關性排序。';
+		'輸入文章內容片段，或直接提出具體問題，系統將會以 AI（向量比對）搜尋相關的文章內容，搜尋結果根據相關性排序。';
 	static readonly TOC: string = '章節目錄';
 }

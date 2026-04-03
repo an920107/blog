@@ -1,14 +1,16 @@
 use actix_session::storage::RedisSessionStore;
 use actix_web::cookie::Key;
+use deadpool_redis::Pool;
 
 #[derive(Clone)]
 pub struct SessionConfiguration {
     pub session_key: Key,
-    pub redis_url: String,
+
+    redis_session_prefix: String,
 }
 
 impl SessionConfiguration {
-    pub fn new() -> Self {
+    pub fn new(redis_session_prefix: &str) -> Self {
         let session_key_hex = std::env::var("SESSION_KEY").expect("SESSION_KEY must be set");
         let session_key_bytes =
             hex::decode(session_key_hex).expect("Invalid SESSION_KEY format, must be hex encoded");
@@ -19,17 +21,18 @@ impl SessionConfiguration {
 
         let session_key = Key::from(&session_key_bytes);
 
-        let redis_url =
-            std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
-
         Self {
             session_key,
-            redis_url,
+            redis_session_prefix: redis_session_prefix.to_string(),
         }
     }
 
-    pub async fn create_session_store(&self) -> RedisSessionStore {
-        RedisSessionStore::new(self.redis_url.clone())
+    pub async fn create_session_store(&self, redis_pool: Pool) -> RedisSessionStore {
+        let prefix = self.redis_session_prefix.clone();
+
+        RedisSessionStore::builder_pooled(redis_pool)
+            .cache_keygen(move |session_key| format!("{}:{}", prefix, session_key))
+            .build()
             .await
             .expect("Failed to create Redis session store")
     }

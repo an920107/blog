@@ -18,7 +18,7 @@ use qdrant_client::Qdrant;
 use server::{
     api_doc::configure_api_doc_routes, configuration::Configuration, container::Container,
 };
-use sqlx::{Pool, Postgres};
+use sqlx::Postgres;
 use std::sync::Arc;
 use text_splitter::MarkdownSplitter;
 use tokenizers::Tokenizer;
@@ -45,9 +45,14 @@ fn main() -> std::io::Result<()> {
         let host = configuration.server.host.clone();
         let port = configuration.server.port;
 
-        let db_pool = configuration.db.create_connection().await;
+        let db_pool = configuration.db.create_pool().await;
+        let redis_pool = configuration.redis.create_pool();
+
         let session_key = configuration.session.session_key.clone();
-        let session_store = configuration.session.create_session_store().await;
+        let session_store = configuration
+            .session
+            .create_session_store(redis_pool.clone())
+            .await;
 
         let qdrant_client = Arc::new(configuration.qdrant.create_client().await);
         let text_embedding_model = Arc::new(Mutex::new(
@@ -58,6 +63,7 @@ fn main() -> std::io::Result<()> {
         HttpServer::new(move || {
             create_app(
                 db_pool.clone(),
+                redis_pool.clone(),
                 qdrant_client.clone(),
                 http_client.clone(),
                 text_embedding_model.clone(),
@@ -78,7 +84,8 @@ fn main() -> std::io::Result<()> {
 }
 
 fn create_app(
-    db_pool: Pool<Postgres>,
+    db_pool: sqlx::Pool<Postgres>,
+    redis_pool: deadpool_redis::Pool,
     qdrant_client: Arc<Qdrant>,
     http_client: reqwest::Client,
     text_embedding_model: Arc<Mutex<TextEmbedding>>,
@@ -97,6 +104,7 @@ fn create_app(
 > {
     let container = Container::new(
         db_pool,
+        redis_pool,
         qdrant_client,
         http_client,
         text_embedding_model,

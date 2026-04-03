@@ -6,6 +6,7 @@ edition.workspace = true
 [dependencies]
 actix-session.workspace = true
 actix-web.workspace = true
+deadpool-redis.workspace = true
 dotenv.workspace = true
 env_logger.workspace = true
 fastembed.workspace = true
@@ -13,6 +14,7 @@ hex.workspace = true
 openidconnect.workspace = true
 percent-encoding.workspace = true
 qdrant-client.workspace = true
+redis.workspace = true
 sentry.workspace = true
 sqlx.workspace = true
 text-splitter.workspace = true

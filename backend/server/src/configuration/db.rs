@@ -27,7 +27,7 @@ impl DbConfiguration {
         Self { database_url }
     }
 
-    pub async fn create_connection(&self) -> Pool<Postgres> {
+    pub async fn create_pool(&self) -> Pool<Postgres> {
         let db_pool = PgPoolOptions::new()
             .max_connections(5)
             .connect(&self.database_url)

@@ -52,6 +52,7 @@ The backend follows Clean Architecture principles with a modular structure:
   - `post/` - Blog post management
   - `label/` - Label/tag system
   - `image/` - Image handling
+   - `search/` - Semantic search and RAG support
   - `common/` - Shared utilities and types
 - `migrations/` - Database migration scripts
 
@@ -66,7 +67,23 @@ Each feature module follows the Clean Architecture pattern:
 
 - **Framework**: Actix-web
 - **Database**: PostgreSQL with SQLx
+- **AI / Search**: RAG-based semantic search with embeddings and Qdrant
 - **Authentication**: JWT-based
 - **Serialization**: Serde
 - **Migration**: SQLx migrations
 - **Logging**: env_logger with RUST_LOG
+
+### Search Embedding Cache
+
+The search module supports Redis-based query embedding cache.
+
+- `SEARCH_CACHE_KEY_PREFIX` - Redis key namespace prefix
+
+Implementation details:
+
+- Only query embedding is cached.
+- Search result IDs are not cached.
+- Cache uses existing `REDIS_URL`.
+- Cache is enabled by default.
+- Cache key model revision comes from embedding configuration.
+- `index_post` does not reset query embedding cache because cache entries only depend on query string.
