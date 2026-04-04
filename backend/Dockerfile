@@ -1,12 +1,12 @@
-FROM rust:1-alpine AS base
-RUN apk add --no-cache build-base openssl-dev openssl-libs-static
+FROM rust:1-slim AS base
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libssl-dev pkg-config
 
 FROM base AS builder
 WORKDIR /app
 COPY . .
 RUN cargo build --release -j2
 
-FROM alpine:latest AS runner
+FROM debian:trixie-slim AS runner
 WORKDIR /app
 COPY --from=builder /app/target/release/server .
 EXPOSE 8080
@@ -21,4 +21,5 @@ ENV DATABASE_PORT=5432
 ENV DATABASE_USER=postgres
 ENV DATABASE_NAME=postgres
 ENV REIDS_URL=redis://127.0.0.1:6379
+ENV QDRANT_URL=http://127.0.0.1:6334
 CMD ["./server"]
