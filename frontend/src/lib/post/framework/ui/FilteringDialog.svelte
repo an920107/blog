@@ -112,7 +112,11 @@
 {#if isDesktop.current}
 	<Dialog bind:open>
 		<DialogTrigger><FilteringButton {showRanbowRing} /></DialogTrigger>
-		<DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
+		<DialogContent
+			showCloseButton={false}
+			onOpenAutoFocus={(e) => e.preventDefault()}
+			onCloseAutoFocus={(e) => e.preventDefault()}
+		>
 			<DialogHeader class="mb-4">
 				<DialogTitle>{Strings.SEARCH_AND_FILTER_TITLE}</DialogTitle>
 			</DialogHeader>
