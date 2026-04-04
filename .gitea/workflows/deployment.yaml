@@ -30,6 +30,8 @@ jobs:
           push: true
           provenance: false
           context: ./frontend
+          secrets: |
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache
           cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache,mode=max
           tags: |
