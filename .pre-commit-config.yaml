@@ -14,7 +14,7 @@ repos:
         pass_filenames: false
         files: ^backend/
       - id: frontend-lint
-        name: frontend lint
+        name: frontend lint & check
         language: script
         entry: ./script/pre-commit/frontend-lint.sh
         pass_filenames: false
