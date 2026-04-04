@@ -172,7 +172,7 @@
 	<div>
 		<div class="flex flex-row items-center gap-1 pb-2">
 			<Label for={id}>{Strings.KEYWORD}</Label>
-			<Tooltip delayDuration={200}>
+			<Tooltip delayDuration={300} disableCloseOnTriggerClick={true}>
 				<TooltipTrigger class="inline-flex cursor-help! items-center">
 					<i class="fa-solid fa-circle-info pt-0.5 text-[0.75rem] text-gray-500"></i>
 				</TooltipTrigger>
