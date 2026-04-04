@@ -50,7 +50,7 @@
 </script>
 
 <svelte:head>
-	<title>{generateTitle('文章')}</title>
+	<title>{generateTitle(isPostsEmpty ? Strings.EMPTY_POSTS : Strings.POST)}</title>
 	<meta name="description" content={description} />
 </svelte:head>
 
