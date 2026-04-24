@@ -11,7 +11,7 @@ const sentryProjects = ['blog-frontend', 'blog-beta-frontend'];
 export default defineConfig({
 	plugins: [
 		sentrySvelteKit(),
-		sentryProjects.map((project) =>
+		...sentryProjects.map((project) =>
 			sentryVitePlugin({
 				org: 'squidspirit',
 				project,
