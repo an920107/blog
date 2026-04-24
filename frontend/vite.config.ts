@@ -1,18 +1,25 @@
 import { sentrySvelteKit } from '@sentry/sveltekit';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 import { version } from './package.json';
 
+const sentryProjects = ['blog-frontend', 'blog-beta-frontend'];
+
 export default defineConfig({
 	plugins: [
-		sentrySvelteKit({
-			sourceMapsUploadOptions: {
+		sentrySvelteKit(),
+		sentryProjects.map((project) =>
+			sentryVitePlugin({
 				org: 'squidspirit',
-				project: 'blog-beta-frontend',
-			},
-		}),
+				project,
+				release: {
+					name: version,
+				},
+			})
+		),
 		tailwindcss(),
 		sveltekit(),
 	],

@@ -8,6 +8,8 @@ Sentry.init({
 	dsn: Environment.SENTRY_DSN,
 	tracesSampleRate: 1,
 	enableLogs: true,
+	release: App.__VERSION__,
+	environment: process.env.NODE_ENV || 'development',
 });
 
 export const handle: Handle = sequence(Sentry.sentryHandle(), ({ event, resolve }) => {
