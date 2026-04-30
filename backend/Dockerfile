@@ -15,12 +15,13 @@ RUN apt-get update && \
 WORKDIR /app
 COPY --from=builder /app/target/release/server .
 EXPOSE 8080
-VOLUME ["/app/static"]
+VOLUME ["/app/static", "/app/embedding_cache"]
 ENV RUST_LOG=info
 ENV RUST_BACKTRACE=1
 ENV HOST=0.0.0.0
 ENV PORT=8080
 ENV STORAGE_PATH=/app/static
+ENV EMBEDDING_CACHE_PATH=/app/embedding_cache
 ENV DATABASE_HOST=127.0.0.1
 ENV DATABASE_PORT=5432
 ENV DATABASE_USER=postgres
