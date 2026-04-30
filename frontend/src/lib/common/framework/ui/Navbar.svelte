@@ -8,11 +8,12 @@
 <script lang="ts">
 	/* eslint-disable svelte/no-navigation-without-resolve */
 
-	import { page } from '$app/state';
-	import { cn } from '$lib/common/framework/components/utils';
 	import { getContext, onDestroy, onMount } from 'svelte';
-	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+	import { cn } from '$lib/common/framework/components/utils';
 
 	const { actions }: { actions: NavigationActionProps[] } = $props();
 

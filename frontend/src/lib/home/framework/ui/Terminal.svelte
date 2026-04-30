@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
+
 	import { cn } from '$lib/common/framework/components/utils';
 	import { selfIntroductionLines } from '$lib/common/framework/ui/StructuredData.svelte';
 	import TerminalLastLine from '$lib/home/framework/ui/TerminalLastLine.svelte';
 	import TerminalNormalLine from '$lib/home/framework/ui/TerminalNormalLine.svelte';
-	import { onDestroy, onMount } from 'svelte';
 
 	const lines = selfIntroductionLines;
 

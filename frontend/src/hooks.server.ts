@@ -1,8 +1,9 @@
-import { sequence } from '@sveltejs/kit/hooks';
 import * as Sentry from '@sentry/sveltekit';
 import type { Handle } from '@sveltejs/kit';
-import { Environment } from '$lib/environment';
+import { sequence } from '@sveltejs/kit/hooks';
+
 import { Container } from '$lib/container';
+import { Environment } from '$lib/environment';
 
 Sentry.init({
 	dsn: Environment.SENTRY_DSN,

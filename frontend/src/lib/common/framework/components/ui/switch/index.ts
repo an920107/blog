@@ -1,4 +1,4 @@
-import Root from './switch.svelte';
+import Root from '$lib/common/framework/components/ui/switch/switch.svelte';
 
 export {
 	Root,

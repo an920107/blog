@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { getContext, setContext } from 'svelte';
+
 	import { Container } from '$lib/container';
 	import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import LabelOverallDashboardPage from '$lib/label/framework/ui/LabelOverallDashboardPage.svelte';
-	import { getContext, setContext } from 'svelte';
-	import type { PageProps } from './$types';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import LabelOverallDashboardPage from '$lib/label/framework/ui/LabelOverallDashboardPage.svelte';
+
+	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);

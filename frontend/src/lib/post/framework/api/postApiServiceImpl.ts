@@ -2,11 +2,11 @@ import { HttpError } from '$lib/common/framework/web/httpError';
 import { HttpStatusCode } from '$lib/common/framework/web/httpStatusCode';
 import { Environment } from '$lib/environment';
 import type { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
-import type { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
 import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
 import { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseDto';
 import type { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
 import { PostResponseDto } from '$lib/post/adapter/gateway/postResponseDto';
+import type { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
 
 export class PostApiServiceImpl implements PostApiService {
 	constructor(private readonly fetchFn: typeof fetch) {}

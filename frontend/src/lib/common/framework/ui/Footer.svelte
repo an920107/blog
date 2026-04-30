@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Strings } from '$lib/strings';
+	import { resolve } from '$app/paths';
 	import { cn } from '$lib/common/framework/components/utils';
 	import { Links } from '$lib/links';
-	import { resolve } from '$app/paths';
+	import { Strings } from '$lib/strings';
 
 	const currentYear = new Date().getFullYear();
 </script>

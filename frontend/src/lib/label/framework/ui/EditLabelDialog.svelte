@@ -22,12 +22,12 @@
 	} from '$lib/common/framework/components/ui/dialog';
 	import Input from '$lib/common/framework/components/ui/input/input.svelte';
 	import Label from '$lib/common/framework/components/ui/label/label.svelte';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import InputError from '$lib/common/framework/ui/InputError.svelte';
+	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import { Label as LabelEntity } from '$lib/label/domain/entity/label';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
-	import InputError from '$lib/common/framework/ui/InputError.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 
 	const {
 		title,

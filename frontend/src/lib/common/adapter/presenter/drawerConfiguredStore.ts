@@ -1,7 +1,8 @@
+import { writable } from 'svelte/store';
+
 import { AsyncState } from '$lib/common/adapter/presenter/asyncState';
 import type { BaseStore } from '$lib/common/adapter/presenter/baseStore';
-import { writable } from 'svelte/store';
-import { DrawerViewModel } from './drawerViewModel';
+import { DrawerViewModel } from '$lib/common/adapter/presenter/drawerViewModel';
 
 type DrawerState = AsyncState<DrawerViewModel>;
 

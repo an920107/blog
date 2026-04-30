@@ -1,4 +1,4 @@
-import { UserViewModel, type DehydratedUserProps } from '$lib/auth/adapter/presenter/userViewModel';
+import { type DehydratedUserProps, UserViewModel } from '$lib/auth/adapter/presenter/userViewModel';
 
 export class AuthViewModel {
 	readonly user: UserViewModel | null;

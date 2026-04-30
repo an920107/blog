@@ -1,6 +1,6 @@
-import { Environment } from '$lib/environment';
-import { handleErrorWithSentry, replayIntegration } from '@sentry/sveltekit';
 import * as Sentry from '@sentry/sveltekit';
+
+import { Environment } from '$lib/environment';
 
 Sentry.init({
 	dsn: Environment.SENTRY_DSN,
@@ -19,11 +19,11 @@ Sentry.init({
 	replaysOnErrorSampleRate: 1.0,
 
 	// If you don't want to use Session Replay, just remove the line below:
-	integrations: [replayIntegration()],
+	integrations: [Sentry.replayIntegration()],
 
 	release: App.__VERSION__,
 	environment: import.meta.env.MODE || 'development',
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = handleErrorWithSentry();
+export const handleError = Sentry.handleErrorWithSentry();

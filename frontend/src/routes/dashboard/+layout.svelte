@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { getContext, onMount, setContext } from 'svelte';
-	import type { LayoutProps } from './$types';
-	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
-	import DashboardNavbar from '$lib/dashboard/framework/ui/DashboardNavbar.svelte';
-	import type { DashboardLink } from '$lib/dashboard/framework/ui/dashboardLink';
-	import { Container } from '$lib/container';
+
 	import { AuthLoadedStore } from '$lib/auth/adapter/presenter/authLoadedStore';
+	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
+	import { Container } from '$lib/container';
+	import type { DashboardLink } from '$lib/dashboard/framework/ui/dashboardLink';
+	import DashboardNavbar from '$lib/dashboard/framework/ui/DashboardNavbar.svelte';
 	import { Strings } from '$lib/strings';
+
+	import type { LayoutProps } from './$types';
 
 	const { children }: LayoutProps = $props();
 	const container = getContext<Container>(Container.name);

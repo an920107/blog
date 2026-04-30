@@ -1,5 +1,6 @@
-import { User } from '$lib/auth/domain/entity/user';
 import z from 'zod';
+
+import { User } from '$lib/auth/domain/entity/user';
 
 export const userResponseSchema = z.object({
 	id: z.int32(),

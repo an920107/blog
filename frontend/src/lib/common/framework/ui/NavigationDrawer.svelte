@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import { getContext } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
+
+	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import { cn } from '$lib/common/framework/components/utils';
 
 	const drawerConfiguredStore = getContext<DrawerConfiguredStore>(DrawerConfiguredStore.name);

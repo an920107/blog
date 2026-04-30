@@ -1,5 +1,6 @@
-import { ImageInfo } from '$lib/image/domain/entity/imageInfo';
 import z from 'zod';
+
+import { ImageInfo } from '$lib/image/domain/entity/imageInfo';
 
 export const imageInfoResponseSchema = z.object({
 	id: z.int32(),

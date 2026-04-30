@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { getContext, setContext } from 'svelte';
-	import type { PageProps } from './$types';
-	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
-	import PostOverallPage from '$lib/post/framework/ui/PostOverallPage.svelte';
+
 	import { Container } from '$lib/container';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import PostOverallPage from '$lib/post/framework/ui/PostOverallPage.svelte';
+
+	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);

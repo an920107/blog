@@ -1,6 +1,7 @@
+import { z } from 'zod';
+
 import { ColorDto, colorResponseSchema } from '$lib/label/adapter/gateway/colorDto';
 import { Label } from '$lib/label/domain/entity/label';
-import { z } from 'zod';
 
 export const labelResponseSchema = z.object({
 	id: z.int32(),

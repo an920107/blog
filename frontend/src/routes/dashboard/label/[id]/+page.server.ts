@@ -1,8 +1,10 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+
 import type { Container } from '$lib/container';
 import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
+
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	const { container } = locals;

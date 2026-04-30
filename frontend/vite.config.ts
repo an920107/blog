@@ -1,9 +1,10 @@
 import { sentrySvelteKit } from '@sentry/sveltekit';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, loadEnv } from 'vite';
 
+// eslint-disable-next-line no-restricted-imports
 import { version } from './package.json';
 
 export default defineConfig(({ mode }) => {

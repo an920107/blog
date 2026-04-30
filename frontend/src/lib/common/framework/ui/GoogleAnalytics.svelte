@@ -1,6 +1,7 @@
 <script>
-	import { Environment } from '$lib/environment';
 	import { onMount } from 'svelte';
+
+	import { Environment } from '$lib/environment';
 
 	onMount(() => {
 		const gaMeasurementId = Environment.GA_MEASUREMENT_ID;

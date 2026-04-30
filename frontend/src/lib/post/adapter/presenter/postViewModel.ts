@@ -1,6 +1,6 @@
 import {
-	PostInfoViewModel,
 	type DehydratedPostInfoProps,
+	PostInfoViewModel,
 } from '$lib/post/adapter/presenter/postInfoViewModel';
 import type { Post } from '$lib/post/domain/entity/post';
 

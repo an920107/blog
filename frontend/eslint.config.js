@@ -1,11 +1,15 @@
-import prettier from 'eslint-config-prettier';
+import { fileURLToPath } from 'node:url';
+
 import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
+import prettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
-import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
+
+// eslint-disable-next-line no-restricted-imports
 import svelteConfig from './svelte.config.js';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
@@ -19,6 +23,9 @@ export default ts.config(
 	prettier,
 	...svelte.configs.prettier,
 	{
+		plugins: {
+			'simple-import-sort': simpleImportSort,
+		},
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
 		},
@@ -27,15 +34,39 @@ export default ts.config(
 			// see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
 			'no-undef': 'off',
 
-			// Disallow relative imports - use absolute paths instead
-			'import/no-relative-parent-imports': 'error',
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['./*', '!./$types', '../*'],
+							message:
+								'Relative imports are not allowed. Please use path aliases (e.g., $lib/...) instead.',
+						},
+					],
+				},
+			],
+
+			'sort-imports': 'off',
+			'simple-import-sort/imports': 'error',
+			'simple-import-sort/exports': 'error',
 		},
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		rules: {
-			// Allow relative imports for CSS files
-			'import/no-relative-parent-imports': ['error', { ignore: ['.*\\.css$'] }],
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['./*', '../*', '!./$types', '!./**/*.css', '!../**/*.css'],
+							message:
+								'Relative imports are not allowed. Please use path aliases (e.g., $lib/...) instead.',
+						},
+					],
+				},
+			],
 		},
 		languageOptions: {
 			parserOptions: {

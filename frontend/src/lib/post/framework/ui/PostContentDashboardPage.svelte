@@ -1,21 +1,22 @@
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+
+	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
+	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
+	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
+	import Table from '$lib/common/framework/components/ui/table/table.svelte';
+	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
+	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
+	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
+	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 	import { PostUpdatedStore } from '$lib/post/adapter/presenter/postUpdatedStore';
 	import EditPostDialog, {
 		type EditPostDialogFormParams,
 	} from '$lib/post/framework/ui/EditPostDialog.svelte';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { getContext, onMount } from 'svelte';
-	import { toast } from 'svelte-sonner';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
-	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
-	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
 	import MarkdownRenderer from '$lib/post/framework/ui/MarkdownRenderer.svelte';
-	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
-	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
-	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
 
 	const { id }: { id: number } = $props();
 

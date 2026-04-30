@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { getContext, setContext } from 'svelte';
+
 	import { Container } from '$lib/container';
 	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
 	import { ImageLoadedStore } from '$lib/image/adapter/presenter/imageLoadedStore';
 	import ImageDetailDashboardPage from '$lib/image/framework/ui/ImageDetailDashboardPage.svelte';
-	import { getContext, setContext } from 'svelte';
+
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();

@@ -1,20 +1,21 @@
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+
+	import { resolve } from '$app/paths';
+	import Table from '$lib/common/framework/components/ui/table/table.svelte';
+	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
+	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
+	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
 	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/labelUpdatedStore';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import EditLabelDialog, {
 		type EditLabelDialogFormParams,
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import { getContext, onMount } from 'svelte';
-	import { toast } from 'svelte-sonner';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
-	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
-	import { resolve } from '$app/paths';
 
 	const { id }: { id: number } = $props();
 

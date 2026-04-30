@@ -11,7 +11,17 @@
 </script>
 
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
+
 	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
+	import {
+		Command,
+		CommandGroup,
+		CommandInput,
+		CommandItem,
+		CommandList,
+	} from '$lib/common/framework/components/ui/command';
 	import {
 		Dialog,
 		DialogContent,
@@ -35,22 +45,13 @@
 		PopoverContent,
 		PopoverTrigger,
 	} from '$lib/common/framework/components/ui/popover';
-	import {
-		Command,
-		CommandGroup,
-		CommandInput,
-		CommandItem,
-		CommandList,
-	} from '$lib/common/framework/components/ui/command';
-	import FilteringButton from '$lib/post/framework/ui/FilteringButton.svelte';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import { MediaQuery } from 'svelte/reactivity';
-	import { getContext, onMount } from 'svelte';
-	import { Strings } from '$lib/strings';
 	import Tooltip from '$lib/common/framework/components/ui/tooltip/tooltip.svelte';
-	import TooltipTrigger from '$lib/common/framework/components/ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from '$lib/common/framework/components/ui/tooltip/tooltip-content.svelte';
+	import TooltipTrigger from '$lib/common/framework/components/ui/tooltip/tooltip-trigger.svelte';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import FilteringButton from '$lib/post/framework/ui/FilteringButton.svelte';
+	import { Strings } from '$lib/strings';
 
 	const {
 		defaultValues = {},

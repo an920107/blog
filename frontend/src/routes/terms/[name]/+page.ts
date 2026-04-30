@@ -1,6 +1,8 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+
 import { Strings } from '$lib/strings';
+
+import type { PageLoad } from './$types';
 
 interface TermsDocument {
 	pathname: string;
