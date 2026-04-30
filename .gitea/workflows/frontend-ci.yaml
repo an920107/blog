@@ -19,7 +19,7 @@ jobs:
         run: bun install
 
       - name: ESLint
-        run: bun run lint
+        run: bun run --bun lint
 
       - name: Check
-        run: bun run check
+        run: bun run --bun check

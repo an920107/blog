@@ -3,4 +3,4 @@
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 cd "$SCRIPT_DIR/../../frontend"
-bun lint && bun check
+bun run --bun lint && bun run --bun check
