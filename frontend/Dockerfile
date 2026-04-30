@@ -21,6 +21,7 @@ FROM base AS runner
 WORKDIR /app
 COPY --from=deps /temp/prod/node_modules ./node_modules
 COPY --from=builder /app/build ./build
+COPY --from=builder /app/package.json ./
 EXPOSE 3000
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
