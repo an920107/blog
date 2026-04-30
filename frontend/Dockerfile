@@ -1,28 +1,28 @@
-FROM node:22-alpine AS base
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable pnpm
+FROM oven/bun:1-alpine AS base
 
 FROM base AS deps
-WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN apk add --no-cache libc6-compat && \
-    pnpm install --frozen-lockfile
+RUN apk add --no-cache libc6-compat
+RUN mkdir -p /temp/dev
+RUN mkdir -p /temp/prod
+COPY package.json bun.lock /temp/dev/
+COPY package.json bun.lock /temp/prod/
+RUN cd /temp/dev && bun install --frozen-lockfile
+RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /temp/dev/node_modules ./node_modules
 COPY . .
 RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     SENTRY_AUTH_TOKEN="$(cat /run/secrets/SENTRY_AUTH_TOKEN 2>/dev/null || true)" \
-    pnpm run build
+    bun run build
 
 FROM base AS runner
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+COPY --from=deps /temp/prod/node_modules ./node_modules
 COPY --from=builder /app/build ./build
-RUN pnpm install --prod --frozen-lockfile
 EXPOSE 3000
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
-CMD ["node", "build"]
+CMD ["bun", "run", "build/index.js"]
