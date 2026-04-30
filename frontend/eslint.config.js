@@ -58,7 +58,7 @@ export default ts.config(
 				{
 					patterns: [
 						{
-							group: ['./*', '../*', '!./$types', '!./**/*.css', '!../**/*.css'],
+							group: ['./*', '../*', '!./$types', '!**/*.css'],
 							message:
 								'Relative imports are not allowed. Please use path aliases (e.g., $lib/...) instead.',
 						},
