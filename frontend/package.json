@@ -40,6 +40,7 @@
 		"eslint": "9.39.4",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-plugin-import": "2.32.0",
+		"eslint-plugin-simple-import-sort": "13.0.0",
 		"eslint-plugin-svelte": "3.17.1",
 		"globals": "17.5.0",
 		"highlight.js": "11.11.1",
@@ -68,6 +69,5 @@
 			"@sentry/cli",
 			"esbuild"
 		]
-	},
-	"packageManager": "pnpm@10.33.0"
+	}
 }
