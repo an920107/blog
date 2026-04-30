@@ -20,6 +20,9 @@ Sentry.init({
 
 	// If you don't want to use Session Replay, just remove the line below:
 	integrations: [replayIntegration()],
+
+	release: App.__VERSION__,
+	environment: import.meta.env.MODE || 'development',
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`

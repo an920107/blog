@@ -112,7 +112,11 @@
 {#if isDesktop.current}
 	<Dialog bind:open>
 		<DialogTrigger><FilteringButton {showRanbowRing} /></DialogTrigger>
-		<DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
+		<DialogContent
+			showCloseButton={false}
+			onOpenAutoFocus={(e) => e.preventDefault()}
+			onCloseAutoFocus={(e) => e.preventDefault()}
+		>
 			<DialogHeader class="mb-4">
 				<DialogTitle>{Strings.SEARCH_AND_FILTER_TITLE}</DialogTitle>
 			</DialogHeader>
@@ -168,8 +172,8 @@
 	<div>
 		<div class="flex flex-row items-center gap-1 pb-2">
 			<Label for={id}>{Strings.KEYWORD}</Label>
-			<Tooltip delayDuration={200}>
-				<TooltipTrigger class="inline-flex !cursor-help items-center">
+			<Tooltip delayDuration={300} disableCloseOnTriggerClick={true}>
+				<TooltipTrigger class="inline-flex cursor-help! items-center">
 					<i class="fa-solid fa-circle-info pt-0.5 text-[0.75rem] text-gray-500"></i>
 				</TooltipTrigger>
 				<TooltipContent>{Strings.SEARCH_POST_HINT}</TooltipContent>
@@ -179,7 +183,7 @@
 			<Input
 				{id}
 				type="text"
-				class="px-4 py-2 text-sm placeholder:text-gray-500"
+				class="px-4 py-2 text-base! placeholder:text-gray-500"
 				placeholder={Strings.SEARCH_POST_PLACEHOLDER}
 				aria-invalid={formErrors.keyword !== undefined}
 				bind:value={formData.keyword}
@@ -211,15 +215,15 @@
 						{#if label}
 							<PostLabel {label} />
 						{:else}
-							<span class="text-gray-500">{Strings.LABEL_SELECT_PLACEHOLDER}</span>
+							<span class="text-base text-gray-500">{Strings.LABEL_SELECT_PLACEHOLDER}</span>
 						{/if}
 					{:else}
-						<span class="text-gray-500">{Strings.LABEL_SELECT_PLACEHOLDER}</span>
+						<span class="text-base text-gray-500">{Strings.LABEL_SELECT_PLACEHOLDER}</span>
 					{/if}
 				</PopoverTrigger>
 				<PopoverContent class="p-0" align="start">
 					<Command>
-						<CommandInput placeholder={Strings.SEARCH_LABEL_PLACEHOLDER} />
+						<CommandInput class="text-base" placeholder={Strings.SEARCH_LABEL_PLACEHOLDER} />
 						<CommandList>
 							<CommandGroup>
 								{#each labelsListedState?.data ?? [] as label (label.id)}
