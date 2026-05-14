@@ -1,21 +1,22 @@
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+
+	import { resolve } from '$app/paths';
+	import { TableCell } from '$lib/common/framework/components/ui/table';
+	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
 	import TableHeader from '$lib/common/framework/components/ui/table/table-header.svelte';
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
 	import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import EditLabelDialog, {
 		type EditLabelDialogFormParams,
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import { getContext, onMount } from 'svelte';
-	import { toast } from 'svelte-sonner';
-	import { TableCell } from '$lib/common/framework/components/ui/table';
-	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { resolve } from '$app/paths';
 
 	const labelCreatedStore = getContext<LabelCreatedStore>(LabelCreatedStore.name);
 	const labelCreatedState = $derived($labelCreatedStore);

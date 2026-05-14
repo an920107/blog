@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { cn } from '$lib/common/framework/components/utils';
 	import { onDestroy, onMount } from 'svelte';
+
+	import { cn } from '$lib/common/framework/components/utils';
 
 	const { showRanbowRing }: { showRanbowRing: boolean } = $props();
 

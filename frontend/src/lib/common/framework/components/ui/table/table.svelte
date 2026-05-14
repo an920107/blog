@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { HTMLTableAttributes } from 'svelte/elements';
+
 	import { cn, type WithElementRef } from '$lib/common/framework/components/utils.js';
 
 	let {

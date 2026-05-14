@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { getContext, setContext } from 'svelte';
-	import type { PageProps } from './$types';
+
 	import { Container } from '$lib/container';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
 	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/labelUpdatedStore';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import LabelContentDashboardPage from '$lib/label/framework/ui/LabelContentDashboardPage.svelte';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+
+	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
 	const id = $derived(data.id);

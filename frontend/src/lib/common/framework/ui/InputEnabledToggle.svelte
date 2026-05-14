@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Switch from '$lib/common/framework/components/ui/switch/switch.svelte';
 	import { onDestroy, onMount } from 'svelte';
+
+	import Switch from '$lib/common/framework/components/ui/switch/switch.svelte';
 
 	const {
 		for: htmlFor,

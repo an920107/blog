@@ -26,7 +26,17 @@
 </script>
 
 <script lang="ts">
+	import { getContext, onMount, tick } from 'svelte';
+
+	import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
 	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
+	import {
+		Command,
+		CommandGroup,
+		CommandInput,
+		CommandItem,
+		CommandList,
+	} from '$lib/common/framework/components/ui/command';
 	import {
 		Dialog,
 		DialogContent,
@@ -37,27 +47,18 @@
 	} from '$lib/common/framework/components/ui/dialog';
 	import Input from '$lib/common/framework/components/ui/input/input.svelte';
 	import Label from '$lib/common/framework/components/ui/label/label.svelte';
-	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
-	import InputError from '$lib/common/framework/ui/InputError.svelte';
-	import Textarea from '$lib/common/framework/components/ui/textarea/textarea.svelte';
-	import InputEnabledToggle from '$lib/common/framework/ui/InputEnabledToggle.svelte';
-	import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
-	import { getContext, onMount, tick } from 'svelte';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import {
 		Popover,
 		PopoverContent,
 		PopoverTrigger,
 	} from '$lib/common/framework/components/ui/popover';
-	import {
-		Command,
-		CommandGroup,
-		CommandInput,
-		CommandItem,
-		CommandList,
-	} from '$lib/common/framework/components/ui/command';
+	import Textarea from '$lib/common/framework/components/ui/textarea/textarea.svelte';
+	import InputEnabledToggle from '$lib/common/framework/ui/InputEnabledToggle.svelte';
+	import InputError from '$lib/common/framework/ui/InputError.svelte';
+	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 
 	const {
 		mode,

@@ -1,6 +1,7 @@
+import z from 'zod';
+
 import { LabelResponseDto, labelResponseSchema } from '$lib/label/adapter/gateway/labelResponseDto';
 import { PostInfo } from '$lib/post/domain/entity/postInfo';
-import z from 'zod';
 
 export const postInfoResponseSchema = z.object({
 	id: z.int32(),

@@ -1,6 +1,8 @@
 <script lang="ts">
 	/* eslint-disable svelte/no-navigation-without-resolve */
 
+	import { getContext, onMount } from 'svelte';
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
@@ -14,7 +16,6 @@
 	} from '$lib/post/framework/ui/FilteringDialog.svelte';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
 	import { Strings } from '$lib/strings';
-	import { getContext, onMount } from 'svelte';
 
 	const { keyword, labelId }: { keyword?: string; labelId?: number } = $props();
 

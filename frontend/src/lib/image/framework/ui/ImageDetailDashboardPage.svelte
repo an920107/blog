@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { ImageLoadedStore } from '$lib/image/adapter/presenter/imageLoadedStore';
+
+	import { resolve } from '$app/paths';
 	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
+	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import { copyToClipboard } from '$lib/common/framework/ui/copyToClipboard';
-	import { resolve } from '$app/paths';
+	import { ImageLoadedStore } from '$lib/image/adapter/presenter/imageLoadedStore';
 
 	const imageLoadedStore = getContext<ImageLoadedStore>(ImageLoadedStore.name);
 	const imageState = $derived($imageLoadedStore);

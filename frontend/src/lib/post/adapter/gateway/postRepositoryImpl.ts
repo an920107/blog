@@ -1,11 +1,11 @@
 import { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
-import { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
 import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
 import { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
+import { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
 import type {
 	CreatePostParams,
-	UpdatePostParams,
 	PostRepository,
+	UpdatePostParams,
 } from '$lib/post/application/gateway/postRepository';
 import type { Post } from '$lib/post/domain/entity/post';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';

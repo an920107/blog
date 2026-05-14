@@ -1,8 +1,8 @@
-import type { Post } from '$lib/post/domain/entity/post';
 import type {
 	PostRepository,
 	UpdatePostParams,
 } from '$lib/post/application/gateway/postRepository';
+import type { Post } from '$lib/post/domain/entity/post';
 
 export class UpdatePostUseCase {
 	constructor(private readonly postRepository: PostRepository) {}

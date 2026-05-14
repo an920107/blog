@@ -1,7 +1,7 @@
 import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
 import {
-	LabelViewModel,
 	type DehydratedLabelProps,
+	LabelViewModel,
 } from '$lib/label/adapter/presenter/labelViewModel';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import TerminalCursor from '$lib/home/framework/ui/TerminalCursor.svelte';
 	import { onDestroy, onMount } from 'svelte';
+
+	import TerminalCursor from '$lib/home/framework/ui/TerminalCursor.svelte';
 
 	let { text, onComplete: onCompleted }: { text: string; onComplete: () => void } = $props();
 

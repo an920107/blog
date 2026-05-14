@@ -1,19 +1,20 @@
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+
+	import { resolve } from '$app/paths';
+	import Table from '$lib/common/framework/components/ui/table/table.svelte';
 	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
 	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
 	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
 	import TableHeader from '$lib/common/framework/components/ui/table/table-header.svelte';
 	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import EditPostDialog, {
 		type EditPostDialogFormParams,
 	} from '$lib/post/framework/ui/EditPostDialog.svelte';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { getContext, onMount } from 'svelte';
-	import { toast } from 'svelte-sonner';
-	import { resolve } from '$app/paths';
 
 	const postCreatedStore = getContext<PostCreatedStore>(PostCreatedStore.name);
 	const postCreatedState = $derived($postCreatedStore);

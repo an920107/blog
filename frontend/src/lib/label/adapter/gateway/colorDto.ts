@@ -1,5 +1,6 @@
-import { Color } from '$lib/label/domain/entity/color';
 import z from 'zod';
+
+import { Color } from '$lib/label/domain/entity/color';
 
 export const colorResponseSchema = z.object({
 	red: z.number().int().min(0).max(255),

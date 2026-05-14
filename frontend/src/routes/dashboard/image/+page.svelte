@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { getContext, setContext } from 'svelte';
+
 	import { Container } from '$lib/container';
+	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
+	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
+	import { ImagesListedStore } from '$lib/image/adapter/presenter/imagesListedStore';
 	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
 	import ImageOverallDashboardPage from '$lib/image/framework/ui/ImageOverallDashboardPage.svelte';
-	import { ImagesListedStore } from '$lib/image/adapter/presenter/imagesListedStore';
-	import { getContext, setContext } from 'svelte';
+
 	import type { PageProps } from './$types';
-	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
-	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
 
 	const { data }: PageProps = $props();
 	const container = getContext<Container>(Container.name);

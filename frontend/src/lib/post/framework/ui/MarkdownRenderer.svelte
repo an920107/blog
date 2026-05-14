@@ -7,12 +7,13 @@
 </script>
 
 <script lang="ts">
-	import SafeHtml from '$lib/common/framework/ui/SafeHtml.svelte';
+	import CryptoJS from 'crypto-js';
+	import hljs from 'highlight.js';
 	import markdownit from 'markdown-it';
 	import markdownitAttrs from 'markdown-it-attrs';
-	import CryptoJS from 'crypto-js';
 	import type { Attachment } from 'svelte/attachments';
-	import hljs from 'highlight.js';
+
+	import SafeHtml from '$lib/common/framework/ui/SafeHtml.svelte';
 
 	const {
 		content,

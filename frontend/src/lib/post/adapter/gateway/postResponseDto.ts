@@ -1,9 +1,10 @@
+import z from 'zod';
+
 import {
 	PostInfoResponseDto,
 	postInfoResponseSchema,
 } from '$lib/post/adapter/gateway/postInfoResponseDto';
 import { Post } from '$lib/post/domain/entity/post';
-import z from 'zod';
 
 export const postResponseSchema = z.object({
 	id: z.int32(),

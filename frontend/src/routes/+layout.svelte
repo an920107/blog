@@ -1,15 +1,17 @@
 <script lang="ts">
-	import Footer from '$lib/common/framework/ui/Footer.svelte';
-	import Navbar, { type NavigationActionProps } from '$lib/common/framework/ui/Navbar.svelte';
-	import GoogleAnalytics from '$lib/common/framework/ui/GoogleAnalytics.svelte';
-	import '../app.css';
 	import '@fortawesome/fontawesome-free/css/all.min.css';
-	import { Toaster } from '$lib/common/framework/components/ui/sonner';
-	import { Container } from '$lib/container';
+	import '../app.css';
+
 	import { setContext } from 'svelte';
-	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
-	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
+
 	import { resolve } from '$app/paths';
+	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+	import { Toaster } from '$lib/common/framework/components/ui/sonner';
+	import Footer from '$lib/common/framework/ui/Footer.svelte';
+	import GoogleAnalytics from '$lib/common/framework/ui/GoogleAnalytics.svelte';
+	import Navbar, { type NavigationActionProps } from '$lib/common/framework/ui/Navbar.svelte';
+	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
+	import { Container } from '$lib/container';
 
 	const container = new Container(fetch);
 	setContext(Container.name, container);
