@@ -75,6 +75,26 @@ To set up the entire project:
 4. Set up frontend (see [frontend/README.md](./frontend/README.md))
 5. Start both servers for full-stack development
 
+### MCP Server Setup
+
+To configure and run the MCP (Model Context Protocol) servers for AI-assisted development:
+
+1. **Install Go**: Ensure Go is installed on your system to run Go-based MCP servers (such as the Gitea MCP server).
+
+2. **Install Bun**: Ensure Bun is installed on your system to run Svelte-based MCP servers (such as the Svelte MCP server via `bunx`).
+
+3. **Install crates.io MCP**: Install `cratesio-mcp` using Cargo:
+
+   ```bash
+   cargo install cratesio-mcp
+   ```
+
+4. **Configure Environment Variables**: Export your Gitea access token:
+
+   ```bash
+   export GITEA_ACCESS_TOKEN="your_gitea_access_token_here"
+   ```
+
 ## License
 
 This project uses a combination of the [MIT License and a custom license](./LICENSE.md). Based on the MIT License, anyone is permitted to use the code. However, before deploying the code, they must first replace any information belonging to "me" or any content that could identify "me," such as logos, names, and "about me" sections.

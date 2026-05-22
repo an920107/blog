@@ -34,4 +34,4 @@ body:
       label: Checklist
       options:
         - label: A milestone is set
-        - label: The related issuse has been linked to this branch
+        - label: The related issues has been linked to this branch

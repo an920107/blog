@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "gitea": {
+      "command": "go",
+      "args": ["run", "gitea.com/gitea/gitea-mcp@latest", "-t", "stdio"],
+      "env": {
+        "GITEA_HOST": "https://git.squidspirit.com"
+      }
+    },
+    "svelte": {
+      "command": "bunx",
+      "args": ["-y", "@sveltejs/mcp"]
+    },
+    "cratesio": {
+      "command": "cratesio-mcp"
+    }
+  }
+}
