@@ -6,8 +6,13 @@
 
 <div
 	class="flex h-fit w-fit flex-row flex-nowrap items-center gap-x-1 rounded-full px-2 py-0.5"
-	style="background-color: {label.color.hex};"
+	style="background-color: {label.color.hex}; color: {label.color.contrastingTextColor};"
 >
-	<div class="size-2 rounded-full" style="background-color: {label.color.darken(0.2).hex};"></div>
+	<div
+		class="size-2 rounded-full"
+		style="background-color: {label.color.isDark
+			? label.color.lighten(0.4).hex
+			: label.color.darken(0.2).hex};"
+	></div>
 	<span class="text-xs text-nowrap">{label.name}</span>
 </div>
