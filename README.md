@@ -17,8 +17,7 @@ For more information about the development process, you can check out the [proje
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (LTS version recommended)
-- [pnpm](https://pnpm.io/) - Package manager for frontend
+- [Bun](https://bun.sh/) - Package manager and runtime for frontend
 - [Rust](https://rustup.rs/) - For backend development
 - [Podman](https://podman.io/) (Optional) - For containerized deployment
 
@@ -61,9 +60,9 @@ For detailed frontend development setup, see [frontend/README.md](./frontend/REA
 Quick start:
 
 1. Navigate to frontend directory: `cd frontend`
-2. Install dependencies: `pnpm install`
-3. Start development server: `pnpm dev`
-4. Build for production: `pnpm build`
+2. Install dependencies: `bun install`
+3. Start development server: `bun run dev`
+4. Build for production: `bun run build`
 
 ### Full Project Setup
 

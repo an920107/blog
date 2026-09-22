@@ -37,17 +37,27 @@
 
 {#snippet icons()}
 	<div class="flex flex-row items-center justify-center gap-x-4">
-		<a href={Links.YOUTUBE} rel="external" target="_blank" aria-label="YouTube Channel">
-			<i class="fa-brands fa-youtube text-[1rem]" title="YouTube Channel"></i>
+		<a
+			href={Links.YOUTUBE.href}
+			rel="external"
+			target="_blank"
+			aria-label={Strings.YOUTUBE_CHANNEL}
+		>
+			<i class="fa-brands fa-youtube text-[1rem]" title={Strings.YOUTUBE_CHANNEL}></i>
 		</a>
-		<a href={Links.EMAIL} rel="external" aria-label="Email">
-			<i class="fa-solid fa-envelope text-[1rem]" title="Email"></i>
+		<a href={Links.EMAIL.href} rel="external" aria-label={Strings.EMAIL}>
+			<i class="fa-solid fa-envelope text-[1rem]" title={Strings.EMAIL}></i>
 		</a>
-		<a href={Links.RSS} rel="external" target="_blank" aria-label="RSS Feed">
+		<a href={Links.RSS.href} rel="external" target="_blank" aria-label={Strings.RSS_FEED}>
 			<i class="fa-solid fa-square-rss text-[1rem]"></i>
 		</a>
-		<a href={Links.SOURCE_CODE} rel="external" target="_blank" aria-label="Git Repository">
-			<i class="fa-brands fa-git-alt text-[1.05rem]" title="Git Repository"></i>
+		<a
+			href={Links.SOURCE_CODE.href}
+			rel="external"
+			target="_blank"
+			aria-label={Strings.GIT_REPOSITORY}
+		>
+			<i class="fa-brands fa-git-alt text-[1.05rem]" title={Strings.GIT_REPOSITORY}></i>
 		</a>
 	</div>
 {/snippet}

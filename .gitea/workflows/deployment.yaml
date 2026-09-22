@@ -30,6 +30,7 @@ jobs:
           push: true
           provenance: false
           context: ./frontend
+          file: ./frontend/Containerfile
           secrets: |
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache
@@ -44,6 +45,7 @@ jobs:
           push: true
           provenance: false
           context: ./backend
+          file: ./backend/Containerfile
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache
           cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache,mode=max
           tags: |
@@ -56,6 +58,7 @@ jobs:
           push: true
           provenance: false
           context: ./script/toolbox
+          file: ./script/toolbox/Containerfile
           cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache
           cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache,mode=max
           tags: |

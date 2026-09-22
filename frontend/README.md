@@ -4,40 +4,39 @@
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (LTS version recommended)
-- [pnpm](https://pnpm.io/) - Package manager
+- [Bun](https://bun.sh/) - Package manager and runtime
 
 ### Setup
 
 1. Install dependencies:
 
    ```bash
-   pnpm install
+   bun install
    ```
 
 2. Start development server:
 
    ```bash
-   pnpm dev
+   bun run dev
    ```
 
 3. Build for production:
 
    ```bash
-   pnpm build
+   bun run build
    ```
 
 4. Preview production build:
    ```bash
-   pnpm preview
+   bun run preview
    ```
 
 ### Development Commands
 
-- **Type checking**: `pnpm check`
-- **Type checking (watch mode)**: `pnpm check:watch`
-- **Linting**: `pnpm lint`
-- **Formatting**: `pnpm format`
+- **Type checking**: `bun run --bun check`
+- **Type checking (watch mode)**: `bun run --bun check:watch`
+- **Linting**: `bun run --bun lint`
+- **Formatting**: `bun run format`
 
 ### Project Structure
 
@@ -62,4 +61,4 @@ Each feature module in `src/lib/` follows the Clean Architecture pattern:
 - **UI Components**: bits-ui, Lucide icons
 - **Type Safety**: TypeScript
 - **Linting**: ESLint with Prettier
-- **Package Manager**: pnpm
+- **Package Manager**: bun

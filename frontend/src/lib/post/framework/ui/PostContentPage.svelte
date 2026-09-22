@@ -1,6 +1,7 @@
 <script lang="ts">
 	/* eslint-disable svelte/no-navigation-without-resolve */
 
+	import { captureException } from '@sentry/sveltekit';
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -11,10 +12,12 @@
 	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { Environment } from '$lib/environment';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { Links } from '$lib/links';
 	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
 	import MarkdownRenderer, {
 		type HeadingItem,
 	} from '$lib/post/framework/ui/MarkdownRenderer.svelte';
+	import ShareButton from '$lib/post/framework/ui/ShareButton.svelte';
 	import { Strings } from '$lib/strings';
 
 	const { id }: { id: string } = $props();
@@ -32,8 +35,13 @@
 	const postInfo = $derived(post?.info);
 	const content = $derived(post?.content ?? '');
 
+	const canonicalUrl = $derived(new URL(`post/${postInfo?.semanticId}`, Environment.APP_BASE_URL));
+
 	let headings: HeadingItem[] = $state([]);
 	let activeHeadingId: string | null = $state(null);
+
+	// Defaults to false so the SSR and first client render match (SSR has no navigator)
+	let canShareNatively = $state(false);
 
 	async function smoothScrollToHeading(headingId: string) {
 		if (drawerViewModel?.isOpen) {
@@ -79,6 +87,27 @@
 		return url;
 	}
 
+	async function shareNatively() {
+		if (!canShareNatively) {
+			return;
+		}
+
+		try {
+			await navigator.share({
+				title: postInfo?.title ?? '',
+				text: postInfo?.description ?? '',
+				url: canonicalUrl.href,
+			});
+		} catch (error) {
+			if (error instanceof DOMException && error.name === 'AbortError') {
+				// The user dismissed the share sheet, which is expected
+				return;
+			}
+
+			captureException(error);
+		}
+	}
+
 	$effect(() => {
 		if (headings.length > 0) {
 			updateActiveHeading();
@@ -86,6 +115,7 @@
 	});
 
 	onMount(() => {
+		canShareNatively = 'share' in navigator;
 		loadPost(id);
 		if (drawerViewModel) {
 			configureDrawer(drawerViewModel.copyWith({ content: tocWithPadding }));
@@ -116,7 +146,7 @@
 	<StructuredData
 		props={{
 			type: 'BlogPosting',
-			url: new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL),
+			url: canonicalUrl,
 			headline: postInfo.title,
 			name: postInfo.title,
 			description: postInfo.description,
@@ -130,7 +160,7 @@
 		description={postInfo.description}
 		publishedTime={postInfo.publishedTime!.nativeDate}
 		labels={postInfo.labels.map((label) => label.name)}
-		url={new URL(`post/${postInfo.semanticId}`, Environment.APP_BASE_URL)}
+		url={canonicalUrl}
 		image={postInfo.previewImageUrl}
 	/>
 {/if}
@@ -172,7 +202,40 @@
 			{postInfo?.title}
 		</h1>
 		<p>{postInfo?.description}</p>
-		<span class="text-gray-500">{postInfo?.publishedTime?.toLocalISODate()}</span>
+		<p class="text-gray-500">{postInfo?.publishedTime?.toLocalISODate()}</p>
+		{@render mediaShare()}
+	</div>
+{/snippet}
+
+{#snippet mediaShare()}
+	<div class="flex flex-row gap-2.5">
+		<ShareButton url={Links.LINKEDIN_SHARE(canonicalUrl)} label={Strings.SHARE_TO_LINKEDIN}>
+			<i class="fa-brands fa-linkedin-in text-[1rem]"></i>
+		</ShareButton>
+		<ShareButton url={Links.FACEBOOK_SHARE(canonicalUrl)} label={Strings.SHARE_TO_FACEBOOK}>
+			<i class="fa-brands fa-facebook-f text-[1rem]"></i>
+		</ShareButton>
+		<ShareButton
+			url={Links.X_SHARE(canonicalUrl, postInfo?.title ?? '')}
+			label={Strings.SHARE_TO_X}
+		>
+			<i class="fa-brands fa-x-twitter text-[1rem]"></i>
+		</ShareButton>
+		<ShareButton
+			url={Links.EMAIL_SHARE(
+				canonicalUrl,
+				postInfo?.title ?? '',
+				`${postInfo?.description ?? ''}\n\n${canonicalUrl.href}`
+			)}
+			label={Strings.SHARE_TO_EMAIL}
+		>
+			<i class="fa-solid fa-envelope text-[1rem]"></i>
+		</ShareButton>
+		{#if canShareNatively}
+			<ShareButton label={Strings.SHARE} onclick={shareNatively} class="md:hidden">
+				<i class="fa-solid fa-share text-[1rem]"></i>
+			</ShareButton>
+		{/if}
 	</div>
 {/snippet}
 

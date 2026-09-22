@@ -16,7 +16,7 @@ pub struct EmbeddingConfiguration {
 impl EmbeddingConfiguration {
     pub fn new() -> Self {
         let cache_dir = std::env::var("EMBEDDING_CACHE_PATH")
-            .unwrap_or_else(|_| "./embedding_cache".to_string());
+            .unwrap_or_else(|_| "embedding_cache".to_string());
 
         Self {
             model: EmbeddingModel::BGELargeZHV15,

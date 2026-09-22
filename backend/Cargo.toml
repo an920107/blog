@@ -1,28 +1,28 @@
 [workspace]
-members = [
-    "server",
-    "feature/auth",
-    "feature/common",
-    "feature/image",
-    "feature/label",
-    "feature/post",
-    "feature/search",
-]
 resolver = "2"
+members = [
+  "feature/auth",
+  "feature/common",
+  "feature/image",
+  "feature/label",
+  "feature/post",
+  "feature/search",
+  "server",
+]
 
 [workspace.package]
 version = "0.7.0"
 edition = "2024"
 
-[profile.release]
-debug = true
-
 [workspace.dependencies]
 actix-multipart = "0.7.2"
-actix-session = { version = "0.11.0", features = [
-    "redis-session",
+actix-session = {
+  version = "0.11.0",
+  features = [
     "redis-pool",
-] }
+    "redis-session",
+  ]
+}
 actix-web = "4.13.0"
 anyhow = "1.0.102"
 async-trait = "0.1.89"
@@ -35,41 +35,56 @@ fnv_rs = "0.4.4"
 futures = "0.3.32"
 hex = "0.4.3"
 log = "0.4.29"
-openidconnect = { version = "4.0.1", features = [
+openidconnect = {
+  version = "4.0.1",
+  features = [
     "reqwest",
     "reqwest-blocking",
-] }
+  ]
+}
 percent-encoding = "2.3.2"
 qdrant-client = { version = "1.17.0", features = ["serde"] }
-redis = { version = "0.32.7", features = [
+redis = {
+  version = "0.32.7",
+  features = [
     "aio",
     "connection-manager",
     "tokio-comp",
-] }
+  ]
+}
 regex = "1.12.3"
 sentry = { version = "0.47.0", features = ["actix", "anyhow"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
-sqlx = { version = "0.8.6", features = [
+sqlx = {
+  version = "0.8.6",
+  features = [
     "chrono",
     "macros",
     "postgres",
     "runtime-tokio-rustls",
-] }
+  ]
+}
 text-splitter = { version = "0.29.3", features = ["markdown", "tokenizers"] }
 tokenizers = { version = "0.22.2", features = ["http"] }
 tokio = { version = "1.51.0", features = ["full"] }
-utoipa = { version = "5.4.0", features = [
+utoipa = {
+  version = "5.4.0",
+  features = [
     "actix_extras",
     "non_strict_integers",
     "url",
-] }
+  ]
+}
 utoipa-redoc = { version = "6.0.0", features = ["actix-web"] }
 
-server.path = "server"
 auth.path = "feature/auth"
 common.path = "feature/common"
 image.path = "feature/image"
 label.path = "feature/label"
 post.path = "feature/post"
 search.path = "feature/search"
+server.path = "server"
+
+[profile.release]
+debug = true

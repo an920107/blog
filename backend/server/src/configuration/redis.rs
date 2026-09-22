@@ -9,7 +9,8 @@ pub struct RedisConfiguration {
 
 impl RedisConfiguration {
     pub fn new() -> Self {
-        let url = std::env::var("REDIS_URL").expect("REDIS_URL must be set");
+        let url =
+            std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
 
         let session_prefix =
             std::env::var("REDIS_SESSION_PREFIX").unwrap_or_else(|_| "session".to_string());
