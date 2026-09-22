@@ -1,19 +1,12 @@
 <script lang="ts">
-	/* eslint-disable svelte/no-navigation-without-resolve */
-
 	import { getContext, onMount } from 'svelte';
 
-	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
 	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
 	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { Environment } from '$lib/environment';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
-	import FilteringDialog, {
-		type FilteringDialogFormParams,
-	} from '$lib/post/framework/ui/FilteringDialog.svelte';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
 	import { Strings } from '$lib/strings';
 
@@ -29,23 +22,6 @@
 	const isPostsEmpty = $derived(
 		(state.isSuccess() && state.data !== null && state.data.length === 0) || state.isError()
 	);
-
-	function handleSubmit(params: FilteringDialogFormParams) {
-		const url = new URL(page.url);
-		if (params.keyword) {
-			url.searchParams.set('keyword', params.keyword);
-		} else {
-			url.searchParams.delete('keyword');
-		}
-
-		if (params.labelId !== undefined) {
-			url.searchParams.set('label_id', params.labelId.toString());
-		} else {
-			url.searchParams.delete('label_id');
-		}
-
-		goto(url, { keepFocus: true });
-	}
 
 	onMount(() => loadPosts({ showUnpublished: false, keyword, labelId }));
 </script>
@@ -99,5 +75,3 @@
 		</div>
 	</div>
 {/if}
-
-<FilteringDialog defaultValues={{ keyword, labelId }} onSubmit={handleSubmit} />

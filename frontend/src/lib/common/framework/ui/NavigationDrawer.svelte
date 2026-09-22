@@ -4,6 +4,7 @@
 
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import { cn } from '$lib/common/framework/components/utils';
+	import { Strings } from '$lib/strings';
 
 	const drawerConfiguredStore = getContext<DrawerConfiguredStore>(DrawerConfiguredStore.name);
 	const drawerConfiguredState = $derived($drawerConfiguredStore);
@@ -51,9 +52,9 @@
 </script>
 
 {#if drawerViewModel?.isOpen}
-	<div transition:fade class="fixed inset-0 z-[99] bg-black/10 backdrop-blur-md">
+	<div transition:fade class="fixed inset-0 z-99 bg-black/15 backdrop-blur-md">
 		<button
-			title="Close drawer"
+			aria-label={Strings.CLOSE_MENU}
 			class="h-full w-full cursor-default!"
 			onclick={() => setDrawerOpen(false)}
 		></button>
@@ -61,13 +62,13 @@
 	<div
 		transition:drawerTransition
 		class={cn(
-			'fixed top-0 right-0 bottom-0 z-[100] origin-right rounded-l-3xl bg-white',
+			'fixed top-0 right-0 bottom-0 z-100 origin-right rounded-l-3xl bg-white',
 			'flex w-2xs max-w-5/6 flex-col gap-y-8 px-4 py-5'
 		)}
 	>
 		<div class="flex flex-row items-center justify-between">
 			<img class="size-10" src="/icon/logo-light.svg" alt="SquidSpirit" />
-			<button type="button" title="Close drawer" onclick={() => setDrawerOpen(false)}>
+			<button type="button" aria-label={Strings.CLOSE_MENU} onclick={() => setDrawerOpen(false)}>
 				<i class="fa-solid fa-xmark size-2"></i>
 			</button>
 		</div>

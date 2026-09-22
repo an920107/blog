@@ -8,14 +8,15 @@
 <script lang="ts">
 	/* eslint-disable svelte/no-navigation-without-resolve */
 
-	import { getContext, onDestroy, onMount } from 'svelte';
+	import { getContext, onDestroy, onMount, type Snippet } from 'svelte';
 
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import { cn } from '$lib/common/framework/components/utils';
+	import { Strings } from '$lib/strings';
 
-	const { actions }: { actions: NavigationActionProps[] } = $props();
+	const { actions, search }: { actions: NavigationActionProps[]; search?: Snippet } = $props();
 
 	const drawerConfiguredStore = getContext<DrawerConfiguredStore>(DrawerConfiguredStore.name);
 	const drawerConfiguredState = $derived($drawerConfiguredStore);
@@ -66,12 +67,16 @@
 	});
 </script>
 
+<!-- `<nav>` is `position: fixed`, so it sizes to the viewport rather than <body>.
+     bits-ui compensates <body> with padding while it locks scrolling; mirror it here so
+     the navbar content stays put when a dialog opens and the scrollbar disappears. -->
 <nav
 	class={cn(
 		'fixed top-0 right-0 left-0 z-50 border-b border-gray-300 bg-white',
 		'transition-transform duration-300',
 		isVisible ? 'translate-y-0' : '-translate-y-full'
 	)}
+	style="padding-right: var(--scrollbar-width, 0px);"
 >
 	<div
 		class={cn(
@@ -84,11 +89,20 @@
 			<span class="text-2xl font-black text-gray-800">魚之魷魂</span>
 		</a>
 
-		<button type="button" title="Open drawer" class="md:hidden" onclick={() => setDrawerOpen(true)}>
-			<i class="fa-solid fa-bars size-2"></i>
-		</button>
-		<div class="flex flex-row items-center gap-x-6 max-md:hidden">
-			{@render actionLinks()}
+		<div class="flex flex-row items-center gap-x-6 md:gap-x-8">
+			{@render search?.()}
+			<div class="flex flex-row items-center gap-x-6 max-md:hidden">
+				{@render actionLinks()}
+			</div>
+			<button
+				type="button"
+				class="md:hidden"
+				aria-label={Strings.OPEN_MENU}
+				aria-expanded={drawerViewModel?.isOpen ?? false}
+				onclick={() => setDrawerOpen(true)}
+			>
+				<i class="fa-solid fa-bars size-2"></i>
+			</button>
 		</div>
 	</div>
 </nav>
@@ -106,7 +120,7 @@
 				isSelected ? 'hover:bg-blue-700' : 'hover:bg-gray-100'
 			)}
 			onclick={() => {
-				// Reseting scroll position by set `top` as 0 since drawer prevents scrolling
+				// Resetting scroll position by set `top` as 0 since drawer prevents scrolling
 				document.body.style.top = '0px';
 				setTimeout(() => setDrawerOpen(false), 200);
 			}}

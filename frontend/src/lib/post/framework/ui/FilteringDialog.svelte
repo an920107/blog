@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	import { getContext, onMount } from 'svelte';
+	import { getContext, onMount, tick } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 
 	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
@@ -28,7 +28,6 @@
 		DialogFooter,
 		DialogHeader,
 		DialogTitle,
-		DialogTrigger,
 	} from '$lib/common/framework/components/ui/dialog';
 	import {
 		Drawer,
@@ -36,7 +35,6 @@
 		DrawerFooter,
 		DrawerHeader,
 		DrawerTitle,
-		DrawerTrigger,
 	} from '$lib/common/framework/components/ui/drawer';
 	import Input from '$lib/common/framework/components/ui/input/input.svelte';
 	import Label from '$lib/common/framework/components/ui/label/label.svelte';
@@ -50,24 +48,22 @@
 	import TooltipTrigger from '$lib/common/framework/components/ui/tooltip/tooltip-trigger.svelte';
 	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import FilteringButton from '$lib/post/framework/ui/FilteringButton.svelte';
 	import { Strings } from '$lib/strings';
 
-	const {
+	let {
 		defaultValues = {},
 		onSubmit,
+		open = $bindable(false),
 	}: {
 		defaultValues: FormParams;
 		onSubmit: (params: FormParams) => void;
+		open?: boolean;
 	} = $props();
 
-	const showRanbowRing = $derived(
-		defaultValues.keyword !== undefined || defaultValues.labelId !== undefined
-	);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
-	let open = $state(false);
 	let labelPopoverOpen = $state(false);
+	let keywordInputElement: HTMLInputElement | null = $state(null);
 
 	let formData: FormParams = $state((() => defaultValues)());
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
@@ -108,11 +104,17 @@
 	}
 
 	onMount(() => listLabels());
+
+	$effect(() => {
+		if (open) {
+			// Focus the keyword input once the content has rendered.
+			tick().then(() => keywordInputElement?.focus());
+		}
+	});
 </script>
 
 {#if isDesktop.current}
 	<Dialog bind:open>
-		<DialogTrigger><FilteringButton {showRanbowRing} /></DialogTrigger>
 		<DialogContent
 			showCloseButton={false}
 			onOpenAutoFocus={(e) => e.preventDefault()}
@@ -134,7 +136,6 @@
 	</Dialog>
 {:else}
 	<Drawer bind:open>
-		<DrawerTrigger><FilteringButton {showRanbowRing} /></DrawerTrigger>
 		<DrawerContent>
 			<DrawerHeader>
 				<DrawerTitle>{Strings.SEARCH_AND_FILTER_TITLE}</DrawerTitle>
@@ -188,6 +189,7 @@
 				placeholder={Strings.SEARCH_POST_PLACEHOLDER}
 				aria-invalid={formErrors.keyword !== undefined}
 				bind:value={formData.keyword}
+				bind:ref={keywordInputElement}
 			/>
 			{#if formData.keyword}
 				<Button variant="ghost" size="icon" onclick={() => (formData.keyword = undefined)}>

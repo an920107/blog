@@ -2,8 +2,6 @@
 	import { getContext, setContext } from 'svelte';
 
 	import { Container } from '$lib/container';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
 	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
 	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
 	import PostOverallPage from '$lib/post/framework/ui/PostOverallPage.svelte';
@@ -18,12 +16,8 @@
 
 	const getInitialPosts = () =>
 		data.dehydratedData.posts?.map((post) => PostInfoViewModel.rehydrate(post));
-	const getInitialLabels = () =>
-		data.dehydratedData.labels?.map((label) => LabelViewModel.rehydrate(label));
 	const postListedStore = container.createPostsListedStore(getInitialPosts());
-	const labelListedStore = container.createLabelsListedStore(getInitialLabels());
 	setContext(PostsListedStore.name, postListedStore);
-	setContext(LabelsListedStore.name, labelListedStore);
 
 	$effect(() => {
 		const posts = data.dehydratedData.posts?.map((post) => PostInfoViewModel.rehydrate(post));

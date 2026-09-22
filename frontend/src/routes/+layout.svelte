@@ -12,12 +12,18 @@
 	import Navbar, { type NavigationActionProps } from '$lib/common/framework/ui/Navbar.svelte';
 	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
 	import { Container } from '$lib/container';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import PostSearchLauncher from '$lib/post/framework/ui/PostSearchLauncher.svelte';
 
 	const container = new Container(fetch);
 	setContext(Container.name, container);
 
 	const drawerConfiguredStore = container.createDrawerConfiguredStore();
 	setContext(DrawerConfiguredStore.name, drawerConfiguredStore);
+
+	// Provided globally so the navbar search dialog works on every page.
+	const labelsListedStore = container.createLabelsListedStore();
+	setContext(LabelsListedStore.name, labelsListedStore);
 
 	const navigationActions: NavigationActionProps[] = [
 		{ href: resolve('/'), label: '首頁' },
@@ -31,7 +37,11 @@
 </svelte:head>
 <div class="min-h-screen">
 	<Toaster theme="light" />
-	<Navbar actions={navigationActions} />
+	<Navbar actions={navigationActions}>
+		{#snippet search()}
+			<PostSearchLauncher />
+		{/snippet}
+	</Navbar>
 	<NavigationDrawer />
 	<main class="pt-toolbar-height">
 		<slot />
