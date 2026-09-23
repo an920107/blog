@@ -38,8 +38,8 @@ This project uses pre-commit hooks to ensure code quality. To set up pre-commit:
 
 The pre-commit configuration will automatically run:
 
-- Backend Rust code checking and formatting
-- Frontend linting and formatting
+- Backend Rust code checking
+- Frontend linting
 - SQL schema preparation
 
 ### Backend Setup
@@ -93,6 +93,11 @@ To configure and run the MCP (Model Context Protocol) servers for AI-assisted de
    ```bash
    export GITEA_ACCESS_TOKEN="your_gitea_access_token_here"
    ```
+
+## Deployment
+
+Self-hosting uses the Kubernetes manifests in
+[manifest/README.md](./manifest/README.md).
 
 ## License
 

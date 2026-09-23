@@ -1,0 +1,8 @@
+secret.yaml
+*.secret.yaml
+
+config.yaml
+*.config.yaml
+
+bundle.yaml
+*.bundle.yaml

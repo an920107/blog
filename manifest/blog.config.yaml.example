@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/all.json
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: blog-config
+type: Opaque
+stringData:
+  OIDC_ISSUER_URL: https://auth.squidspirit.com/realms/squidspirit
+  OIDC_REDIRECT_URL: https://squidspirit.com/api/auth/callback
+  OIDC_CLIENT_ID: blog
+  QDRANT_SEARCH_THRESHOLD: "0.3"
+  API_BASE_URL: https://squidspirit.com/api/
+  APP_BASE_URL: https://squidspirit.com/
+  GA_MEASUREMENT_ID: G-XXXXXX
+  ADSENSE_CLIENT_ID: ca-pub-xxxxxx
+  FRONTEND_SENTRY_DSN: https://xxx@xxx.ingest.us.sentry.io/xxx
+  BACKEND_SENTRY_DSN: https://xxx@xxx.ingest.us.sentry.io/xxx

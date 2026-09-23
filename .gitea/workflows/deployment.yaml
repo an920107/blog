@@ -5,14 +5,23 @@ on:
       - published
 
 jobs:
-  deployment:
+  build-image:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: frontend
+            context: ./frontend
+            file: ./frontend/Containerfile
+            repo_var: IMAGE_REPO_FRONTEND
+          - component: backend
+            context: ./backend
+            file: ./backend/Containerfile
+            repo_var: IMAGE_REPO_BACKEND
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -24,30 +33,42 @@ jobs:
           username: ${{ vars.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and push (Frontend)
+      - name: Build and push (${{ matrix.component }})
         uses: docker/build-push-action@v6
         with:
           push: true
           provenance: false
-          context: ./frontend
-          file: ./frontend/Containerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           secrets: |
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars[matrix.repo_var] }}:buildcache
+          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars[matrix.repo_var] }}:buildcache,mode=max
           tags: |
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:latest
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_FRONTEND }}:${{ gitea.event.release.tag_name }}
+            ${{ vars.REGISTRY }}/${{ vars[matrix.repo_var] }}:latest
+            ${{ vars.REGISTRY }}/${{ vars[matrix.repo_var] }}:${{ gitea.event.release.tag_name }}
 
-      - name: Build and push (Backend)
-        uses: docker/build-push-action@v6
+  package-manifest:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Zip manifest
+        run: zip -r "blog-manifest-${{ gitea.event.release.tag_name }}.zip" manifest
+
+      - name: Upload manifest artifact
+        uses: actions/upload-artifact@v3
         with:
-          push: true
-          provenance: false
-          context: ./backend
-          file: ./backend/Containerfile
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:buildcache,mode=max
-          tags: |
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:latest
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:${{ gitea.event.release.tag_name }}
+          name: blog-manifest-${{ gitea.event.release.tag_name }}
+          path: blog-manifest-${{ gitea.event.release.tag_name }}.zip
+
+      - name: Attach manifest to release
+        env:
+          GITEA_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          curl -sSf -X POST \
+            -H "Authorization: token ${GITEA_TOKEN}" \
+            -F "attachment=@blog-manifest-${{ gitea.event.release.tag_name }}.zip" \
+            "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/releases/${{ gitea.event.release.id }}/assets?name=blog-manifest-${{ gitea.event.release.tag_name }}.zip"

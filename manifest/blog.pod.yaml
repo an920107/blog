@@ -1,0 +1,144 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/all.json
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blog
+spec:
+  containers:
+    - name: postgres
+      image: docker.io/library/postgres:17-alpine
+      env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: DATABASE_PASSWORD
+      volumeMounts:
+        - name: blog-postgres
+          mountPath: /var/lib/postgresql/data
+    - name: qdrant
+      image: docker.io/qdrant/qdrant:v1.17
+      env:
+        - name: QDRANT__SERVICE__API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: QDRANT_API_KEY
+      volumeMounts:
+        - name: blog-qdrant
+          mountPath: /qdrant/storage
+    - name: redis
+      image: docker.io/library/redis:7-alpine
+    - name: backend
+      image: registry.squidspirit.com/squid/blog-backend:v0.7.0
+      env:
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: DATABASE_PASSWORD
+        - name: SESSION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: SESSION_KEY
+        - name: OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: OIDC_ISSUER_URL
+        - name: OIDC_REDIRECT_URL
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: OIDC_REDIRECT_URL
+        - name: OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: OIDC_CLIENT_ID
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: OIDC_CLIENT_SECRET
+        - name: QDRANT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: blog-secret
+              key: QDRANT_API_KEY
+        - name: QDRANT_SEARCH_THRESHOLD
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: QDRANT_SEARCH_THRESHOLD
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: BACKEND_SENTRY_DSN
+      volumeMounts:
+        - name: blog-localtime
+          mountPath: /etc/localtime
+          readOnly: true
+        - name: blog-storage
+          mountPath: /app/static
+        - name: blog-embedding-cache
+          mountPath: /app/embedding_cache
+      ports:
+        - hostPort: 10012
+          hostIP: 127.0.0.1
+          containerPort: 8080
+    - name: frontend
+      image: registry.squidspirit.com/squid/blog-frontend:v0.7.3
+      env:
+        - name: PUBLIC_API_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: API_BASE_URL
+        - name: PUBLIC_APP_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: APP_BASE_URL
+        - name: PUBLIC_GA_MEASUREMENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: GA_MEASUREMENT_ID
+        - name: PUBLIC_ADSENSE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: ADSENSE_CLIENT_ID
+        - name: PUBLIC_SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: blog-config
+              key: FRONTEND_SENTRY_DSN
+      volumeMounts:
+        - name: blog-localtime
+          mountPath: /etc/localtime
+          readOnly: true
+      ports:
+        - hostPort: 10011
+          hostIP: 127.0.0.1
+          containerPort: 3000
+  volumes:
+    - name: blog-localtime
+      hostPath:
+        path: /etc/localtime
+    - name: blog-postgres
+      persistentVolumeClaim:
+        claimName: blog-postgres
+    - name: blog-qdrant
+      persistentVolumeClaim:
+        claimName: blog-qdrant
+    - name: blog-storage
+      persistentVolumeClaim:
+        claimName: blog-storage
+    - name: blog-embedding-cache
+      persistentVolumeClaim:
+        claimName: blog-embedding-cache
