@@ -6,12 +6,12 @@ pub struct PostMapper {
     pub content: String,
 }
 
-impl Into<Post> for PostMapper {
-    fn into(self) -> Post {
+impl From<PostMapper> for Post {
+    fn from(val: PostMapper) -> Self {
         Post {
-            id: self.id,
-            info: self.info.into(),
-            content: self.content,
+            id: val.id,
+            info: val.info.into(),
+            content: val.content,
         }
     }
 }

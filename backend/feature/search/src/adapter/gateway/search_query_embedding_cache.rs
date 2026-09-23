@@ -12,6 +12,6 @@ pub trait SearchQueryEmbeddingCache: Send + Sync {
     async fn set_by_query_string(
         &self,
         query_string: &str,
-        embedding: &Vec<f32>,
+        embedding: &[f32],
     ) -> Result<(), SearchError>;
 }

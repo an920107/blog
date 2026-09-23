@@ -1,37 +1,44 @@
 use regex::Regex;
-use std::collections::HashSet;
+use std::{collections::HashSet, sync::LazyLock};
+
+/// Matches the trailing path segments of an image URL and captures its id, for example the `42`
+/// in `/image/42`.
+static IMAGE_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"(\/[^\/\s]+)*\/image\/(\d+)"#).unwrap());
+
+/// Matches a markdown image whose target is an [`IMAGE_REGEX`] match.
+static MARKDOWN_IMAGE_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(&format!(
+        "{}{}{}",
+        r#"!\[.*\]\("#,
+        IMAGE_REGEX.as_str(),
+        r#"\)"#
+    ))
+    .unwrap()
+});
 
 pub struct ImageExtractor;
 
 impl ImageExtractor {
+    pub fn extract_preview_image_id(preview_image_url: &Option<String>) -> Option<i32> {
+        let url = preview_image_url.as_ref()?;
+        let cap = IMAGE_REGEX.captures(url)?;
+        cap.get(2)?.as_str().parse::<i32>().ok()
+    }
+
     pub fn extract_image_ids(content: &str, preview_image_url: &Option<String>) -> Vec<i32> {
         let mut image_ids = HashSet::new();
 
-        let image_re = Regex::new(r#"(\/[^\/\s]+)*\/image\/(\d+)"#).unwrap();
-        let md_image_re = Regex::new(&format!(
-            "{}{}{}",
-            r#"!\[.*\]\("#,
-            image_re.as_str(),
-            r#"\)"#
-        ))
-        .unwrap();
-
-        for cap in md_image_re.captures_iter(content) {
-            if let Some(id_str) = cap.get(2) {
-                if let Ok(id) = id_str.as_str().parse::<i32>() {
-                    image_ids.insert(id);
-                }
+        for cap in MARKDOWN_IMAGE_REGEX.captures_iter(content) {
+            if let Some(id_str) = cap.get(2)
+                && let Ok(id) = id_str.as_str().parse::<i32>()
+            {
+                image_ids.insert(id);
             }
         }
 
-        if let Some(url) = preview_image_url {
-            if let Some(cap) = image_re.captures(url) {
-                if let Some(id_str) = cap.get(2) {
-                    if let Ok(id) = id_str.as_str().parse::<i32>() {
-                        image_ids.insert(id);
-                    }
-                }
-            }
+        if let Some(id) = Self::extract_preview_image_id(preview_image_url) {
+            image_ids.insert(id);
         }
 
         image_ids.into_iter().collect()
@@ -64,5 +71,26 @@ mod tests {
         let preview_image_url = Some("/path/to/image/789".to_string());
         let ids = ImageExtractor::extract_image_ids(content, &preview_image_url);
         assert_eq!(ids, vec![789]);
+    }
+
+    #[test]
+    fn test_extract_preview_image_id_only() {
+        assert_eq!(
+            ImageExtractor::extract_preview_image_id(&Some("/image/42".to_string())),
+            Some(42)
+        );
+        assert_eq!(
+            ImageExtractor::extract_preview_image_id(&Some(
+                "https://example.com/image/7".to_string()
+            )),
+            Some(7)
+        );
+        assert_eq!(
+            ImageExtractor::extract_preview_image_id(&Some(
+                "https://example.com/photo.png".to_string()
+            )),
+            None
+        );
+        assert_eq!(ImageExtractor::extract_preview_image_id(&None), None);
     }
 }

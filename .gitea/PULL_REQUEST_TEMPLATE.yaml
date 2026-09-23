@@ -13,7 +13,18 @@ body:
     id: package
     attributes:
       label: Package Changes
-      description: List the packages changed in this PR
+      description: |
+        Dependency changes only (npm packages from package.json, Rust crates from Cargo.toml),
+        listed as a table using the actions Added, Removed or Updated. Write "None" if there are none.
+        For example:
+        | Package | Action | Version |
+        | --- | --- | --- |
+        | svelte-adapter-bun | Added | 1.0.1 |
+        | svelte | Updated | 5.55.1 -> 5.55.5 |
+        | eslint-plugin-import | Removed | 2.32.0 |
+      placeholder: |
+        | Package | Action | Version |
+        | --- | --- | --- |
 
   - type: textarea
     id: screenshots

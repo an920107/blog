@@ -83,6 +83,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn create_app(
     db_pool: sqlx::Pool<Postgres>,
     redis_pool: deadpool_redis::Pool,

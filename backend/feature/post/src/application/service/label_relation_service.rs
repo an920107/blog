@@ -13,7 +13,7 @@ impl LabelRelationService {
             label_repository
                 .get_label_by_id(label_id)
                 .await
-                .map_err(|e| PostError::LabelError(e.into()))?;
+                .map_err(PostError::LabelError)?;
         }
 
         Ok(())

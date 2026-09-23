@@ -5,11 +5,11 @@ pub struct ImageRequestDto {
     pub data: Vec<u8>,
 }
 
-impl Into<CreateImageParams> for ImageRequestDto {
-    fn into(self) -> CreateImageParams {
+impl From<ImageRequestDto> for CreateImageParams {
+    fn from(val: ImageRequestDto) -> Self {
         CreateImageParams {
-            mime_type: self.mime_type,
-            data: self.data,
+            mime_type: val.mime_type,
+            data: val.data,
         }
     }
 }

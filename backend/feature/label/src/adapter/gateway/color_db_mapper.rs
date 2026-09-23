@@ -4,13 +4,13 @@ pub struct ColorMapper {
     pub value: u32,
 }
 
-impl Into<Color> for ColorMapper {
-    fn into(self) -> Color {
+impl From<ColorMapper> for Color {
+    fn from(val: ColorMapper) -> Self {
         Color {
-            red: (self.value >> 24) as u8,
-            green: ((self.value >> 16) & 0xFF) as u8,
-            blue: ((self.value >> 8) & 0xFF) as u8,
-            alpha: (self.value & 0xFF) as u8,
+            red: (val.value >> 24) as u8,
+            green: ((val.value >> 16) & 0xFF) as u8,
+            blue: ((val.value >> 8) & 0xFF) as u8,
+            alpha: (val.value & 0xFF) as u8,
         }
     }
 }

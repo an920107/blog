@@ -6,12 +6,12 @@ pub struct LabelMapper {
     pub color: ColorMapper,
 }
 
-impl Into<Label> for LabelMapper {
-    fn into(self) -> Label {
+impl From<LabelMapper> for Label {
+    fn from(val: LabelMapper) -> Self {
         Label {
-            id: self.id,
-            name: self.name,
-            color: self.color.into(),
+            id: val.id,
+            name: val.name,
+            color: val.color.into(),
         }
     }
 }

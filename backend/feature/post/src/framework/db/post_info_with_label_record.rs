@@ -8,6 +8,7 @@ pub struct PostInfoWithLabelRecord {
     pub description: String,
     pub preview_image_url: Option<String>,
     pub published_time: Option<NaiveDateTime>,
+    pub updated_time: Option<NaiveDateTime>,
 
     pub label_id: Option<i32>,
     pub label_name: Option<String>,

@@ -9,9 +9,9 @@ pub enum ImageError {
     Unexpected(anyhow::Error),
 }
 
-impl Into<String> for ImageError {
-    fn into(self) -> String {
-        format!("{}", self)
+impl From<ImageError> for String {
+    fn from(val: ImageError) -> Self {
+        format!("{}", val)
     }
 }
 

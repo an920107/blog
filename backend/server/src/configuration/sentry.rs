@@ -4,12 +4,18 @@ pub struct SentryConfiguration {
     pub options: sentry::ClientOptions,
 }
 
+impl Default for SentryConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SentryConfiguration {
     pub fn new() -> Self {
         let dsn = std::env::var("SENTRY_DSN").unwrap_or("".to_string());
 
         Self {
-            dsn: dsn,
+            dsn,
             options: sentry::ClientOptions {
                 release: sentry::release_name!(),
                 traces_sample_rate: 1.0,

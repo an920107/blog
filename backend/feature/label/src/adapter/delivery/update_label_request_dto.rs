@@ -12,11 +12,11 @@ pub struct UpdateLabelRequestDto {
     pub color: ColorRequestDto,
 }
 
-impl Into<CreateOrUpdateLabelParams> for UpdateLabelRequestDto {
-    fn into(self) -> CreateOrUpdateLabelParams {
+impl From<UpdateLabelRequestDto> for CreateOrUpdateLabelParams {
+    fn from(val: UpdateLabelRequestDto) -> Self {
         CreateOrUpdateLabelParams {
-            name: self.name,
-            color: self.color.into(),
+            name: val.name,
+            color: val.color.into(),
         }
     }
 }

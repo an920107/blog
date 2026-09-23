@@ -140,6 +140,16 @@ impl Container {
             get_label_by_id_use_case,
         ));
 
+        // Image metadata is built before Post because the post use case enriches posts with
+        // their preview image's MIME type and size.
+        let image_db_service = Arc::new(ImageDbServiceImpl::new(db_pool.clone()));
+        let image_storage = Arc::new(ImageStorageImpl::new(&configuration.storage.storage_path));
+
+        let image_repository = Arc::new(ImageRepositoryImpl::new(
+            image_db_service.clone(),
+            image_storage.clone(),
+        ));
+
         // Search
         let search_vector_db_service = Arc::new(SearchVectorDbServiceImpl::new(
             qdrant_client,
@@ -178,9 +188,12 @@ impl Container {
         let get_all_post_info_use_case = Arc::new(GetAllPostInfoUseCaseImpl::new(
             post_repository.clone(),
             search_service.clone(),
+            image_repository.clone(),
         ));
-        let get_post_by_id_use_case =
-            Arc::new(GetFullPostUseCaseImpl::new(post_repository.clone()));
+        let get_post_by_id_use_case = Arc::new(GetFullPostUseCaseImpl::new(
+            post_repository.clone(),
+            image_repository.clone(),
+        ));
         let get_post_by_semantic_id_use_case = Arc::new(GetPostBySemanticIdUseCaseImpl::new(
             post_repository.clone(),
             get_post_by_id_use_case.clone(),
@@ -205,14 +218,6 @@ impl Container {
         ));
 
         // Image
-        let image_db_service = Arc::new(ImageDbServiceImpl::new(db_pool.clone()));
-        let image_storage = Arc::new(ImageStorageImpl::new(&configuration.storage.storage_path));
-
-        let image_repository = Arc::new(ImageRepositoryImpl::new(
-            image_db_service.clone(),
-            image_storage.clone(),
-        ));
-
         let upload_image_use_case = Arc::new(UploadImageUseCaseImpl::new(image_repository.clone()));
         let get_image_use_case = Arc::new(GetImageUseCaseImpl::new(image_repository.clone()));
         let get_image_info_use_case = Arc::new(GetImageInfoUseCaseImpl::new(

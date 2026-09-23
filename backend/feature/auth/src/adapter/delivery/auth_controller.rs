@@ -65,7 +65,7 @@ impl AuthController for AuthControllerImpl {
             .execute(&query.code, &query.state, expected_state, expected_nonce)
             .await;
 
-        result.map(|user| UserResponseDto::from(user))
+        result.map(UserResponseDto::from)
     }
 
     async fn get_user(&self, user_id: i32) -> Result<UserResponseDto, AuthError> {

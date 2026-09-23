@@ -115,7 +115,7 @@ impl PostController for PostControllerImpl {
         result.map(|post_info_list| {
             let post_info_response_dto_list: Vec<PostInfoResponseDto> = post_info_list
                 .into_iter()
-                .map(|post_info| PostInfoResponseDto::from(post_info))
+                .map(PostInfoResponseDto::from)
                 .collect();
 
             post_info_response_dto_list

@@ -11,8 +11,11 @@ pub struct PostInfo {
     pub title: String,
     pub description: String,
     pub preview_image_url: Option<String>,
+    pub preview_image_mime_type: Option<String>,
+    pub preview_image_size: Option<i64>,
     pub labels: Vec<Label>,
     pub published_time: Option<DateTime<Utc>>,
+    pub updated_time: Option<DateTime<Utc>>,
 }
 
 impl PostInfo {

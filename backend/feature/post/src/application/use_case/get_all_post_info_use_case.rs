@@ -1,9 +1,13 @@
 use std::{collections::HashMap, sync::Arc};
 
 use async_trait::async_trait;
+use image::application::gateway::image_repository::ImageRepository;
 
 use crate::{
-    application::gateway::{post_repository::PostRepository, search_service::SearchService},
+    application::{
+        gateway::{post_repository::PostRepository, search_service::SearchService},
+        service::preview_image_metadata_service::PreviewImageMetadataService,
+    },
     domain::{entity::post_info::PostInfo, error::post_error::PostError},
 };
 
@@ -21,16 +25,19 @@ pub trait GetAllPostInfoUseCase: Send + Sync {
 pub struct GetAllPostInfoUseCaseImpl {
     post_repository: Arc<dyn PostRepository>,
     search_service: Arc<dyn SearchService>,
+    image_repository: Arc<dyn ImageRepository>,
 }
 
 impl GetAllPostInfoUseCaseImpl {
     pub fn new(
         post_repository: Arc<dyn PostRepository>,
         search_service: Arc<dyn SearchService>,
+        image_repository: Arc<dyn ImageRepository>,
     ) -> Self {
         Self {
             post_repository,
             search_service,
+            image_repository,
         }
     }
 }
@@ -54,10 +61,12 @@ impl GetAllPostInfoUseCase for GetAllPostInfoUseCaseImpl {
         // | F                 | F             | T      |
         let is_published_only = is_published_only || !has_logged_in;
 
-        let posts = self
+        let mut posts = self
             .post_repository
             .get_all_post_info(is_published_only, label_id)
             .await?;
+
+        PreviewImageMetadataService::attach(self.image_repository.clone(), &mut posts).await?;
 
         if let Some(keyword) = keyword {
             let post_map: HashMap<i32, PostInfo> =

@@ -11,13 +11,13 @@ pub struct ColorRequestDto {
     pub alpha: u8,
 }
 
-impl Into<Color> for ColorRequestDto {
-    fn into(self) -> Color {
+impl From<ColorRequestDto> for Color {
+    fn from(val: ColorRequestDto) -> Self {
         Color {
-            red: self.red,
-            green: self.green,
-            blue: self.blue,
-            alpha: self.alpha,
+            red: val.red,
+            green: val.green,
+            blue: val.blue,
+            alpha: val.alpha,
         }
     }
 }

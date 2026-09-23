@@ -14,6 +14,12 @@ pub struct QdrantConfiguration {
     size: u64,
 }
 
+impl Default for QdrantConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl QdrantConfiguration {
     pub fn new() -> Self {
         let url =

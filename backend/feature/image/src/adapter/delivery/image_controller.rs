@@ -75,10 +75,12 @@ impl ImageController for ImageControllerImpl {
         }
 
         let mime_type = image.mime_type.clone();
+        let size = Some(image.data.len() as i64);
         let id = self.upload_image_use_case.execute(image.into()).await?;
         Ok(ImageInfoResponseDto {
-            id: id,
-            mime_type: mime_type,
+            id,
+            mime_type,
+            size,
             is_referred: false,
         })
     }
@@ -97,6 +99,7 @@ impl ImageController for ImageControllerImpl {
         Ok(ImageInfoResponseDto {
             id: image_info.id,
             mime_type: image_info.mime_type,
+            size: image_info.size,
             is_referred: image_info.is_referred,
         })
     }
@@ -108,6 +111,7 @@ impl ImageController for ImageControllerImpl {
             .map(|info| ImageInfoResponseDto {
                 id: info.id,
                 mime_type: info.mime_type,
+                size: info.size,
                 is_referred: info.is_referred,
             })
             .collect())

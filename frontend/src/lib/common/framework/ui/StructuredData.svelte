@@ -1,15 +1,4 @@
 <script module lang="ts">
-	export const selfIntroductionLines = [
-		'大家好，我是 Squid 魷魚',
-		'身為一位軟體工程師',
-		'平常最喜歡埋首於程式碼的世界',
-		'鑽研各種新奇有趣的技術',
-		'在這裡',
-		'我會分享我的技術筆記、開發心得',
-		'還有各式各樣實用工具的評測與介紹',
-		'一起探索數位世界的無限可能吧！',
-	];
-
 	export interface StructuredDataArticleProps {
 		type: 'BlogPosting';
 		url: URL;
@@ -39,6 +28,7 @@
 
 <script lang="ts">
 	import { Environment } from '$lib/environment';
+	import { Strings } from '$lib/strings';
 
 	/* eslint-disable svelte/no-at-html-tags */
 
@@ -106,7 +96,7 @@
 			url: Environment.APP_BASE_URL,
 			image: new URL('favicon.svg', Environment.APP_BASE_URL).href,
 			jobTitle: 'Software Engineer',
-			description: selfIntroductionLines.join('，'),
+			description: Strings.SELF_INTRODUCTION_LINES.join('，'),
 			alumniOf: {
 				'@type': 'EducationalOrganization',
 				name: 'National Central University',

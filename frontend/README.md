@@ -62,3 +62,15 @@ Each feature module in `src/lib/` follows the Clean Architecture pattern:
 - **Type Safety**: TypeScript
 - **Linting**: ESLint with Prettier
 - **Package Manager**: bun
+
+### Sitemap & Feed
+
+The frontend serves its own discovery documents, so the public URL scheme is defined only here:
+
+- `/sitemap.xml` - every published post plus the static pages the backend cannot know about
+  (home, post list, terms).
+- `/feed.xml` - an RSS 2.0 feed of the 20 most recent posts. Items are identified by the post's
+  semantic id, so their `guid` stays stable when URLs change.
+
+Both are generated on demand from `src/lib/seo/` and served with `Cache-Control: public, max-age=300`,
+so a newly published post shows up without a rebuild or a separate generation step.

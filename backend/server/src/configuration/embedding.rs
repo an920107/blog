@@ -13,6 +13,12 @@ pub struct EmbeddingConfiguration {
     overlap_token: usize,
 }
 
+impl Default for EmbeddingConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl EmbeddingConfiguration {
     pub fn new() -> Self {
         let cache_dir = std::env::var("EMBEDDING_CACHE_PATH")

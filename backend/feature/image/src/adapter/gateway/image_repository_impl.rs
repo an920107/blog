@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use async_trait::async_trait;
@@ -31,6 +32,18 @@ impl ImageRepositoryImpl {
             image_storage,
         }
     }
+
+    /// Builds metadata from a database record. The size comes from the storage layer and is
+    /// optional: a record whose data file is missing or unreadable still yields usable
+    /// metadata, so a single broken image cannot fail the list, info, sitemap or feed
+    /// requests that read it.
+    fn to_image_meta_data(&self, image_db_mapper: ImageDbMapper) -> ImageMetaData {
+        ImageMetaData {
+            id: image_db_mapper.id,
+            mime_type: image_db_mapper.mime_type,
+            size: self.image_storage.size(image_db_mapper.id).ok(),
+        }
+    }
 }
 
 #[async_trait]
@@ -55,6 +68,7 @@ impl ImageRepository for ImageRepositoryImpl {
             info: ImageMetaData {
                 id: image_db_mapper.id,
                 mime_type: image_db_mapper.mime_type,
+                size: Some(data.len() as i64),
             },
             data,
         })
@@ -62,10 +76,25 @@ impl ImageRepository for ImageRepositoryImpl {
 
     async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageMetaData, ImageError> {
         let image_db_mapper = self.image_db_service.get_image_meta_data_by_id(id).await?;
-        Ok(ImageMetaData {
-            id: image_db_mapper.id,
-            mime_type: image_db_mapper.mime_type,
-        })
+        Ok(self.to_image_meta_data(image_db_mapper))
+    }
+
+    async fn get_image_meta_data_by_ids(
+        &self,
+        ids: &[i32],
+    ) -> Result<HashMap<i32, ImageMetaData>, ImageError> {
+        let image_db_mappers = self
+            .image_db_service
+            .get_image_meta_data_by_ids(ids)
+            .await?;
+
+        let mut image_meta_data = HashMap::new();
+        for image_db_mapper in image_db_mappers {
+            let meta_data = self.to_image_meta_data(image_db_mapper);
+            image_meta_data.insert(meta_data.id, meta_data);
+        }
+
+        Ok(image_meta_data)
     }
 
     async fn list_image_meta_data(&self) -> Result<Vec<ImageMetaData>, ImageError> {
@@ -73,10 +102,7 @@ impl ImageRepository for ImageRepositoryImpl {
 
         Ok(image_db_mappers
             .into_iter()
-            .map(|image_db_mapper| ImageMetaData {
-                id: image_db_mapper.id,
-                mime_type: image_db_mapper.mime_type,
-            })
+            .map(|image_db_mapper| self.to_image_meta_data(image_db_mapper))
             .collect())
     }
 

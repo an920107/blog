@@ -7,9 +7,9 @@ pub enum LabelError {
     Unexpected(anyhow::Error),
 }
 
-impl Into<String> for LabelError {
-    fn into(self) -> String {
-        format!("{}", self)
+impl From<LabelError> for String {
+    fn from(val: LabelError) -> Self {
+        format!("{}", val)
     }
 }
 

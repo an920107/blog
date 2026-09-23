@@ -4,6 +4,12 @@ pub struct ServerConfiguration {
     pub port: u16,
 }
 
+impl Default for ServerConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ServerConfiguration {
     pub fn new() -> Self {
         let host = std::env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string());

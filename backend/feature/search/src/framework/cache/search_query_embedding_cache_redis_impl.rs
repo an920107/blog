@@ -58,7 +58,7 @@ impl SearchQueryEmbeddingCache for SearchQueryEmbeddingCacheRedisImpl {
     async fn set_by_query_string(
         &self,
         query_string: &str,
-        embedding: &Vec<f32>,
+        embedding: &[f32],
     ) -> Result<(), SearchError> {
         let key = self.generate_cache_key(query_string);
         let value =

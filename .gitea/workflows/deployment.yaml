@@ -51,16 +51,3 @@ jobs:
           tags: |
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:latest
             ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_BACKEND }}:${{ gitea.event.release.tag_name }}
-
-      - name: Build and push (Toolbox)
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          provenance: false
-          context: ./script/toolbox
-          file: ./script/toolbox/Containerfile
-          cache-from: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache
-          cache-to: type=registry,ref=${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:buildcache,mode=max
-          tags: |
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:latest
-            ${{ vars.REGISTRY }}/${{ vars.IMAGE_REPO_TOOLBOX }}:${{ gitea.event.release.tag_name }}

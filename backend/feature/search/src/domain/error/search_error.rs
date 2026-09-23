@@ -5,9 +5,9 @@ pub enum SearchError {
     Unexpected(anyhow::Error),
 }
 
-impl Into<String> for SearchError {
-    fn into(self) -> String {
-        format!("{}", self)
+impl From<SearchError> for String {
+    fn from(val: SearchError) -> Self {
+        format!("{}", val)
     }
 }
 

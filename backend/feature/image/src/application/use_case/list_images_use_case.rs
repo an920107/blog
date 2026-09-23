@@ -50,6 +50,7 @@ impl ListImagesUseCase for ListImagesUseCaseImpl {
             .map(|meta_data| ImageInfo {
                 id: meta_data.id,
                 mime_type: meta_data.mime_type,
+                size: meta_data.size,
                 is_referred: reference_counts.get(&meta_data.id).copied().unwrap_or(0) > 0,
             })
             .collect();

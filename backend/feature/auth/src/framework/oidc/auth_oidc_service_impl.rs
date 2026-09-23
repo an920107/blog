@@ -104,9 +104,9 @@ impl AuthOidcService for AuthOidcServiceImpl {
 
         Ok(OidcClaimsResponseDto {
             sub: claims.subject().to_string(),
-            issuer: issuer,
-            preferred_username: preferred_username,
-            email: email,
+            issuer,
+            preferred_username,
+            email,
         })
     }
 }

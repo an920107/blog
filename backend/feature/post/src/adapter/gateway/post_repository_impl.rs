@@ -65,6 +65,7 @@ impl PostRepository for PostRepositoryImpl {
             preview_image_url: post.preview_image_url,
             labels: Vec::new(),
             published_time: post.published_time.map(|dt| dt.naive_utc()),
+            updated_time: None,
         };
 
         let post_mapper = PostMapper {
@@ -80,17 +81,18 @@ impl PostRepository for PostRepositoryImpl {
 
     async fn update_post(&self, id: i32, post: UpdatePostParams) -> Result<(), PostError> {
         let info_mapper = PostInfoMapper {
-            id: id,
+            id,
             semantic_id: String::new(),
             title: post.title,
             description: post.description,
             preview_image_url: post.preview_image_url,
             labels: Vec::new(),
             published_time: post.published_time.map(|dt| dt.naive_utc()),
+            updated_time: None,
         };
 
         let post_mapper = PostMapper {
-            id: id,
+            id,
             info: info_mapper,
             content: post.content,
         };

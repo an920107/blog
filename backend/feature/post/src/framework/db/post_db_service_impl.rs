@@ -93,6 +93,7 @@ impl PostDbService for PostDbServiceImpl {
                     preview_image_url: record.preview_image_url.clone(),
                     labels: Vec::new(),
                     published_time: record.published_time,
+                    updated_time: record.updated_time,
                 });
 
             if let (Some(label_id), Some(label_name), Some(label_color)) = (
@@ -131,6 +132,7 @@ impl PostDbService for PostDbServiceImpl {
                     p.preview_image_url,
                     p.content,
                     p.published_time,
+                    p.updated_time,
                     l.id AS label_id,
                     l.name AS label_name,
                     l.color AS label_color
@@ -173,6 +175,7 @@ impl PostDbService for PostDbServiceImpl {
                         preview_image_url: record.preview_image_url.clone(),
                         labels: Vec::new(),
                         published_time: record.published_time,
+                        updated_time: record.updated_time,
                     },
                     content: record.content.clone(),
                 });
@@ -229,11 +232,10 @@ impl PostDbService for PostDbServiceImpl {
         .fetch_one(&mut *tx)
         .await
         .map_err(|e| {
-            if let sqlx::Error::Database(db_err) = &e {
-                if db_err.constraint() == Some("idx_post_semantic_id") {
+            if let sqlx::Error::Database(db_err) = &e
+                && db_err.constraint() == Some("idx_post_semantic_id") {
                     return PostError::DuplicatedSemanticId;
                 }
-            }
             PostError::Unexpected(DatabaseError(e).into())
         })?;
 
@@ -292,11 +294,11 @@ impl PostDbService for PostDbServiceImpl {
         let affected_rows = sqlx::query!(
             r#"
             UPDATE post
-            SET 
-                title = $1, 
-                description = $2, 
-                preview_image_url = $3, 
-                content = $4, 
+            SET
+                title = $1,
+                description = $2,
+                preview_image_url = $3,
+                content = $4,
                 published_time = $5
             WHERE id = $6
             "#,
@@ -310,11 +312,10 @@ impl PostDbService for PostDbServiceImpl {
         .execute(&mut *tx)
         .await
         .map_err(|e| {
-            if let sqlx::Error::Database(db_err) = &e {
-                if db_err.constraint() == Some("idx_post_semantic_id") {
+            if let sqlx::Error::Database(db_err) = &e
+                && db_err.constraint() == Some("idx_post_semantic_id") {
                     return PostError::DuplicatedSemanticId;
                 }
-            }
             PostError::Unexpected(DatabaseError(e).into())
         })?
         .rows_affected();

@@ -22,18 +22,18 @@ pub struct CreatePostRequestDto {
     pub published_time: Option<String>,
 }
 
-impl Into<CreatePostParams> for CreatePostRequestDto {
-    fn into(self) -> CreatePostParams {
-        let image_ids = ImageExtractor::extract_image_ids(&self.content, &self.preview_image_url);
+impl From<CreatePostRequestDto> for CreatePostParams {
+    fn from(val: CreatePostRequestDto) -> Self {
+        let image_ids = ImageExtractor::extract_image_ids(&val.content, &val.preview_image_url);
 
         CreatePostParams {
-            semantic_id: self.semantic_id,
-            title: self.title,
-            description: self.description,
-            content: self.content,
-            label_ids: self.label_ids,
-            preview_image_url: self.preview_image_url,
-            published_time: self
+            semantic_id: val.semantic_id,
+            title: val.title,
+            description: val.description,
+            content: val.content,
+            label_ids: val.label_ids,
+            preview_image_url: val.preview_image_url,
+            published_time: val
                 .published_time
                 .and_then(|time_str| DateTime::parse_from_rfc3339(&time_str).ok())
                 .map(|dt| dt.with_timezone(&Utc)),

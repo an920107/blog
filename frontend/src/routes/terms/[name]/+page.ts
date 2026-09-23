@@ -1,18 +1,8 @@
 import { error } from '@sveltejs/kit';
 
-import { Strings } from '$lib/strings';
+import { TERMS_DOCUMENTS } from '$lib/terms/framework/termsDocuments';
 
 import type { PageLoad } from './$types';
-
-interface TermsDocument {
-	pathname: string;
-	title: string;
-}
-
-const TERMS_DOCUMENTS: TermsDocument[] = [
-	{ pathname: 'privacy-policy', title: Strings.PRIVACY_POLICY },
-	{ pathname: 'ai-usage-policy', title: Strings.AI_USAGE_POLICY },
-];
 
 export const load: PageLoad = async ({ fetch, params }) => {
 	const { name } = params;

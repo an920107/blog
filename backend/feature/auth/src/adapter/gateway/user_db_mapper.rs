@@ -8,14 +8,14 @@ pub struct UserMapper {
     pub email: String,
 }
 
-impl Into<User> for UserMapper {
-    fn into(self) -> User {
+impl From<UserMapper> for User {
+    fn from(val: UserMapper) -> Self {
         User {
-            id: self.id,
-            issuer: self.issuer,
-            source_id: self.source_id,
-            displayed_name: self.displayed_name,
-            email: self.email,
+            id: val.id,
+            issuer: val.issuer,
+            source_id: val.source_id,
+            displayed_name: val.displayed_name,
+            email: val.email,
         }
     }
 }

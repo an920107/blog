@@ -64,6 +64,35 @@ impl ImageDbService for ImageDbServiceImpl {
         }
     }
 
+    async fn get_image_meta_data_by_ids(
+        &self,
+        ids: &[i32],
+    ) -> Result<Vec<ImageDbMapper>, ImageError> {
+        if ids.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        let image_records = sqlx::query_as::<_, ImageRecord>(
+            r#"
+                SELECT id, mime_type
+                FROM image
+                WHERE id = ANY($1) AND deleted_time IS NULL
+            "#,
+        )
+        .bind(ids)
+        .fetch_all(&self.db_pool)
+        .await
+        .map_err(|e| ImageError::Unexpected(DatabaseError(e).into()))?;
+
+        Ok(image_records
+            .into_iter()
+            .map(|record| ImageDbMapper {
+                id: record.id,
+                mime_type: record.mime_type,
+            })
+            .collect())
+    }
+
     async fn list_image_meta_data(&self) -> Result<Vec<ImageDbMapper>, ImageError> {
         let image_records = sqlx::query_as!(
             ImageRecord,

@@ -7,6 +7,12 @@ pub struct RedisConfiguration {
     pub search_query_embedding_prefix: String,
 }
 
+impl Default for RedisConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RedisConfiguration {
     pub fn new() -> Self {
         let url =

@@ -81,7 +81,7 @@ impl LabelController for LabelControllerImpl {
 
         Ok(result
             .into_iter()
-            .map(|label| LabelResponseDto::from(label))
+            .map(LabelResponseDto::from)
             .collect())
     }
 

@@ -41,6 +41,7 @@ impl GetImageInfoUseCase for GetImageInfoUseCaseImpl {
         Ok(ImageInfo {
             id: image_meta_data.id,
             mime_type: image_meta_data.mime_type,
+            size: image_meta_data.size,
             is_referred,
         })
     }

@@ -78,17 +78,21 @@ impl SearchRepository for SearchRepositoryImpl {
 impl SearchRepositoryImpl {
     fn split_markdown(&self, markdown: &str) -> Vec<String> {
         self.markdown_splitter
-            .chunks(&markdown)
+            .chunks(markdown)
             .map(|s| s.to_string())
             .collect()
     }
 
     async fn get_query_embedding(&self, query_string: &str) -> Result<Vec<f32>, SearchError> {
-        if let Ok(Some(cached_embedding)) = self.query_embedding_cache.get_by_query_string(query_string).await {
+        if let Ok(Some(cached_embedding)) = self
+            .query_embedding_cache
+            .get_by_query_string(query_string)
+            .await
+        {
             return Ok(cached_embedding);
         }
 
-        let embeddings = self.embed_chunks(&vec![query_string.to_string()]).await?;
+        let embeddings = self.embed_chunks(&[query_string.to_string()]).await?;
         let query_vector = embeddings
             .into_iter()
             .next()
@@ -104,9 +108,9 @@ impl SearchRepositoryImpl {
         Ok(query_vector)
     }
 
-    async fn embed_chunks(&self, chunks: &Vec<String>) -> Result<Vec<Vec<f32>>, SearchError> {
+    async fn embed_chunks(&self, chunks: &[String]) -> Result<Vec<Vec<f32>>, SearchError> {
         let model = self.text_embedding_model.clone();
-        let chunks = chunks.clone();
+        let chunks = chunks.to_owned();
 
         spawn_blocking(move || {
             let mut model = model.blocking_lock();
@@ -114,6 +118,6 @@ impl SearchRepositoryImpl {
         })
         .await
         .map_err(|e| SearchError::Unexpected(e.into()))?
-        .map_err(|e| SearchError::Unexpected(e.into()))
+        .map_err(SearchError::Unexpected)
     }
 }

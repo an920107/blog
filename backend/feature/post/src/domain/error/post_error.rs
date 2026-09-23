@@ -11,9 +11,9 @@ pub enum PostError {
     Unexpected(anyhow::Error),
 }
 
-impl Into<String> for PostError {
-    fn into(self) -> String {
-        format!("{}", self)
+impl From<PostError> for String {
+    fn from(val: PostError) -> Self {
+        format!("{}", val)
     }
 }
 

@@ -45,6 +45,8 @@ import { GetAllPostsUseCase } from '$lib/post/application/useCase/getAllPostsUse
 import { GetPostUseCase } from '$lib/post/application/useCase/getPostUseCase';
 import { UpdatePostUseCase } from '$lib/post/application/useCase/updatePostUseCase';
 import { PostApiServiceImpl } from '$lib/post/framework/api/postApiServiceImpl';
+import { PostPagesListedStore } from '$lib/seo/adapter/presenter/postPagesListedStore';
+import { ListPostPagesUseCase } from '$lib/seo/application/useCase/listPostPagesUseCase';
 
 export class Container {
 	private useCases: UseCases;
@@ -93,6 +95,10 @@ export class Container {
 
 	createPostUpdatedStore(): PostUpdatedStore {
 		return new PostUpdatedStore(this.useCases.updatePostUseCase);
+	}
+
+	createPostPagesListedStore(): PostPagesListedStore {
+		return new PostPagesListedStore(this.useCases.listPostPagesUseCase);
 	}
 
 	createLabelsListedStore(initialData?: readonly LabelViewModel[]): LabelsListedStore {
@@ -190,6 +196,7 @@ class UseCases {
 	private _getPostUseCase?: GetPostUseCase;
 	private _createPostUseCase?: CreatePostUseCase;
 	private _updatePostUseCase?: UpdatePostUseCase;
+	private _listPostPagesUseCase?: ListPostPagesUseCase;
 	private _getAllLabelsUseCase?: GetAllLabelsUseCase;
 	private _getLabelUseCase?: GetLabelUseCase;
 	private _createLabelUseCase?: CreateLabelUseCase;
@@ -242,6 +249,11 @@ class UseCases {
 	get updatePostUseCase(): UpdatePostUseCase {
 		this._updatePostUseCase ??= new UpdatePostUseCase(this.repositories.postRepository);
 		return this._updatePostUseCase;
+	}
+
+	get listPostPagesUseCase(): ListPostPagesUseCase {
+		this._listPostPagesUseCase ??= new ListPostPagesUseCase(this.getAllPostsUseCase);
+		return this._listPostPagesUseCase;
 	}
 
 	get getAllLabelsUseCase(): GetAllLabelsUseCase {

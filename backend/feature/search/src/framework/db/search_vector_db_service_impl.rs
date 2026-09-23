@@ -43,13 +43,9 @@ impl SearchVectorDbServiceImpl {
 
 #[async_trait]
 impl SearchVectorDbService for SearchVectorDbServiceImpl {
-    async fn insert_vectors(
-        &self,
-        post_id: i32,
-        vectors: &Vec<Vec<f32>>,
-    ) -> Result<(), SearchError> {
+    async fn insert_vectors(&self, post_id: i32, vectors: &[Vec<f32>]) -> Result<(), SearchError> {
         let points: Vec<PointStruct> = vectors
-            .into_iter()
+            .iter()
             .enumerate()
             .map(|(index, vector)| {
                 let payload = InnerPayload {
@@ -87,7 +83,7 @@ impl SearchVectorDbService for SearchVectorDbServiceImpl {
 
     async fn search_similar_posts(
         &self,
-        query_vector: &Vec<f32>,
+        query_vector: &[f32],
         scope: &Option<Vec<i32>>,
     ) -> Result<Vec<i32>, SearchError> {
         let filter = if let Some(scope) = scope {
@@ -103,7 +99,7 @@ impl SearchVectorDbService for SearchVectorDbServiceImpl {
         };
 
         let request = QueryPointGroupsBuilder::new(self.collection_name.clone(), KEY_POST_ID)
-            .query(query_vector.clone())
+            .query(query_vector.to_owned())
             .with_payload(true)
             .filter(filter)
             .group_size(1u64)

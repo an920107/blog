@@ -1,9 +1,13 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use image::application::gateway::image_repository::ImageRepository;
 
 use crate::{
-    application::gateway::post_repository::PostRepository,
+    application::{
+        gateway::post_repository::PostRepository,
+        service::preview_image_metadata_service::PreviewImageMetadataService,
+    },
     domain::{entity::post::Post, error::post_error::PostError},
 };
 
@@ -14,22 +18,35 @@ pub trait GetPostByIdUseCase: Send + Sync {
 
 pub struct GetFullPostUseCaseImpl {
     post_repository: Arc<dyn PostRepository>,
+    image_repository: Arc<dyn ImageRepository>,
 }
 
 impl GetFullPostUseCaseImpl {
-    pub fn new(post_repository: Arc<dyn PostRepository>) -> Self {
-        Self { post_repository }
+    pub fn new(
+        post_repository: Arc<dyn PostRepository>,
+        image_repository: Arc<dyn ImageRepository>,
+    ) -> Self {
+        Self {
+            post_repository,
+            image_repository,
+        }
     }
 }
 
 #[async_trait]
 impl GetPostByIdUseCase for GetFullPostUseCaseImpl {
     async fn execute(&self, id: i32, user_id: Option<i32>) -> Result<Post, PostError> {
-        let post = self.post_repository.get_post_by_id(id).await?;
+        let mut post = self.post_repository.get_post_by_id(id).await?;
 
         if post.info.published_time.is_none() && user_id.is_none() {
             return Err(PostError::NotFound);
         }
+
+        PreviewImageMetadataService::attach(
+            self.image_repository.clone(),
+            std::slice::from_mut(&mut post.info),
+        )
+        .await?;
 
         Ok(post)
     }

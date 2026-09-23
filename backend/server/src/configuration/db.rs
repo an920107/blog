@@ -7,6 +7,12 @@ pub struct DbConfiguration {
     pub database_url: String,
 }
 
+impl Default for DbConfiguration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DbConfiguration {
     pub fn new() -> Self {
         let host = env::var("DATABASE_HOST").unwrap_or_else(|_| "127.0.0.1".to_string());

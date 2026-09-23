@@ -27,11 +27,22 @@ export abstract class Strings {
 	static readonly SEARCH_POST_HINT: string =
 		'輸入文章內容片段，或直接提出具體問題，系統將會以 AI（向量比對）搜尋相關的文章內容，搜尋結果根據相關性排序。';
 	static readonly SEARCH_UNAVAILABLE: string = '搜尋暫時無法使用，請稍後再試';
+	static readonly SELF_INTRODUCTION_LINES: readonly string[] = [
+		'大家好，我是 Squid 魷魚',
+		'身為一位軟體工程師',
+		'平常最喜歡埋首於程式碼的世界',
+		'鑽研各種新奇有趣的技術',
+		'在這裡',
+		'我會分享我的技術筆記、開發心得',
+		'還有各式各樣實用工具的評測與介紹',
+		'一起探索數位世界的無限可能吧！',
+	];
 	static readonly SHARE: string = 'Share';
 	static readonly SHARE_TO_EMAIL: string = 'Email';
 	static readonly SHARE_TO_FACEBOOK: string = 'Facebook';
 	static readonly SHARE_TO_LINKEDIN: string = 'LinkedIn';
 	static readonly SHARE_TO_X: string = 'X';
+	static readonly SITE_DESCRIPTION: string = Strings.SELF_INTRODUCTION_LINES.join('，');
 	static readonly TOC: string = '章節目錄';
 	static readonly YOUTUBE_CHANNEL: string = 'YouTube Channel';
 }
