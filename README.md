@@ -99,6 +99,33 @@ To configure and run the MCP (Model Context Protocol) servers for AI-assisted de
 Self-hosting uses the Kubernetes manifests in
 [manifest/README.md](./manifest/README.md).
 
+### CI configuration
+
+Publishing a release runs the
+[Deployment workflow](./.gitea/workflows/deployment.yaml), which builds and
+pushes the frontend and backend images and attaches a zip of `manifest/` to the
+release. It reads the Actions variables and secrets below, set at the
+repository or owner level (Settings → Actions).
+
+**Variables**
+
+| Name | Example | Used for |
+| --- | --- | --- |
+| `REGISTRY` | `registry.squidspirit.com` | Registry host for the login step, build cache and image tags. |
+| `REGISTRY_USERNAME` | `squid` | Registry account for the login step. |
+| `IMAGE_REPO_FRONTEND` | `squid/blog-frontend` | Frontend image name under `REGISTRY`. |
+| `IMAGE_REPO_BACKEND` | `squid/blog-backend` | Backend image name under `REGISTRY`. |
+
+**Secrets**
+
+| Name | Required | Used for |
+| --- | --- | --- |
+| `REGISTRY_PASSWORD` | Yes | Password or token for `REGISTRY_USERNAME`. |
+| `SENTRY_AUTH_TOKEN` | No | Uploads frontend source maps to Sentry; the frontend still builds without it. |
+
+Attaching the manifest to the release uses the `GITEA_TOKEN` that Gitea provides
+to every job, so no separate token secret is required.
+
 ## License
 
 The source code is licensed under the [Apache License 2.0](./LICENSE). You are free to use, modify, and redistribute the code, including for your own blog.
