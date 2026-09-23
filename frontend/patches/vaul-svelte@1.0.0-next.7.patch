@@ -1,0 +1,111 @@
+diff --git a/dist/use-drawer-root.svelte.js b/dist/use-drawer-root.svelte.js
+index dffcf102fa23b5ab751407901513910d06980e09..755d178200bc61b3256955f9aa2f448aa85a8260 100644
+--- a/dist/use-drawer-root.svelte.js
++++ b/dist/use-drawer-root.svelte.js
+@@ -27,6 +27,7 @@ export function useDrawerRoot(opts) {
+     let drawerHeight = 0;
+     let drawerWidth = 0;
+     let initialDrawerHeight = 0;
++    let keyboardStylesApplied = false;
+     let isReleasing = false;
+     const snapPointsState = useSnapPoints({
+         snapPoints: opts.snapPoints,
+@@ -240,6 +241,26 @@ export function useDrawerRoot(opts) {
+         if (!drawerNode || !opts.repositionInputs.current)
+             return;
+         const focusedElement = document.activeElement;
++        // `keyboardIsOpen` is a toggle derived from deltas and blur can fire before this resize
++        // event, so it cannot be relied upon. When nothing is focused and the keyboard is not
++        // covering the layout viewport, the keyboard is genuinely gone: undo the styles applied
++        // for it, otherwise the drawer keeps its keyboard height and offset.
++        // This must NOT run merely because `innerHeight` equals the visual viewport height: some
++        // browsers resize the layout viewport for the keyboard, so the drawer still needs its
++        // height clamped while the input stays focused.
++        const keyboardIsGone = window.innerHeight - (window.visualViewport?.height || 0) <= 60;
++        if (keyboardIsGone && !isInput(focusedElement)) {
++            if (keyboardStylesApplied) {
++                drawerNode.style.height = "";
++                drawerNode.style.bottom = "";
++                keyboardStylesApplied = false;
++                // Re-measure the natural height the next time the keyboard opens.
++                initialDrawerHeight = 0;
++                previousDiffFromInitial = 0;
++                keyboardIsOpen.current = false;
++            }
++            return;
++        }
+         if (isInput(focusedElement) || keyboardIsOpen.current) {
+             const visualViewportHeight = window.visualViewport?.height || 0;
+             const totalHeight = window.innerHeight;
+@@ -252,6 +273,16 @@ export function useDrawerRoot(opts) {
+                 initialDrawerHeight = drawerHeight;
+             }
+             const offsetFromTop = drawerNode.getBoundingClientRect().top;
++            // The drawer is bottom-anchored inside the layout viewport, but the visible area is
++            // not always the whole layout viewport: on mobile the on-screen keyboard also pans
++            // the visual viewport (`offsetTop`), so the visible area can start well below the top
++            // of the layout viewport. That offset is applied to `bottom` further down, and caps
++            // how tall the drawer may be.
++            const visualViewportOffsetTop = window.visualViewport?.offsetTop || 0;
++            const availableHeight = Math.max(visualViewportHeight - WINDOW_TOP_OFFSET, 0);
++            // Moving the drawer out of the keyboard's way must never make it taller than its
++            // natural height, otherwise the extra room shows up as a gap above the footer.
++            const maxDrawerHeight = initialDrawerHeight > 0 ? Math.min(initialDrawerHeight, availableHeight) : availableHeight;
+             // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
+             if (Math.abs(previousDiffFromInitial - diffFromInitial) > 60) {
+                 keyboardIsOpen.current = !keyboardIsOpen.current;
+@@ -277,11 +308,19 @@ export function useDrawerRoot(opts) {
+                     drawerNode.style.height = `${height - Math.max(diffFromInitial, 0)}px`;
+                 }
+                 else {
+-                    drawerNode.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
++                    // `visualViewportHeight - offsetFromTop` is derived from the drawer's
++                    // previous position, so it overshoots whenever the keyboard height shrinks
++                    // between two `visualViewport` resize events. Clamp the result to the
++                    // visible area and to the drawer's natural height.
++                    const targetDrawerHeight = Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop);
++                    drawerNode.style.height = `${Math.min(targetDrawerHeight, maxDrawerHeight)}px`;
+                 }
+             }
+             else if (!isMobileFirefox()) {
+-                drawerNode.style.height = `${initialDrawerHeight}px`;
++                // `keyboardIsOpen` is a toggle derived from deltas, so this branch can also run
++                // while the keyboard is open and the drawer is still lifted by `bottom`. Restore
++                // the natural height without exceeding the visible area.
++                drawerNode.style.height = `${Math.min(initialDrawerHeight, maxDrawerHeight)}px`;
+             }
+             if (opts.snapPoints.current &&
+                 opts.snapPoints.current.length > 0 &&
+@@ -289,9 +328,14 @@ export function useDrawerRoot(opts) {
+                 drawerNode.style.bottom = `0px`;
+             }
+             else {
++                // The drawer is anchored to the bottom of the *layout* viewport, but the visible
++                // area ends where the visual viewport ends. On mobile the keyboard pans the visual
++                // viewport (`offsetTop`) instead of only shrinking it, so subtracting it is what
++                // keeps the drawer (and the focused input) inside the visible area.
+                 // Negative bottom value would never make sense
+-                drawerNode.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
++                drawerNode.style.bottom = `${Math.max(diffFromInitial - visualViewportOffsetTop, 0)}px`;
+             }
++            keyboardStylesApplied = true;
+         }
+     }
+     watch([
+@@ -302,7 +346,15 @@ export function useDrawerRoot(opts) {
+     ], () => {
+         if (!window.visualViewport)
+             return;
+-        return on(window.visualViewport, "resize", onVisualViewportChange);
++        // An on-screen keyboard does not necessarily *resize* the visual viewport: it can also
++        // *pan* it (`offsetTop`), which only fires `scroll`. Without listening for it the drawer
++        // keeps the offset computed for its previous position and ends up above the visible area.
++        const removeResizeListener = on(window.visualViewport, "resize", onVisualViewportChange);
++        const removeScrollListener = on(window.visualViewport, "scroll", onVisualViewportChange);
++        return () => {
++            removeResizeListener();
++            removeScrollListener();
++        };
+     });
+     function cancelDrag() {
+         if (!isDragging || !drawerNode)
