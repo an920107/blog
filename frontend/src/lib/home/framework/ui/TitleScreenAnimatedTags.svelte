@@ -66,11 +66,11 @@
 </script>
 
 <div
-	class="relative w-full max-w-screen-md transition-opacity duration-500
+	class="relative w-full max-w-3xl transition-opacity duration-500
 		{isTagsVisible ? 'opacity-100' : 'opacity-0'}"
 >
 	<div
-		class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-60% to-white"
+		class="absolute inset-0 bg-linear-to-r from-transparent via-transparent via-60% to-white"
 	></div>
 	<div class="flex flex-row items-center gap-x-2 overflow-hidden">
 		{#each showingTags as tag (tag)}

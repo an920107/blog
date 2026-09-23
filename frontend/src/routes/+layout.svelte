@@ -8,6 +8,7 @@
 	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
 	import { Toaster } from '$lib/common/framework/components/ui/sonner';
 	import Footer from '$lib/common/framework/ui/Footer.svelte';
+	import GoogleAdsense from '$lib/common/framework/ui/GoogleAdsense.svelte';
 	import GoogleAnalytics from '$lib/common/framework/ui/GoogleAnalytics.svelte';
 	import Navbar, { type NavigationActionProps } from '$lib/common/framework/ui/Navbar.svelte';
 	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
@@ -32,6 +33,7 @@
 </script>
 
 <GoogleAnalytics />
+<GoogleAdsense />
 <svelte:head>
 	<meta name="app-version" content={App.__VERSION__} />
 </svelte:head>
