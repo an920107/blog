@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use fastembed::{EmbeddingModel, InitOptions, TextEmbedding};
+use fastembed::{EmbeddingModel, TextEmbedding, TextInitOptions};
 use text_splitter::{ChunkConfig, MarkdownSplitter};
 use tokenizers::Tokenizer;
 
@@ -21,8 +21,8 @@ impl Default for EmbeddingConfiguration {
 
 impl EmbeddingConfiguration {
     pub fn new() -> Self {
-        let cache_dir = std::env::var("EMBEDDING_CACHE_PATH")
-            .unwrap_or_else(|_| "embedding_cache".to_string());
+        let cache_dir =
+            std::env::var("EMBEDDING_CACHE_PATH").unwrap_or_else(|_| "embedding_cache".to_string());
 
         Self {
             model: EmbeddingModel::BGELargeZHV15,
@@ -34,7 +34,7 @@ impl EmbeddingConfiguration {
     }
 
     pub fn create_embedding_options(&self) -> TextEmbedding {
-        let options = InitOptions::new(self.model.clone())
+        let options = TextInitOptions::new(self.model.clone())
             .with_show_download_progress(true)
             .with_cache_dir(PathBuf::from(self.cache_dir.clone()));
 

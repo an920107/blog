@@ -118,6 +118,6 @@ impl SearchRepositoryImpl {
         })
         .await
         .map_err(|e| SearchError::Unexpected(e.into()))?
-        .map_err(SearchError::Unexpected)
+        .map_err(|e| SearchError::Unexpected(e.into()))
     }
 }

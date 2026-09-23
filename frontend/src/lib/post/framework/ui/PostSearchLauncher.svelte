@@ -16,8 +16,7 @@
 	// zod, …) stays out of the initial bundle of every page. It is prefetched on
 	// pointer/focus intent so the first open still feels instant.
 	let FilteringDialog:
-		| typeof import('$lib/post/framework/ui/FilteringDialog.svelte').default
-		| null = $state(null);
+		typeof import('$lib/post/framework/ui/FilteringDialog.svelte').default | null = $state(null);
 
 	let open = $state(false);
 

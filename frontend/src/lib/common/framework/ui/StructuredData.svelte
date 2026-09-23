@@ -36,9 +36,7 @@
 		props,
 	}: {
 		props:
-			| StructuredDataArticleProps
-			| StructuredDataCollectionPageProps
-			| StructuredDataPersonProps;
+			StructuredDataArticleProps | StructuredDataCollectionPageProps | StructuredDataPersonProps;
 	} = $props();
 
 	const context = 'https://schema.org';

@@ -101,4 +101,6 @@ Self-hosting uses the Kubernetes manifests in
 
 ## License
 
-This project uses a combination of the [MIT License and a custom license](./LICENSE.md). Based on the MIT License, anyone is permitted to use the code. However, before deploying the code, they must first replace any information belonging to "me" or any content that could identify "me," such as logos, names, and "about me" sections.
+The source code is licensed under the [Apache License 2.0](./LICENSE). You are free to use, modify, and redistribute the code, including for your own blog.
+
+The project's name and branding ("SquidSpirit" / "魚之魷魂", the logo, and personal content) are **not** covered by the code license. See [TRADEMARK.md](./TRADEMARK.md) for the trademark policy — in short, if you deploy a modified copy, replace the branding with your own.

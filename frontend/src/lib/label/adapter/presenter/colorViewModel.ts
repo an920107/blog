@@ -108,14 +108,12 @@ export class ColorViewModel {
 
 		const max = Math.max(r, g, b);
 		const min = Math.min(r, g, b);
-		let h = 0,
-			s = 0;
+		let h = 0;
+		let s = 0;
 		const l = (max + min) / 2;
 
-		if (max === min) {
-			// achromatic (grayscale)
-			h = s = 0;
-		} else {
+		// Achromatic (grayscale) colors keep hue and saturation at 0.
+		if (max !== min) {
 			const d = max - min;
 			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 			switch (max) {

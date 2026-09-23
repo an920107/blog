@@ -5,11 +5,12 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, loadEnv } from 'vite';
 
 // eslint-disable-next-line no-restricted-imports
-import { version } from './package.json';
+import packageJson from './package.json' with { type: 'json' };
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
 	const sentryProjects = ['blog-frontend', 'blog-beta-frontend'];
+	const { version } = packageJson;
 
 	return {
 		plugins: [

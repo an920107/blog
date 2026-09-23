@@ -20,8 +20,9 @@
 		document.head.appendChild(gaScript);
 
 		window.dataLayer = window.dataLayer || [];
-		function gtag() {
-			window.dataLayer.push(arguments);
+		/** @param {...unknown} args */
+		function gtag(...args) {
+			window.dataLayer.push(args);
 		}
 		gtag('js', new Date());
 		gtag('config', gaMeasurementId);

@@ -7,7 +7,6 @@
 </script>
 
 <script lang="ts">
-	import CryptoJS from 'crypto-js';
 	import hljs from 'highlight.js';
 	import markdownit from 'markdown-it';
 	import markdownitAttrs from 'markdown-it-attrs';
@@ -40,17 +39,27 @@
 	md.use(markdownitAttrs);
 	const parsedContent = $derived(md.render(content));
 
+	/** Generates a URL-safe, human-readable anchor slug (falls back to `section`). */
+	function slugify(text: string): string {
+		return (
+			text
+				.trim()
+				.toLowerCase()
+				.replace(/[^\p{L}\p{N}]+/gu, '-')
+				.replace(/^-+|-+$/g, '') || 'section'
+		);
+	}
+
 	const attachment: Attachment = (element) => {
 		const headings: HeadingItem[] = [];
-		const idSet = new Set<string>();
+		const slugCounts: Record<string, number> = {};
 
 		element.querySelectorAll('h2, h3, h4, h5, h6').forEach((h) => {
 			const level = parseInt(h.tagName.charAt(1)) as 2 | 3 | 4 | 5 | 6;
-			let id = CryptoJS.MD5(h.textContent || '').toString();
-
-			while (idSet.has(id)) {
-				id = CryptoJS.MD5(id).toString();
-			}
+			const slug = slugify(h.textContent || '');
+			const count = slugCounts[slug] ?? 0;
+			slugCounts[slug] = count + 1;
+			const id = count === 0 ? slug : `${slug}-${count}`;
 
 			h.id = id;
 			headings.push({ id, text: h.textContent || '', level });
