@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: blog
+  name: __NAME__
 spec:
   containers:
     - name: postgres
@@ -12,10 +12,10 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: DATABASE_PASSWORD
       volumeMounts:
-        - name: blog-postgres
+        - name: __NAME__-postgres
           mountPath: /var/lib/postgresql/data
     - name: qdrant
       image: docker.io/qdrant/qdrant:v1.17
@@ -23,122 +23,122 @@ spec:
         - name: QDRANT__SERVICE__API_KEY
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: QDRANT_API_KEY
       volumeMounts:
-        - name: blog-qdrant
+        - name: __NAME__-qdrant
           mountPath: /qdrant/storage
     - name: redis
       image: docker.io/library/redis:7-alpine
     - name: backend
-      image: registry.squidspirit.com/squid/blog-backend:v0.7.0
+      image: __BACKEND_IMAGE__:__BACKEND_TAG__
       env:
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: DATABASE_PASSWORD
         - name: SESSION_KEY
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: SESSION_KEY
         - name: OIDC_ISSUER_URL
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: OIDC_ISSUER_URL
         - name: OIDC_REDIRECT_URL
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: OIDC_REDIRECT_URL
         - name: OIDC_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: OIDC_CLIENT_ID
         - name: OIDC_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: OIDC_CLIENT_SECRET
         - name: QDRANT_API_KEY
           valueFrom:
             secretKeyRef:
-              name: blog-secret
+              name: __NAME__-secret
               key: QDRANT_API_KEY
         - name: QDRANT_SEARCH_THRESHOLD
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: QDRANT_SEARCH_THRESHOLD
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: BACKEND_SENTRY_DSN
       volumeMounts:
-        - name: blog-localtime
+        - name: __NAME__-localtime
           mountPath: /etc/localtime
           readOnly: true
-        - name: blog-storage
+        - name: __NAME__-storage
           mountPath: /app/static
-        - name: blog-embedding-cache
+        - name: __NAME__-embedding-cache
           mountPath: /app/embedding_cache
       ports:
-        - hostPort: 10012
+        - hostPort: __BACKEND_PORT__
           hostIP: 127.0.0.1
           containerPort: 8080
     - name: frontend
-      image: registry.squidspirit.com/squid/blog-frontend:v0.7.3
+      image: __FRONTEND_IMAGE__:__FRONTEND_TAG__
       env:
         - name: PUBLIC_API_BASE_URL
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: API_BASE_URL
         - name: PUBLIC_APP_BASE_URL
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: APP_BASE_URL
         - name: PUBLIC_GA_MEASUREMENT_ID
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: GA_MEASUREMENT_ID
         - name: PUBLIC_ADSENSE_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: ADSENSE_CLIENT_ID
         - name: PUBLIC_SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: blog-config
+              name: __NAME__-config
               key: FRONTEND_SENTRY_DSN
       volumeMounts:
-        - name: blog-localtime
+        - name: __NAME__-localtime
           mountPath: /etc/localtime
           readOnly: true
       ports:
-        - hostPort: 10011
+        - hostPort: __FRONTEND_PORT__
           hostIP: 127.0.0.1
           containerPort: 3000
   volumes:
-    - name: blog-localtime
+    - name: __NAME__-localtime
       hostPath:
         path: /etc/localtime
-    - name: blog-postgres
+    - name: __NAME__-postgres
       persistentVolumeClaim:
-        claimName: blog-postgres
-    - name: blog-qdrant
+        claimName: __NAME__-postgres
+    - name: __NAME__-qdrant
       persistentVolumeClaim:
-        claimName: blog-qdrant
-    - name: blog-storage
+        claimName: __NAME__-qdrant
+    - name: __NAME__-storage
       persistentVolumeClaim:
-        claimName: blog-storage
-    - name: blog-embedding-cache
+        claimName: __NAME__-storage
+    - name: __NAME__-embedding-cache
       persistentVolumeClaim:
-        claimName: blog-embedding-cache
+        claimName: __NAME__-embedding-cache

@@ -3,12 +3,12 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: blog-config
+  name: __NAME__-config
 type: Opaque
 stringData:
   OIDC_ISSUER_URL: https://auth.squidspirit.com/realms/squidspirit
   OIDC_REDIRECT_URL: https://squidspirit.com/api/auth/callback
-  OIDC_CLIENT_ID: blog
+  OIDC_CLIENT_ID: __NAME__
   QDRANT_SEARCH_THRESHOLD: "0.3"
   API_BASE_URL: https://squidspirit.com/api/
   APP_BASE_URL: https://squidspirit.com/
