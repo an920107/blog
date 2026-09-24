@@ -16,9 +16,9 @@ BACKEND_PORT ?= 10012
 # instance off `latest`:
 #   make NAME=blog-beta BACKEND_TAG=latest FRONTEND_TAG=latest
 BACKEND_IMAGE  ?= registry.squidspirit.com/squid/blog-backend
-BACKEND_TAG    ?= v0.7.0
+BACKEND_TAG    ?= v0.8.0-beta.3
 FRONTEND_IMAGE ?= registry.squidspirit.com/squid/blog-frontend
-FRONTEND_TAG   ?= v0.7.3
+FRONTEND_TAG   ?= v0.8.0-beta.3
 
 # Source files are picked per instance: <NAME>.secret.yaml, <NAME>.config.yaml
 # and <NAME>.pod.yaml are used when they exist, otherwise the shared blog.*
