@@ -1,5 +1,10 @@
 name: Backend CI
-on: [push]
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 defaults:
   run:
@@ -21,6 +26,13 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          # The Cargo workspace lives in backend/, not at the repo root.
+          # rust-cache resolves this relative to the repo root, not working-directory.
+          workspaces: backend
 
       - name: Check
         run: cargo check
