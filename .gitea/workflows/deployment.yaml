@@ -51,6 +51,8 @@ jobs:
   package-manifest:
     needs: build-image
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,9 +68,9 @@ jobs:
 
       - name: Attach manifest to release
         env:
-          GITEA_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
         run: |
-          curl -sSf -X POST \
+          curl -sS --fail-with-body -X POST \
             -H "Authorization: token ${GITEA_TOKEN}" \
             -F "attachment=@blog-manifest-${{ gitea.event.release.tag_name }}.zip" \
             "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/releases/${{ gitea.event.release.id }}/assets?name=blog-manifest-${{ gitea.event.release.tag_name }}.zip"

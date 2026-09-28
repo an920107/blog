@@ -1,5 +1,10 @@
 name: Frontend CI
-on: [push]
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 defaults:
   run:
@@ -14,6 +19,17 @@ jobs:
 
       - name: Install bun
         uses: oven-sh/setup-bun@v2
+        with:
+          # Keep in sync with the frontend Containerfile (oven/bun:1-alpine).
+          bun-version: 1
+
+      - name: Cache bun downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          # hashFiles is relative to the repo root, not working-directory.
+          key: bun-${{ runner.os }}-${{ hashFiles('frontend/bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
 
       - name: Install dependencies
         run: bun install
