@@ -16,9 +16,6 @@
 	const state = $derived($store);
 	const { trigger: loadPosts } = store;
 
-	const description =
-		'探索 魚之魷魂 SquidSpirit 的所有文章，這裡是您尋找最新技術洞見與實用教學的園地。';
-
 	const isPostsEmpty = $derived(
 		(state.isSuccess() && state.data !== null && state.data.length === 0) || state.isError()
 	);
@@ -28,7 +25,7 @@
 
 <svelte:head>
 	<title>{generateTitle(isPostsEmpty ? Strings.EMPTY_POSTS : Strings.POST)}</title>
-	<meta name="description" content={description} />
+	<meta name="description" content={Strings.POST_OVERALL_DESCRIPTION} />
 </svelte:head>
 
 {#if isPostsEmpty}
@@ -40,7 +37,7 @@
 				type: 'CollectionPage',
 				url: new URL('post', Environment.APP_BASE_URL),
 				name: '文章',
-				description: description,
+				description: Strings.POST_OVERALL_DESCRIPTION,
 				mainEntity: {
 					numberOfItems: state.data.length,
 					itemListElement: state.data.map((postInfo) => ({
@@ -60,13 +57,13 @@
 
 	<OpenGraph
 		title="文章"
-		{description}
+		description={Strings.POST_OVERALL_DESCRIPTION}
 		url={new URL('post', Environment.APP_BASE_URL)}
 		image={new URL('favicon.svg', Environment.APP_BASE_URL)}
 		labels={[]}
 	/>
 
-	<div class="content-container pb-10">
+	<div class="content-container pb-16">
 		<h1 class="py-9 text-center text-3xl font-bold text-gray-800 md:py-20 md:text-5xl">文章</h1>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-y-8 lg:grid-cols-3">
 			{#each state.data ?? [] as postInfo (postInfo.id)}

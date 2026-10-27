@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import type { AuthApiService } from '$lib/auth/adapter/gateway/authApiService';
 import { AuthRepositoryImpl } from '$lib/auth/adapter/gateway/authRepositoryImpl';
 import { AuthLoadedStore } from '$lib/auth/adapter/presenter/authLoadedStore';
@@ -5,6 +6,7 @@ import type { AuthRepository } from '$lib/auth/application/gateway/authRepositor
 import { GetCurrentUserUseCase } from '$lib/auth/application/useCase/getCurrentUserUseCase';
 import { AuthApiServiceImpl } from '$lib/auth/framework/api/authApiServiceImpl';
 import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
+import { Environment } from '$lib/environment';
 import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
 import { ImageRepositoryImpl } from '$lib/image/adapter/gateway/imageRepositoryImpl';
 import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
@@ -31,6 +33,7 @@ import { GetAllLabelsUseCase } from '$lib/label/application/useCase/getAllLabels
 import { GetLabelUseCase } from '$lib/label/application/useCase/getLabelUseCase';
 import { UpdateLabelUseCase } from '$lib/label/application/useCase/updateLabelUseCase';
 import { LabelApiServiceImpl } from '$lib/label/framework/api/labelApiServiceImpl';
+import { createMockFetch } from '$lib/mock/mockApiFetch';
 import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
 import { PostRepositoryImpl } from '$lib/post/adapter/gateway/postRepositoryImpl';
 import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
@@ -52,7 +55,8 @@ export class Container {
 	private useCases: UseCases;
 
 	constructor(fetchFn: typeof fetch) {
-		const apiServices = new ApiServices(fetchFn);
+		const effectiveFetch = dev && Environment.USE_MOCK_API ? createMockFetch(fetchFn) : fetchFn;
+		const apiServices = new ApiServices(effectiveFetch);
 		const repositories = new Repositories(apiServices);
 		this.useCases = new UseCases(repositories);
 	}

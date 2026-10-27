@@ -18,6 +18,8 @@ export abstract class Strings {
 	static readonly NOT_FOUND_CODE: string = '404';
 	static readonly OPEN_MENU: string = '開啟選單';
 	static readonly POST: string = '文章';
+	static readonly POST_OVERALL_DESCRIPTION: string =
+		'探索 魚之魷魂 SquidSpirit 的所有文章，這裡是您尋找最新技術洞見與實用教學的園地。';
 	static readonly RSS_FEED: string = 'RSS Feed';
 	static readonly SEARCH: string = '搜尋';
 	static readonly SEARCH_AND_FILTER_TITLE: string = '搜尋與篩選';

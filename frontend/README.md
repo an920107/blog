@@ -38,6 +38,18 @@
 - **Linting**: `bun run --bun lint`
 - **Formatting**: `bun run format`
 
+### Mock API
+
+To check layouts without running the backend, start the dev server with the mock API enabled:
+
+```bash
+PUBLIC_USE_MOCK_API=true bun run dev
+```
+
+The fixtures live in `src/lib/mock/` and serve fake posts, labels, and a logged-out
+`/me`, so `/post`, `/post/[id]`, and the search dialog all render. The mock is only
+wired up in dev mode and stays inert unless `PUBLIC_USE_MOCK_API=true`.
+
 ### Project Structure
 
 The frontend is built with SvelteKit and Tailwind CSS following Clean Architecture principles:
