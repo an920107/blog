@@ -5,19 +5,19 @@
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
-	import { cn } from '$lib/common/framework/components/utils';
-	import generateTitle from '$lib/common/framework/ui/generateTitle';
-	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
-	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { Environment } from '$lib/environment';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
 	import { Links } from '$lib/links';
-	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
+	import { PostLoadedStore } from '$lib/post/adapter/presenter/store/postLoadedStore';
 	import MarkdownRenderer, {
 		type HeadingItem,
 	} from '$lib/post/framework/ui/MarkdownRenderer.svelte';
 	import ShareButton from '$lib/post/framework/ui/ShareButton.svelte';
+	import { DrawerConfiguredStore } from '$lib/shared/adapter/presenter/store/drawerConfiguredStore';
+	import { cn } from '$lib/shared/framework/components/utils';
+	import generateTitle from '$lib/shared/framework/ui/generateTitle';
+	import OpenGraph from '$lib/shared/framework/ui/OpenGraph.svelte';
+	import StructuredData from '$lib/shared/framework/ui/StructuredData.svelte';
 	import { Strings } from '$lib/strings';
 
 	const { id }: { id: string } = $props();

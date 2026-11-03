@@ -1,5 +1,5 @@
 use crate::domain::error::post_error::PostError;
-use label::application::gateway::label_repository::LabelRepository;
+use label::application::port::label_repository::LabelRepository;
 use std::sync::Arc;
 
 pub struct LabelRelationService;

@@ -1,8 +1,9 @@
 import { error } from '@sveltejs/kit';
 
 import type { Container } from '$lib/container';
-import type { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
-import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
+import type { LabelViewModel } from '$lib/label/adapter/presenter/viewModel/labelViewModel';
+import type { PostInfoViewModel } from '$lib/post/adapter/presenter/viewModel/postInfoViewModel';
+import { Strings } from '$lib/strings';
 
 import type { PageServerLoad } from './$types';
 
@@ -11,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	const numericId = Number(params.id);
 	if (isNaN(numericId)) {
-		error(400, { message: 'Invalid label ID' });
+		error(400, { message: Strings.INVALID_LABEL_ID });
 	}
 	const label = await loadLabel(container, numericId);
 	const posts = await loadPosts(container, label.id);
@@ -29,7 +30,7 @@ async function loadLabel(container: Container, id: number): Promise<LabelViewMod
 
 	const state = await trigger(id);
 	if (!state.data) {
-		error(404, { message: 'Label not found' });
+		error(404, { message: Strings.LABEL_NOT_FOUND });
 	}
 
 	return state.data;

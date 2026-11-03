@@ -61,8 +61,8 @@ use post::{
 use qdrant_client::Qdrant;
 use search::{
     adapter::{
-        gateway::search_query_embedding_cache::SearchQueryEmbeddingCache,
         gateway::search_repository_impl::SearchRepositoryImpl,
+        port::search_query_embedding_cache::SearchQueryEmbeddingCache,
         service::search_service_impl::SearchServiceImpl,
     },
     application::use_case::{

@@ -13,6 +13,7 @@ COPY .sqlx ./.sqlx
 COPY migrations ./migrations
 COPY server ./server
 COPY feature ./feature
+COPY shared ./shared
 RUN cargo build --release --locked -j2
 
 FROM debian:trixie-slim AS runner

@@ -1,11 +1,11 @@
 use std::{collections::HashMap, sync::Arc};
 
 use async_trait::async_trait;
-use image::application::gateway::image_repository::ImageRepository;
+use image::application::port::image_repository::ImageRepository;
 
 use crate::{
     application::{
-        gateway::{post_repository::PostRepository, search_service::SearchService},
+        port::{post_repository::PostRepository, search_service::SearchService},
         service::preview_image_metadata_service::PreviewImageMetadataService,
     },
     domain::{entity::post_info::PostInfo, error::post_error::PostError},

@@ -1,9 +1,9 @@
 use async_trait::async_trait;
-use common::framework::error::DatabaseError;
+use shared::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
-    adapter::gateway::{user_db_mapper::UserMapper, user_db_service::UserDbService},
+    adapter::{gateway::dto::user_db_model::UserDbModel, port::user_db_service::UserDbService},
     domain::error::auth_error::AuthError,
     framework::db::user_record::UserRecord,
 };
@@ -20,12 +20,12 @@ impl UserDbServiceImpl {
 
 #[async_trait]
 impl UserDbService for UserDbServiceImpl {
-    async fn get_user_by_id(&self, user_id: i32) -> Result<UserMapper, AuthError> {
+    async fn get_user_by_id(&self, user_id: i32) -> Result<UserDbModel, AuthError> {
         let record = sqlx::query_as!(
             UserRecord,
             r#"
             SELECT id, issuer, source_id, displayed_name, email
-            FROM "user"
+            FROM "users"
             WHERE id = $1
             "#,
             user_id
@@ -35,7 +35,7 @@ impl UserDbService for UserDbServiceImpl {
         .map_err(|e| AuthError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
-            Some(record) => Ok(record.into_mapper()),
+            Some(record) => Ok(record.into_db_model()),
             None => Err(AuthError::UserNotFound),
         }
     }
@@ -44,12 +44,12 @@ impl UserDbService for UserDbServiceImpl {
         &self,
         issuer: &str,
         source_id: &str,
-    ) -> Result<UserMapper, AuthError> {
+    ) -> Result<UserDbModel, AuthError> {
         let record = sqlx::query_as!(
             UserRecord,
             r#"
             SELECT id, issuer, source_id, displayed_name, email
-            FROM "user"
+            FROM "users"
             WHERE issuer = $1 AND source_id = $2
             "#,
             issuer,
@@ -60,15 +60,15 @@ impl UserDbService for UserDbServiceImpl {
         .map_err(|e| AuthError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
-            Some(record) => Ok(record.into_mapper()),
+            Some(record) => Ok(record.into_db_model()),
             None => Err(AuthError::UserNotFound),
         }
     }
 
-    async fn create_user(&self, user: UserMapper) -> Result<i32, AuthError> {
+    async fn create_user(&self, user: UserDbModel) -> Result<i32, AuthError> {
         let id = sqlx::query_scalar!(
             r#"
-            INSERT INTO "user" (issuer, source_id, displayed_name, email)
+            INSERT INTO "users" (issuer, source_id, displayed_name, email)
             VALUES ($1, $2, $3, $4)
             RETURNING id
             "#,

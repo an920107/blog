@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 
-	import { Container } from '$lib/container';
-	import { PostCreatedStore } from '$lib/post/adapter/presenter/postCreatedStore';
-	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import { PostCreatedStore } from '$lib/post/adapter/presenter/store/postCreatedStore';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/store/postsListedStore';
+	import { PostInfoViewModel } from '$lib/post/adapter/presenter/viewModel/postInfoViewModel';
 	import PostOverallDashboardPage from '$lib/post/framework/ui/PostOverallDashboardPage.svelte';
+	import { getContainer } from '$lib/shared/framework/ui/containerContext';
 
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const container = getContext<Container>(Container.name);
+	const container = getContainer();
 
 	const postCreatedStore = container.createPostCreatedStore();
 	setContext(PostCreatedStore.name, postCreatedStore);

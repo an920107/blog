@@ -2,12 +2,12 @@
 resolver = "2"
 members = [
   "feature/auth",
-  "feature/common",
   "feature/image",
   "feature/label",
   "feature/post",
   "feature/search",
   "server",
+  "shared",
 ]
 
 [workspace.package]
@@ -80,12 +80,12 @@ utoipa = {
 utoipa-redoc = { version = "7.0.0", features = ["actix-web"] }
 
 auth.path = "feature/auth"
-common.path = "feature/common"
 image.path = "feature/image"
 label.path = "feature/label"
 post.path = "feature/post"
 search.path = "feature/search"
 server.path = "server"
+shared.path = "shared"
 
 [profile.release]
 debug = true

@@ -3,11 +3,11 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::{
-        color_db_mapper::ColorMapper, label_db_mapper::LabelMapper,
-        label_db_service::LabelDbService,
+    adapter::{
+        gateway::{dto::color_db_model::ColorDbModel, dto::label_db_model::LabelDbModel},
+        port::label_db_service::LabelDbService,
     },
-    application::gateway::{
+    application::port::{
         create_or_update_label_params::CreateOrUpdateLabelParams, label_repository::LabelRepository,
     },
     domain::{entity::label::Label, error::label_error::LabelError},
@@ -27,10 +27,10 @@ impl LabelRepositoryImpl {
 impl LabelRepository for LabelRepositoryImpl {
     async fn create_label(&self, label: CreateOrUpdateLabelParams) -> Result<i32, LabelError> {
         self.label_db_service
-            .create_label(LabelMapper {
+            .create_label(LabelDbModel {
                 id: -1,
                 name: label.name,
-                color: ColorMapper::from(label.color),
+                color: ColorDbModel::from(label.color),
             })
             .await
     }
@@ -41,10 +41,10 @@ impl LabelRepository for LabelRepositoryImpl {
         label: CreateOrUpdateLabelParams,
     ) -> Result<(), LabelError> {
         self.label_db_service
-            .update_label(LabelMapper {
+            .update_label(LabelDbModel {
                 id,
                 name: label.name,
-                color: ColorMapper::from(label.color),
+                color: ColorDbModel::from(label.color),
             })
             .await
     }
@@ -60,6 +60,6 @@ impl LabelRepository for LabelRepositoryImpl {
         self.label_db_service
             .get_all_labels()
             .await
-            .map(|mappers| mappers.into_iter().map(Into::into).collect())
+            .map(|db_models| db_models.into_iter().map(Into::into).collect())
     }
 }

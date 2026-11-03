@@ -19,5 +19,5 @@ tokenizers.workspace = true
 tokio.workspace = true
 
 auth.workspace = true
-common.workspace = true
+shared.workspace = true
 post.workspace = true

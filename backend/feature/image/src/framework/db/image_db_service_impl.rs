@@ -1,9 +1,9 @@
 use async_trait::async_trait;
-use common::framework::error::DatabaseError;
+use shared::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
-    adapter::gateway::{image_db_mapper::ImageDbMapper, image_db_service::ImageDbService},
+    adapter::{gateway::dto::image_db_model::ImageDbModel, port::image_db_service::ImageDbService},
     domain::error::image_error::ImageError,
     framework::db::image_record::ImageRecord,
 };
@@ -20,11 +20,11 @@ impl ImageDbServiceImpl {
 
 #[async_trait]
 impl ImageDbService for ImageDbServiceImpl {
-    async fn create_image_info(&self, image: ImageDbMapper) -> Result<i32, ImageError> {
+    async fn create_image_info(&self, image: ImageDbModel) -> Result<i32, ImageError> {
         let mime_type = image.mime_type.clone();
         let id = sqlx::query_scalar!(
             r#"
-                INSERT INTO image (mime_type)
+                INSERT INTO images (mime_type)
                 VALUES ($1)
                 RETURNING id
             "#,
@@ -39,12 +39,12 @@ impl ImageDbService for ImageDbServiceImpl {
         }
     }
 
-    async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageDbMapper, ImageError> {
+    async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageDbModel, ImageError> {
         let image_record = sqlx::query_as!(
             ImageRecord,
             r#"
                 SELECT id, mime_type
-                FROM image
+                FROM images
                 WHERE id = $1 AND deleted_time IS NULL
             "#,
             id
@@ -54,7 +54,7 @@ impl ImageDbService for ImageDbServiceImpl {
 
         match image_record {
             Ok(record) => match record {
-                Some(record) => Ok(ImageDbMapper {
+                Some(record) => Ok(ImageDbModel {
                     id: record.id,
                     mime_type: record.mime_type,
                 }),
@@ -67,7 +67,7 @@ impl ImageDbService for ImageDbServiceImpl {
     async fn get_image_meta_data_by_ids(
         &self,
         ids: &[i32],
-    ) -> Result<Vec<ImageDbMapper>, ImageError> {
+    ) -> Result<Vec<ImageDbModel>, ImageError> {
         if ids.is_empty() {
             return Ok(Vec::new());
         }
@@ -75,7 +75,7 @@ impl ImageDbService for ImageDbServiceImpl {
         let image_records = sqlx::query_as::<_, ImageRecord>(
             r#"
                 SELECT id, mime_type
-                FROM image
+                FROM images
                 WHERE id = ANY($1) AND deleted_time IS NULL
             "#,
         )
@@ -86,19 +86,19 @@ impl ImageDbService for ImageDbServiceImpl {
 
         Ok(image_records
             .into_iter()
-            .map(|record| ImageDbMapper {
+            .map(|record| ImageDbModel {
                 id: record.id,
                 mime_type: record.mime_type,
             })
             .collect())
     }
 
-    async fn list_image_meta_data(&self) -> Result<Vec<ImageDbMapper>, ImageError> {
+    async fn list_image_meta_data(&self) -> Result<Vec<ImageDbModel>, ImageError> {
         let image_records = sqlx::query_as!(
             ImageRecord,
             r#"
                 SELECT id, mime_type
-                FROM image
+                FROM images
                 WHERE deleted_time IS NULL
                 ORDER BY id
             "#
@@ -109,7 +109,7 @@ impl ImageDbService for ImageDbServiceImpl {
         match image_records {
             Ok(records) => Ok(records
                 .into_iter()
-                .map(|record| ImageDbMapper {
+                .map(|record| ImageDbModel {
                     id: record.id,
                     mime_type: record.mime_type,
                 })
@@ -121,7 +121,7 @@ impl ImageDbService for ImageDbServiceImpl {
     async fn delete_image(&self, id: i32) -> Result<(), ImageError> {
         let result = sqlx::query!(
             r#"
-                DELETE FROM image
+                DELETE FROM images
                 WHERE id = $1
             "#,
             id,

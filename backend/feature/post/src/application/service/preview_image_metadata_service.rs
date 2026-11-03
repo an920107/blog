@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use image::application::gateway::image_repository::ImageRepository;
+use image::application::port::image_repository::ImageRepository;
 
 use crate::{
     application::service::image_extractor::ImageExtractor,

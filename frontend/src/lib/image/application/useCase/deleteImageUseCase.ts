@@ -1,4 +1,4 @@
-import type { ImageRepository } from '$lib/image/application/gateway/imageRepository';
+import type { ImageRepository } from '$lib/image/application/port/imageRepository';
 
 export class DeleteImageUseCase {
 	constructor(private readonly imageRepository: ImageRepository) {}

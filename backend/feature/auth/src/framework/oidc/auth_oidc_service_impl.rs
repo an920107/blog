@@ -6,8 +6,9 @@ use openidconnect::{
 };
 
 use crate::{
-    adapter::gateway::{
-        auth_oidc_service::AuthOidcService, oidc_claims_response_dto::OidcClaimsResponseDto,
+    adapter::{
+        gateway::dto::oidc_claims_response_dto::OidcClaimsResponseDto,
+        port::auth_oidc_service::AuthOidcService,
     },
     application::use_case::get_auth_url_use_case::AuthUrl,
     domain::error::auth_error::AuthError,

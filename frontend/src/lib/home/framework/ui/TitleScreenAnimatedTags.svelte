@@ -1,38 +1,9 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 
-	const tagsCollection = [
-		'APP',
-		'C++',
-		'Clean Architecture',
-		'Design Pattern',
-		'Docker',
-		'Flutter',
-		'Go',
-		'Java',
-		'LINER',
-		'Linux',
-		'Python',
-		'React',
-		'Rust',
-		'Squid',
-		'Svelte',
-		'TypeScript',
-		'中央大學',
-		'全端',
-		'分享',
-		'前端',
-		'後端',
-		'教學',
-		'知識',
-		'科技',
-		'科普',
-		'程式設計',
-		'資工系',
-		'軟體工程',
-		'遊戲',
-		'魷魚',
-	];
+	import { Strings } from '$lib/strings';
+
+	const tagsCollection = Strings.HOME_TAGS;
 
 	// Initialize with placeholder to prevent flickering
 	let showingTags: string[] = $state(['']);

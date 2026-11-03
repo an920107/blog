@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 import { buildSitemapDocument } from '$lib/seo/framework/xml/sitemapDocument';
+import { Strings } from '$lib/strings';
 
 import type { RequestHandler } from './$types';
 
@@ -14,7 +15,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 
 	const postPages = state.data;
 	if (state.isError() || postPages === null) {
-		error(500, 'Failed to generate the sitemap');
+		error(500, Strings.FAILED_TO_GENERATE_SITEMAP);
 	}
 
 	const body = await buildSitemapDocument(postPages);

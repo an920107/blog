@@ -1,11 +1,11 @@
-import { CreateLabelRequestDto } from '$lib/label/adapter/gateway/createLabelRequestDto';
-import type { LabelApiService } from '$lib/label/adapter/gateway/labelApiService';
-import { UpdateLabelRequestDto } from '$lib/label/adapter/gateway/updateLabelRequestDto';
+import { CreateLabelRequestDto } from '$lib/label/adapter/gateway/dto/createLabelRequestDto';
+import { UpdateLabelRequestDto } from '$lib/label/adapter/gateway/dto/updateLabelRequestDto';
+import type { LabelApiService } from '$lib/label/adapter/port/labelApiService';
 import type {
 	CreateLabelParams,
 	LabelRepository,
 	UpdateLabelParams,
-} from '$lib/label/application/gateway/labelRepository';
+} from '$lib/label/application/port/labelRepository';
 import type { Label } from '$lib/label/domain/entity/label';
 
 export class LabelRepositoryImpl implements LabelRepository {

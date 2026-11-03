@@ -1,7 +1,4 @@
-import type {
-	PostRepository,
-	UpdatePostParams,
-} from '$lib/post/application/gateway/postRepository';
+import type { PostRepository, UpdatePostParams } from '$lib/post/application/port/postRepository';
 import type { Post } from '$lib/post/domain/entity/post';
 
 export class UpdatePostUseCase {

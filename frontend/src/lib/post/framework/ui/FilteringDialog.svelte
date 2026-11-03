@@ -14,40 +14,40 @@
 	import { getContext, onMount, tick } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 
-	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/store/labelsListedStore';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { Button, buttonVariants } from '$lib/shared/framework/components/ui/button';
 	import {
 		Command,
 		CommandGroup,
 		CommandInput,
 		CommandItem,
 		CommandList,
-	} from '$lib/common/framework/components/ui/command';
+	} from '$lib/shared/framework/components/ui/command';
 	import {
 		Dialog,
 		DialogContent,
 		DialogFooter,
 		DialogHeader,
 		DialogTitle,
-	} from '$lib/common/framework/components/ui/dialog';
+	} from '$lib/shared/framework/components/ui/dialog';
 	import {
 		Drawer,
 		DrawerContent,
 		DrawerFooter,
 		DrawerHeader,
 		DrawerTitle,
-	} from '$lib/common/framework/components/ui/drawer';
-	import Input from '$lib/common/framework/components/ui/input/input.svelte';
-	import Label from '$lib/common/framework/components/ui/label/label.svelte';
+	} from '$lib/shared/framework/components/ui/drawer';
+	import Input from '$lib/shared/framework/components/ui/input/input.svelte';
+	import Label from '$lib/shared/framework/components/ui/label/label.svelte';
 	import {
 		Popover,
 		PopoverContent,
 		PopoverTrigger,
-	} from '$lib/common/framework/components/ui/popover';
-	import Tooltip from '$lib/common/framework/components/ui/tooltip/tooltip.svelte';
-	import TooltipContent from '$lib/common/framework/components/ui/tooltip/tooltip-content.svelte';
-	import TooltipTrigger from '$lib/common/framework/components/ui/tooltip/tooltip-trigger.svelte';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	} from '$lib/shared/framework/components/ui/popover';
+	import Tooltip from '$lib/shared/framework/components/ui/tooltip/tooltip.svelte';
+	import TooltipContent from '$lib/shared/framework/components/ui/tooltip/tooltip-content.svelte';
+	import TooltipTrigger from '$lib/shared/framework/components/ui/tooltip/tooltip-trigger.svelte';
 	import { Strings } from '$lib/strings';
 
 	let {

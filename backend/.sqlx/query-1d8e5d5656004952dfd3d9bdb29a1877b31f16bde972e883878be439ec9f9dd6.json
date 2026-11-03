@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO posts (\n                semantic_id, title, description, preview_image_url, content, published_time\n            ) VALUES ($1, $2, $3, $4, $5, $6)\n            RETURNING id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamp"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "1d8e5d5656004952dfd3d9bdb29a1877b31f16bde972e883878be439ec9f9dd6"
+}

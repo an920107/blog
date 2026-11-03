@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::gateway::auth_repository::AuthRepository,
+    application::port::auth_repository::AuthRepository,
     domain::{entity::user::User, error::auth_error::AuthError},
 };
 

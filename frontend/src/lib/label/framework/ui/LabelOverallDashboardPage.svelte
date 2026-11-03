@@ -3,20 +3,21 @@
 	import { toast } from 'svelte-sonner';
 
 	import { resolve } from '$app/paths';
-	import { TableCell } from '$lib/common/framework/components/ui/table';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
-	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
-	import TableHeader from '$lib/common/framework/components/ui/table/table-header.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import { LabelCreatedStore } from '$lib/label/adapter/presenter/labelCreatedStore';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import { LabelCreatedStore } from '$lib/label/adapter/presenter/store/labelCreatedStore';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/store/labelsListedStore';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/viewModel/colorViewModel';
 	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import EditLabelDialog, {
 		type EditLabelDialogFormParams,
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { TableCell } from '$lib/shared/framework/components/ui/table';
+	import Table from '$lib/shared/framework/components/ui/table/table.svelte';
+	import TableBody from '$lib/shared/framework/components/ui/table/table-body.svelte';
+	import TableHead from '$lib/shared/framework/components/ui/table/table-head.svelte';
+	import TableHeader from '$lib/shared/framework/components/ui/table/table-header.svelte';
+	import TableRow from '$lib/shared/framework/components/ui/table/table-row.svelte';
+	import { Strings } from '$lib/strings';
 
 	const labelCreatedStore = getContext<LabelCreatedStore>(LabelCreatedStore.name);
 	const labelCreatedState = $derived($labelCreatedStore);
@@ -37,9 +38,9 @@
 
 		if (state.isSuccess()) {
 			loadLabels();
-			toast.success(`Label created successfully with ID: ${state.data.id}`);
+			toast.success(`${Strings.LABEL_CREATED_PREFIX} ${state.data.id}`);
 		} else if (state.isError()) {
-			toast.error('Failed to create label', {
+			toast.error(Strings.FAILED_TO_CREATE_LABEL, {
 				description: state.error.message,
 			});
 			return false;
@@ -53,10 +54,10 @@
 
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="py-16 text-5xl font-bold text-gray-800">Label</h1>
+		<h1 class="py-16 text-5xl font-bold text-gray-800">{Strings.DASHBOARD_LABEL}</h1>
 		<EditLabelDialog
-			title="Create Label"
-			triggerButtonText="Create"
+			title={Strings.CREATE_LABEL}
+			triggerButtonText={Strings.CREATE}
 			disabled={labelCreatedState.isLoading()}
 			{onSubmit}
 		/>
@@ -64,10 +65,10 @@
 	<Table>
 		<TableHeader>
 			<TableRow>
-				<TableHead>ID</TableHead>
-				<TableHead>Name</TableHead>
-				<TableHead>Color</TableHead>
-				<TableHead>Preview</TableHead>
+				<TableHead>{Strings.ID}</TableHead>
+				<TableHead>{Strings.NAME}</TableHead>
+				<TableHead>{Strings.COLOR}</TableHead>
+				<TableHead>{Strings.PREVIEW}</TableHead>
 			</TableRow>
 		</TableHeader>
 		<TableBody>

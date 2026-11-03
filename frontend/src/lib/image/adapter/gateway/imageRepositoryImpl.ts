@@ -1,5 +1,5 @@
-import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
-import type { ImageRepository } from '$lib/image/application/gateway/imageRepository';
+import type { ImageApiService } from '$lib/image/adapter/port/imageApiService';
+import type { ImageRepository } from '$lib/image/application/port/imageRepository';
 import { ImageInfo } from '$lib/image/domain/entity/imageInfo';
 
 export class ImageRepositoryImpl implements ImageRepository {

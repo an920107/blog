@@ -1,5 +1,5 @@
 use crate::{
-    application::gateway::{
+    application::port::{
         create_image_params::CreateImageParams, image_repository::ImageRepository,
     },
     domain::error::image_error::ImageError,

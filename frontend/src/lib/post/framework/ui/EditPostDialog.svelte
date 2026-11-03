@@ -1,42 +1,27 @@
 <script module lang="ts">
-	import z from 'zod';
+	import type { PostFormValues } from '$lib/post/application/validation/postFormSchema';
 
-	const formSchema = z.object({
-		semanticId: z
-			.string()
-			.max(100)
-			.regex(/\D/)
-			.regex(/^[\da-z_-]+$/i),
-		title: z.string().trim().nonempty(),
-		description: z
-			.string()
-			.trim()
-			.transform((s) => s.replaceAll('\n', '')),
-		content: z.string(),
-		labelIds: z.array(z.number()),
-		previewImageUrl: z.string().nullable(),
-		publishedTime: z
-			.date()
-			.nullable()
-			.transform((d) => (d ? new EnhancedDate(d) : null)),
-	});
-
-	type FormParams = z.infer<typeof formSchema>;
-	export type EditPostDialogFormParams = FormParams;
+	export type EditPostDialogFormParams = PostFormValues;
 </script>
 
 <script lang="ts">
 	import { getContext, onMount, tick } from 'svelte';
+	import z from 'zod';
 
-	import { EnhancedDate } from '$lib/common/adapter/presenter/enhancedDate';
-	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/store/labelsListedStore';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/viewModel/labelViewModel';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { Links } from '$lib/links';
+	import { postFormSchema } from '$lib/post/application/validation/postFormSchema';
+	import { EnhancedDate } from '$lib/shared/adapter/presenter/enhancedDate';
+	import { Button, buttonVariants } from '$lib/shared/framework/components/ui/button';
 	import {
 		Command,
 		CommandGroup,
 		CommandInput,
 		CommandItem,
 		CommandList,
-	} from '$lib/common/framework/components/ui/command';
+	} from '$lib/shared/framework/components/ui/command';
 	import {
 		Dialog,
 		DialogContent,
@@ -44,25 +29,25 @@
 		DialogHeader,
 		DialogTitle,
 		DialogTrigger,
-	} from '$lib/common/framework/components/ui/dialog';
-	import Input from '$lib/common/framework/components/ui/input/input.svelte';
-	import Label from '$lib/common/framework/components/ui/label/label.svelte';
+	} from '$lib/shared/framework/components/ui/dialog';
+	import Input from '$lib/shared/framework/components/ui/input/input.svelte';
+	import Label from '$lib/shared/framework/components/ui/label/label.svelte';
 	import {
 		Popover,
 		PopoverContent,
 		PopoverTrigger,
-	} from '$lib/common/framework/components/ui/popover';
-	import Textarea from '$lib/common/framework/components/ui/textarea/textarea.svelte';
-	import InputEnabledToggle from '$lib/common/framework/ui/InputEnabledToggle.svelte';
-	import InputError from '$lib/common/framework/ui/InputError.svelte';
-	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	} from '$lib/shared/framework/components/ui/popover';
+	import Textarea from '$lib/shared/framework/components/ui/textarea/textarea.svelte';
+	import InputEnabledToggle from '$lib/shared/framework/ui/InputEnabledToggle.svelte';
+	import InputError from '$lib/shared/framework/ui/InputError.svelte';
+	import RestoreButton from '$lib/shared/framework/ui/RestoreButton.svelte';
+	import { Strings } from '$lib/strings';
+
+	type FormParams = EditPostDialogFormParams;
 
 	const {
 		mode,
-		title = mode === 'create' ? 'Create Post' : 'Update Post',
+		title = mode === 'create' ? Strings.CREATE_POST : Strings.UPDATE_POST,
 		triggerButtonText,
 		disabled,
 		defaultValues = {
@@ -90,7 +75,12 @@
 	let formErrors: Partial<Record<keyof FormParams, string>> = $state({});
 
 	let previewImageUrl = $state((() => defaultValues.previewImageUrl ?? '')());
-	let publishedTime = $state((() => defaultValues.publishedTime?.toDateTimeInputValue() ?? '')());
+	let publishedTime = $state(
+		(() =>
+			defaultValues.publishedTime
+				? new EnhancedDate(defaultValues.publishedTime).toDateTimeInputValue()
+				: '')()
+	);
 
 	const labelsListedStore =
 		getContext<LabelsListedStore | undefined>(LabelsListedStore.name) ?? null;
@@ -141,7 +131,7 @@
 		event.preventDefault();
 		formErrors = {};
 
-		const parseResult = formSchema.safeParse({
+		const parseResult = postFormSchema.safeParse({
 			...formData,
 			previewImageUrl: previewImageUrl || null,
 			publishedTime: publishedTime ? new Date(publishedTime) : null,
@@ -197,8 +187,10 @@
 		</form>
 
 		<DialogFooter class="mt-6">
-			<Button variant="outline" onclick={() => (open = false)} {disabled}>Cancel</Button>
-			<Button type="submit" form="create-post-form" {disabled}>Submit</Button>
+			<Button variant="outline" onclick={() => (open = false)} {disabled}
+				>{Strings.CANCEL_DIALOG}</Button
+			>
+			<Button type="submit" form="create-post-form" {disabled}>{Strings.SUBMIT}</Button>
 		</DialogFooter>
 	</DialogContent>
 </Dialog>
@@ -206,7 +198,7 @@
 {#snippet semanticIdInput()}
 	{@const id = 'semantic-id-input'}
 	<div>
-		<Label for={id} class="pb-2">Semantic ID</Label>
+		<Label for={id} class="pb-2">{Strings.SEMANTIC_ID}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Input
 				{id}
@@ -227,7 +219,7 @@
 {#snippet titleInput()}
 	{@const id = 'title-input'}
 	<div>
-		<Label for={id} class="pb-2">Title</Label>
+		<Label for={id} class="pb-2">{Strings.TITLE}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Input
 				{id}
@@ -248,7 +240,7 @@
 {#snippet labelIdsInput()}
 	{@const id = 'label-ids-input'}
 	<div>
-		<Label for={id} class="pb-2">Label IDs</Label>
+		<Label for={id} class="pb-2">{Strings.LABEL_IDS}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<input
 				{id}
@@ -282,7 +274,7 @@
 {#snippet descriptionInput()}
 	{@const id = 'description-input'}
 	<div>
-		<Label for={id} class="pb-2">Description</Label>
+		<Label for={id} class="pb-2">{Strings.DESCRIPTION}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Textarea
 				{id}
@@ -303,7 +295,7 @@
 {#snippet contentInput()}
 	{@const id = 'content-input'}
 	<div>
-		<Label for={id} class="pb-2">Content</Label>
+		<Label for={id} class="pb-2">{Strings.CONTENT}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Textarea
 				{id}
@@ -325,9 +317,9 @@
 	{@const id = 'preview-image-url-input'}
 	{@const defaultValue = defaultValues.previewImageUrl ?? ''}
 	<div>
-		<Label for={id} class="pb-2">Preview Image URL (optional)</Label>
+		<Label for={id} class="pb-2">{Strings.PREVIEW_IMAGE_URL_OPTIONAL}</Label>
 		<div class="flex flex-row items-center gap-x-2">
-			<InputEnabledToggle for={id} {defaultValue} valueOnEnable="https://example.com" />
+			<InputEnabledToggle for={id} {defaultValue} valueOnEnable={Links.EXAMPLE.href} />
 			<Input
 				{id}
 				type="text"
@@ -346,9 +338,11 @@
 
 {#snippet publishedTimeInput()}
 	{@const id = 'published-time-input'}
-	{@const defaultValue = defaultValues.publishedTime?.toDateTimeInputValue() ?? ''}
+	{@const defaultValue = defaultValues.publishedTime
+		? new EnhancedDate(defaultValues.publishedTime).toDateTimeInputValue()
+		: ''}
 	<div>
-		<Label for={id} class="pb-2">Published Time (optional)</Label>
+		<Label for={id} class="pb-2">{Strings.PUBLISHED_TIME_OPTIONAL}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<InputEnabledToggle
 				for={id}
@@ -405,7 +399,7 @@
 	<div class="group flex flex-row items-center">
 		<button
 			type="button"
-			title="Move previous"
+			title={Strings.MOVE_PREVIOUS}
 			class="hidden group-hover:block"
 			onclick={() => labelOperation('previous', label.id)}
 		>
@@ -414,7 +408,7 @@
 		<PostLabel {label} />
 		<button
 			type="button"
-			title="Move next"
+			title={Strings.MOVE_NEXT}
 			class="hidden group-hover:block"
 			onclick={() => labelOperation('next', label.id)}
 		>
@@ -422,7 +416,7 @@
 		</button>
 		<button
 			type="button"
-			title="Remove"
+			title={Strings.REMOVE}
 			class="hidden group-hover:block"
 			onclick={() => labelOperation('remove', label.id)}
 		>

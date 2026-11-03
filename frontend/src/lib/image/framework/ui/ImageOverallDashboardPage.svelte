@@ -2,13 +2,14 @@
 	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
-	import { Button } from '$lib/common/framework/components/ui/button';
-	import { cn } from '$lib/common/framework/components/utils';
-	import { copyToClipboard } from '$lib/common/framework/ui/copyToClipboard';
-	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
-	import { ImagesListedStore } from '$lib/image/adapter/presenter/imagesListedStore';
-	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
-	import UploadImageDialoag from '$lib/image/framework/ui/UploadImageDialoag.svelte';
+	import { ImageDeletedStore } from '$lib/image/adapter/presenter/store/imageDeletedStore';
+	import { ImagesListedStore } from '$lib/image/adapter/presenter/store/imagesListedStore';
+	import { ImageUploadedStore } from '$lib/image/adapter/presenter/store/imageUploadedStore';
+	import UploadImageDialog from '$lib/image/framework/ui/UploadImageDialog.svelte';
+	import { Button } from '$lib/shared/framework/components/ui/button';
+	import { cn } from '$lib/shared/framework/components/utils';
+	import { copyToClipboard } from '$lib/shared/framework/ui/copyToClipboard';
+	import { Strings } from '$lib/strings';
 
 	const imageUploadedStore = getContext<ImageUploadedStore>(ImageUploadedStore.name);
 	const imageUploadedState = $derived($imageUploadedStore);
@@ -28,13 +29,13 @@
 		if (state.isSuccess()) {
 			const imageInfo = state.data;
 			await copyToClipboard(imageInfo.url.href, {
-				successMessage: `Image uploaded successfully with ID: ${imageInfo.id}`,
-				successDescription: 'The URL is copied to clipboard',
+				successMessage: `${Strings.IMAGE_UPLOADED_PREFIX} ${imageInfo.id}`,
+				successDescription: Strings.URL_COPIED,
 			});
 			listImages();
 		} else if (state.isError()) {
-			toast.error('Failed to upload image', {
-				description: state.error?.message ?? 'Unknown error',
+			toast.error(Strings.FAILED_TO_UPLOAD_IMAGE, {
+				description: state.error?.message ?? Strings.UNKNOWN_ERROR,
 			});
 		}
 	}
@@ -43,11 +44,11 @@
 		const state = await deleteImage(imageId);
 
 		if (state.isSuccess()) {
-			toast.success('Image deleted successfully');
+			toast.success(Strings.IMAGE_DELETED);
 			await listImages();
 		} else if (state.isError()) {
-			toast.error('Failed to delete image', {
-				description: state.error?.message ?? 'Unknown error',
+			toast.error(Strings.FAILED_TO_DELETE_IMAGE, {
+				description: state.error?.message ?? Strings.UNKNOWN_ERROR,
 			});
 		}
 	}
@@ -55,8 +56,8 @@
 
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="py-16 text-5xl font-bold text-gray-800">Image</h1>
-		<UploadImageDialoag
+		<h1 class="py-16 text-5xl font-bold text-gray-800">{Strings.DASHBOARD_IMAGE}</h1>
+		<UploadImageDialog
 			disabled={imageUploadedState.isLoading()}
 			onSubmit={onUploadImageDialogSubmit}
 		/>
@@ -67,7 +68,7 @@
 			<div class="group relative aspect-square overflow-hidden rounded-lg bg-gray-100">
 				<img
 					src={image.url.href}
-					alt="Image {image.id}"
+					alt="{Strings.IMAGE} {image.id}"
 					class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
 					loading="lazy"
 				/>
@@ -86,19 +87,19 @@
 					</div>
 					<div class="flex gap-2">
 						<Button
-							title="Copy URL"
+							title={Strings.COPY_URL}
 							type="button"
 							variant="secondary"
 							size="icon"
 							onclick={() =>
 								copyToClipboard(image.url.href, {
-									successMessage: 'The URL is copied to clipboard',
+									successMessage: Strings.URL_COPIED,
 								})}
 						>
 							<i class="fa-regular fa-clone"></i>
 						</Button>
 						<Button
-							title="View Details"
+							title={Strings.VIEW_DETAILS}
 							type="button"
 							href="/dashboard/image/{image.id}"
 							variant="secondary"
@@ -107,7 +108,7 @@
 							<i class="fa-regular fa-eye"></i>
 						</Button>
 						<Button
-							title={image.isReferred ? 'Image is in use and cannot be deleted' : 'Delete Image'}
+							title={image.isReferred ? Strings.IMAGE_IN_USE : Strings.DELETE_IMAGE}
 							type="button"
 							variant="destructive"
 							size="icon"

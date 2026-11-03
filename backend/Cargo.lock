@@ -492,10 +492,10 @@ dependencies = [
  "actix-web",
  "anyhow",
  "async-trait",
- "common",
  "openidconnect",
  "sentry",
  "serde",
+ "shared",
  "sqlx",
  "utoipa",
 ]
@@ -917,13 +917,6 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-util",
-]
-
-[[package]]
-name = "common"
-version = "0.8.0"
-dependencies = [
- "sqlx",
 ]
 
 [[package]]
@@ -2674,11 +2667,11 @@ dependencies = [
  "anyhow",
  "async-trait",
  "auth",
- "common",
  "fnv_rs",
  "futures",
  "sentry",
  "serde",
+ "shared",
  "sqlx",
  "utoipa",
 ]
@@ -2947,9 +2940,9 @@ dependencies = [
  "anyhow",
  "async-trait",
  "auth",
- "common",
  "sentry",
  "serde",
+ "shared",
  "sqlx",
  "utoipa",
 ]
@@ -3965,12 +3958,12 @@ dependencies = [
  "async-trait",
  "auth",
  "chrono",
- "common",
  "image 0.8.0",
  "label",
  "regex",
  "sentry",
  "serde",
+ "shared",
  "sqlx",
  "utoipa",
 ]
@@ -4818,7 +4811,6 @@ dependencies = [
  "anyhow",
  "async-trait",
  "auth",
- "common",
  "deadpool-redis",
  "fastembed",
  "fnv_rs",
@@ -4827,6 +4819,7 @@ dependencies = [
  "redis",
  "serde",
  "serde_json",
+ "shared",
  "text-splitter",
  "tokenizers",
  "tokio",
@@ -5203,6 +5196,13 @@ dependencies = [
  "cfg-if",
  "cpufeatures 0.2.17",
  "digest 0.10.7",
+]
+
+[[package]]
+name = "shared"
+version = "0.8.0"
+dependencies = [
+ "sqlx",
 ]
 
 [[package]]

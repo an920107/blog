@@ -52,15 +52,20 @@ The backend follows Clean Architecture principles with a modular structure:
   - `post/` - Blog post management
   - `label/` - Label/tag system
   - `image/` - Image handling
-   - `search/` - Semantic search and RAG support
-  - `common/` - Shared utilities and types
+  - `search/` - Semantic search and RAG support
+- `shared/` - Shared utilities and types used across features
 - `migrations/` - Database migration scripts
 
 Each feature module follows the Clean Architecture pattern:
 
 - `domain/` - Business logic and entities
 - `application/` - Use cases and application services
-- `adapter/` - Interface adapters (controllers, presenters)
+  - `port/` - Application ports (repository and service interfaces)
+- `adapter/` - Interface adapters
+  - `port/` - Infrastructure ports (database, storage, and external service interfaces)
+  - `gateway/` - Implementations of application ports
+    - `dto/` - Database models and remote DTOs
+  - `delivery/` - Controllers and DTOs
 - `framework/` - External frameworks (database, HTTP)
 
 ### Technology Stack

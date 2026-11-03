@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 import { buildFeedDocument } from '$lib/seo/framework/xml/feedDocument';
+import { Strings } from '$lib/strings';
 
 import type { RequestHandler } from './$types';
 
@@ -14,7 +15,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 
 	const postPages = state.data;
 	if (state.isError() || postPages === null) {
-		error(500, 'Failed to generate the feed');
+		error(500, Strings.FAILED_TO_GENERATE_FEED);
 	}
 
 	const body = buildFeedDocument(postPages);

@@ -12,7 +12,7 @@
 	import markdownitAttrs from 'markdown-it-attrs';
 	import type { Attachment } from 'svelte/attachments';
 
-	import SafeHtml from '$lib/common/framework/ui/SafeHtml.svelte';
+	import SafeHtml from '$lib/shared/framework/ui/SafeHtml.svelte';
 
 	const {
 		content,

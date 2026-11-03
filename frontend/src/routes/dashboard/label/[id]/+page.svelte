@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 
-	import { Container } from '$lib/container';
-	import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
-	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/labelUpdatedStore';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import { LabelLoadedStore } from '$lib/label/adapter/presenter/store/labelLoadedStore';
+	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/store/labelUpdatedStore';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/viewModel/labelViewModel';
 	import LabelContentDashboardPage from '$lib/label/framework/ui/LabelContentDashboardPage.svelte';
-	import { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/store/postsListedStore';
+	import { PostInfoViewModel } from '$lib/post/adapter/presenter/viewModel/postInfoViewModel';
+	import { getContainer } from '$lib/shared/framework/ui/containerContext';
 
 	import type { PageProps } from './$types';
 
@@ -15,7 +15,7 @@
 	const id = $derived(data.id);
 	const numericId = $derived(Number(id));
 
-	const container = getContext<Container>(Container.name);
+	const container = getContainer();
 
 	const getInitialLabelData = () => LabelViewModel.rehydrate(data.dehydratedLabel);
 	const labelLoadedStore = container.createLabelLoadedStore(getInitialLabelData());

@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 
-	import { Container } from '$lib/container';
-	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
-	import { ImageLoadedStore } from '$lib/image/adapter/presenter/imageLoadedStore';
+	import { ImageLoadedStore } from '$lib/image/adapter/presenter/store/imageLoadedStore';
+	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/viewModel/imageInfoViewModel';
 	import ImageDetailDashboardPage from '$lib/image/framework/ui/ImageDetailDashboardPage.svelte';
+	import { getContainer } from '$lib/shared/framework/ui/containerContext';
 
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const container = getContext<Container>(Container.name);
+	const container = getContainer();
 
 	const getInitialData = () =>
 		data.dehydratedData ? ImageInfoViewModel.rehydrate(data.dehydratedData) : undefined;

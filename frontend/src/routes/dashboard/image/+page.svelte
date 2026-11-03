@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 
-	import { Container } from '$lib/container';
-	import { ImageDeletedStore } from '$lib/image/adapter/presenter/imageDeletedStore';
-	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/imageInfoViewModel';
-	import { ImagesListedStore } from '$lib/image/adapter/presenter/imagesListedStore';
-	import { ImageUploadedStore } from '$lib/image/adapter/presenter/imageUploadedStore';
+	import { ImageDeletedStore } from '$lib/image/adapter/presenter/store/imageDeletedStore';
+	import { ImagesListedStore } from '$lib/image/adapter/presenter/store/imagesListedStore';
+	import { ImageUploadedStore } from '$lib/image/adapter/presenter/store/imageUploadedStore';
+	import { ImageInfoViewModel } from '$lib/image/adapter/presenter/viewModel/imageInfoViewModel';
 	import ImageOverallDashboardPage from '$lib/image/framework/ui/ImageOverallDashboardPage.svelte';
+	import { getContainer } from '$lib/shared/framework/ui/containerContext';
 
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const container = getContext<Container>(Container.name);
+	const container = getContainer();
 
 	const imageUploadedStore = container.createImageUploadedStore();
 	setContext(ImageUploadedStore.name, imageUploadedStore);

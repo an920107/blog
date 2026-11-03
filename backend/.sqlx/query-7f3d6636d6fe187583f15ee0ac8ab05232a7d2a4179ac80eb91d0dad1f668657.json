@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO post_labels (\n                    post_id, label_id, \"order\"\n                ) VALUES ($1, $2, $3)\n                ON CONFLICT DO NOTHING\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7f3d6636d6fe187583f15ee0ac8ab05232a7d2a4179ac80eb91d0dad1f668657"
+}

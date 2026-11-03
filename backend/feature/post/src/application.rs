@@ -1,3 +1,3 @@
-pub mod gateway;
+pub mod port;
 pub mod service;
 pub mod use_case;

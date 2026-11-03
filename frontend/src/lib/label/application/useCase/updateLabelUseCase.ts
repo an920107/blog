@@ -1,7 +1,7 @@
 import type {
 	LabelRepository,
 	UpdateLabelParams,
-} from '$lib/label/application/gateway/labelRepository';
+} from '$lib/label/application/port/labelRepository';
 import type { Label } from '$lib/label/domain/entity/label';
 
 export class UpdateLabelUseCase {

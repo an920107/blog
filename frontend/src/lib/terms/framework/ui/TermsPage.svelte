@@ -1,6 +1,6 @@
 <script lang="ts">
-	import generateTitle from '$lib/common/framework/ui/generateTitle';
 	import MarkdownRenderer from '$lib/post/framework/ui/MarkdownRenderer.svelte';
+	import generateTitle from '$lib/shared/framework/ui/generateTitle';
 
 	const { title, content }: { title?: string; content: string } = $props();
 </script>

@@ -3,11 +3,9 @@ use std::{
     io::Write,
 };
 
-use common::framework::error::IOError;
+use shared::framework::error::IOError;
 
-use crate::{
-    adapter::gateway::image_storage::ImageStorage, domain::error::image_error::ImageError,
-};
+use crate::{adapter::port::image_storage::ImageStorage, domain::error::image_error::ImageError};
 
 pub struct ImageStorageImpl {
     storage_path: String,

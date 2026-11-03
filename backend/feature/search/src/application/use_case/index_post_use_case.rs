@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use post::domain::entity::post::Post;
 
 use crate::{
-    application::gateway::search_repository::SearchRepository,
+    application::port::search_repository::SearchRepository,
     domain::error::search_error::SearchError,
 };
 

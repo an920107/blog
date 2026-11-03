@@ -1,6 +1,8 @@
 import { Environment } from '$lib/environment';
 
 export abstract class Links {
+	static readonly EXAMPLE: URL = new URL('https://example.com');
+	static readonly GITHUB: URL = new URL('https://github.com/an920107');
 	static readonly YOUTUBE: URL = new URL('https://www.youtube.com/@squidspirit16');
 	static readonly EMAIL: URL = new URL('mailto:squid@squidspirit.com');
 	static readonly RSS: URL = new URL('feed.xml', Environment.APP_BASE_URL);

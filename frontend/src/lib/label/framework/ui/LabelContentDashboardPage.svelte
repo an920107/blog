@@ -3,19 +3,20 @@
 	import { toast } from 'svelte-sonner';
 
 	import { resolve } from '$app/paths';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
-	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import { LabelLoadedStore } from '$lib/label/adapter/presenter/labelLoadedStore';
-	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/labelUpdatedStore';
+	import { LabelLoadedStore } from '$lib/label/adapter/presenter/store/labelLoadedStore';
+	import { LabelUpdatedStore } from '$lib/label/adapter/presenter/store/labelUpdatedStore';
+	import { ColorViewModel } from '$lib/label/adapter/presenter/viewModel/colorViewModel';
 	import ColorCode from '$lib/label/framework/ui/ColorCode.svelte';
 	import EditLabelDialog, {
 		type EditLabelDialogFormParams,
 	} from '$lib/label/framework/ui/EditLabelDialog.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/store/postsListedStore';
+	import Table from '$lib/shared/framework/components/ui/table/table.svelte';
+	import TableBody from '$lib/shared/framework/components/ui/table/table-body.svelte';
+	import TableCell from '$lib/shared/framework/components/ui/table/table-cell.svelte';
+	import TableRow from '$lib/shared/framework/components/ui/table/table-row.svelte';
+	import { Strings } from '$lib/strings';
 
 	const { id }: { id: number } = $props();
 
@@ -44,7 +45,7 @@
 
 	async function onSubmit(params: EditLabelDialogFormParams): Promise<boolean> {
 		if (!label) {
-			toast.error('Label not found');
+			toast.error(Strings.LABEL_NOT_FOUND);
 			return false;
 		}
 
@@ -61,9 +62,9 @@
 
 		if (state.isSuccess()) {
 			loadLabel(label.id);
-			toast.success('Label updated successfully');
+			toast.success(Strings.LABEL_UPDATED);
 		} else if (state.isError()) {
-			toast.error('Failed to update label', {
+			toast.error(Strings.FAILED_TO_UPDATE_LABEL, {
 				description: state.error.message,
 			});
 			return false;
@@ -80,11 +81,11 @@
 
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="py-16 text-5xl font-bold text-gray-800">Label Details</h1>
+		<h1 class="py-16 text-5xl font-bold text-gray-800">{Strings.LABEL_DETAILS}</h1>
 		{#key formDefaultValues}
 			<EditLabelDialog
-				title="Update Label"
-				triggerButtonText="Edit"
+				title={Strings.UPDATE_LABEL}
+				triggerButtonText={Strings.EDIT}
 				disabled={!labelLoadedState.isSuccess() || labelUpdatedState.isLoading()}
 				defaultValues={formDefaultValues ?? undefined}
 				{onSubmit}
@@ -94,15 +95,15 @@
 	<Table>
 		<TableBody>
 			<TableRow>
-				<TableCell class="font-medium">ID</TableCell>
+				<TableCell class="font-medium">{Strings.ID}</TableCell>
 				<TableCell>{label?.id}</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell class="font-medium">Name</TableCell>
+				<TableCell class="font-medium">{Strings.NAME}</TableCell>
 				<TableCell>{label?.name}</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell class="font-medium">Color</TableCell>
+				<TableCell class="font-medium">{Strings.COLOR}</TableCell>
 				<TableCell>
 					{#if label}
 						<ColorCode color={label.color} />
@@ -110,7 +111,7 @@
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell class="font-medium">Preview</TableCell>
+				<TableCell class="font-medium">{Strings.PREVIEW}</TableCell>
 				<TableCell>
 					{#if label}
 						<PostLabel {label} />
@@ -118,7 +119,7 @@
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableCell class="font-medium">Related Posts</TableCell>
+				<TableCell class="font-medium">{Strings.RELATED_POSTS}</TableCell>
 				<TableCell>
 					{#each relatedPostsState.data ?? [] as postInfo (postInfo.id)}
 						<p>

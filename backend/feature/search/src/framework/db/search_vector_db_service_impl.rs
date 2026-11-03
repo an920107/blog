@@ -11,7 +11,7 @@ use qdrant_client::{
 };
 
 use crate::{
-    adapter::gateway::search_vector_db_service::SearchVectorDbService,
+    adapter::port::search_vector_db_service::SearchVectorDbService,
     domain::error::search_error::SearchError,
 };
 

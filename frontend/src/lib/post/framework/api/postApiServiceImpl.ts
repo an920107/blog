@@ -1,78 +1,35 @@
-import { HttpError } from '$lib/common/framework/web/httpError';
-import { HttpStatusCode } from '$lib/common/framework/web/httpStatusCode';
-import { Environment } from '$lib/environment';
-import type { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
-import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
-import { PostInfoResponseDto } from '$lib/post/adapter/gateway/postInfoResponseDto';
-import type { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
-import { PostResponseDto } from '$lib/post/adapter/gateway/postResponseDto';
-import type { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
+import type { CreatePostRequestDto } from '$lib/post/adapter/gateway/dto/createPostRequestDto';
+import { PostInfoResponseDto } from '$lib/post/adapter/gateway/dto/postInfoResponseDto';
+import type { PostListQueryDto } from '$lib/post/adapter/gateway/dto/postListQueryDto';
+import { PostResponseDto } from '$lib/post/adapter/gateway/dto/postResponseDto';
+import type { UpdatePostRequestDto } from '$lib/post/adapter/gateway/dto/updatePostRequestDto';
+import type { PostApiService } from '$lib/post/adapter/port/postApiService';
+import { ApiClient } from '$lib/shared/framework/http/apiClient';
+import { HttpStatusCode } from '$lib/shared/framework/http/httpStatusCode';
 
 export class PostApiServiceImpl implements PostApiService {
-	constructor(private readonly fetchFn: typeof fetch) {}
+	constructor(private readonly apiClient: ApiClient) {}
 
-	async getAllPosts(searchParams: PostListQueryDto): Promise<PostInfoResponseDto[]> {
-		const url = new URL('post', Environment.API_BASE_URL);
-		url.search = searchParams.toSearchParams().toString();
+	getAllPosts(searchParams: PostListQueryDto): Promise<PostInfoResponseDto[]> {
+		const query = searchParams.toSearchParams().toString();
 
-		const response = await this.fetchFn(url);
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return data.map(PostInfoResponseDto.fromJson);
+		return this.apiClient.getJsonArray(
+			query.length > 0 ? `post?${query}` : 'post',
+			PostInfoResponseDto.fromJson
+		);
 	}
 
-	async getPost(id: string | number): Promise<PostResponseDto | null> {
-		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url);
-
-		if (response.status === HttpStatusCode.NOT_FOUND) {
-			return null;
-		}
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return PostResponseDto.fromJson(data);
+	getPost(id: string | number): Promise<PostResponseDto | null> {
+		return this.apiClient.getJsonOrNull(`post/${id}`, PostResponseDto.fromJson, [
+			HttpStatusCode.NOT_FOUND,
+		]);
 	}
 
-	async createPost(payload: CreatePostRequestDto): Promise<PostResponseDto> {
-		const url = new URL('post', Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload.toJson()),
-		});
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return PostResponseDto.fromJson(data);
+	createPost(payload: CreatePostRequestDto): Promise<PostResponseDto> {
+		return this.apiClient.postJson('post', payload.toJson(), PostResponseDto.fromJson);
 	}
 
-	async updatePost(id: number, payload: UpdatePostRequestDto): Promise<PostResponseDto> {
-		const url = new URL(`post/${id}`, Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload.toJson()),
-		});
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return PostResponseDto.fromJson(data);
+	updatePost(id: number, payload: UpdatePostRequestDto): Promise<PostResponseDto> {
+		return this.apiClient.putJson(`post/${id}`, payload.toJson(), PostResponseDto.fromJson);
 	}
 }

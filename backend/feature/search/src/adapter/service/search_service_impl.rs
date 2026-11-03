@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use post::{
-    application::gateway::search_service::SearchService,
+    application::port::search_service::SearchService,
     domain::{entity::post::Post, error::post_error::PostError},
 };
 

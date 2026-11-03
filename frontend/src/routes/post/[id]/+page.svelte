@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 
-	import { Container } from '$lib/container';
-	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
-	import { PostViewModel } from '$lib/post/adapter/presenter/postViewModel';
+	import { PostLoadedStore } from '$lib/post/adapter/presenter/store/postLoadedStore';
+	import { PostViewModel } from '$lib/post/adapter/presenter/viewModel/postViewModel';
 	import PostContentPage from '$lib/post/framework/ui/PostContentPage.svelte';
+	import { getContainer } from '$lib/shared/framework/ui/containerContext';
 
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
 	const id = $derived(data.id);
-	const container = getContext<Container>(Container.name);
+	const container = getContainer();
 
 	const getInitialData = () => PostViewModel.rehydrate(data.dehydratedData);
 	const store = container.createPostLoadedStore(getInitialData());

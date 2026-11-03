@@ -7,9 +7,9 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { cn } from '$lib/common/framework/components/utils';
 	import type { FilteringDialogFormParams } from '$lib/post/framework/ui/FilteringDialog.svelte';
 	import { parsePostListSearchParams } from '$lib/post/framework/ui/postListSearchParams';
+	import { cn } from '$lib/shared/framework/components/utils';
 	import { Strings } from '$lib/strings';
 
 	// The filtering dialog is lazily imported so its code (dialog/drawer/command,

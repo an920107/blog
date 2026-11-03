@@ -1,73 +1,28 @@
-import { HttpError } from '$lib/common/framework/web/httpError';
-import { Environment } from '$lib/environment';
-import type { CreateLabelRequestDto } from '$lib/label/adapter/gateway/createLabelRequestDto';
-import type { LabelApiService } from '$lib/label/adapter/gateway/labelApiService';
-import { LabelResponseDto } from '$lib/label/adapter/gateway/labelResponseDto';
-import type { UpdateLabelRequestDto } from '$lib/label/adapter/gateway/updateLabelRequestDto';
+import type { CreateLabelRequestDto } from '$lib/label/adapter/gateway/dto/createLabelRequestDto';
+import { LabelResponseDto } from '$lib/label/adapter/gateway/dto/labelResponseDto';
+import type { UpdateLabelRequestDto } from '$lib/label/adapter/gateway/dto/updateLabelRequestDto';
+import type { LabelApiService } from '$lib/label/adapter/port/labelApiService';
+import { ApiClient } from '$lib/shared/framework/http/apiClient';
+import { HttpStatusCode } from '$lib/shared/framework/http/httpStatusCode';
 
 export class LabelApiServiceImpl implements LabelApiService {
-	constructor(private readonly fetchFn: typeof fetch) {}
+	constructor(private readonly apiClient: ApiClient) {}
 
-	async getAllLabels(): Promise<LabelResponseDto[]> {
-		const url = new URL('label', Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url);
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return data.map(LabelResponseDto.fromJson);
+	getAllLabels(): Promise<LabelResponseDto[]> {
+		return this.apiClient.getJsonArray('label', LabelResponseDto.fromJson);
 	}
 
-	async getLabelById(id: number): Promise<LabelResponseDto | null> {
-		const url = new URL(`label/${id}`, Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url);
-
-		if (response.status === 404) {
-			return null;
-		}
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return LabelResponseDto.fromJson(data);
+	getLabelById(id: number): Promise<LabelResponseDto | null> {
+		return this.apiClient.getJsonOrNull(`label/${id}`, LabelResponseDto.fromJson, [
+			HttpStatusCode.NOT_FOUND,
+		]);
 	}
 
-	async createLabel(payload: CreateLabelRequestDto): Promise<LabelResponseDto> {
-		const url = new URL('label', Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload.toJson()),
-		});
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return LabelResponseDto.fromJson(data);
+	createLabel(payload: CreateLabelRequestDto): Promise<LabelResponseDto> {
+		return this.apiClient.postJson('label', payload.toJson(), LabelResponseDto.fromJson);
 	}
 
-	async updateLabel(id: number, payload: UpdateLabelRequestDto): Promise<LabelResponseDto> {
-		const url = new URL(`label/${id}`, Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload.toJson()),
-		});
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return LabelResponseDto.fromJson(data);
+	updateLabel(id: number, payload: UpdateLabelRequestDto): Promise<LabelResponseDto> {
+		return this.apiClient.putJson(`label/${id}`, payload.toJson(), LabelResponseDto.fromJson);
 	}
 }

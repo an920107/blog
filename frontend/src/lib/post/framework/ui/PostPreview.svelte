@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { cn } from '$lib/common/framework/components/utils';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/viewModel/labelViewModel';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import type { PostInfoViewModel } from '$lib/post/adapter/presenter/postInfoViewModel';
+	import type { PostInfoViewModel } from '$lib/post/adapter/presenter/viewModel/postInfoViewModel';
+	import { cn } from '$lib/shared/framework/components/utils';
 
 	const { postInfo }: { postInfo: PostInfoViewModel } = $props();
 

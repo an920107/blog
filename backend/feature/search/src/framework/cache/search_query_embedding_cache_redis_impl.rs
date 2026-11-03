@@ -5,7 +5,7 @@ use fnv_rs::{Fnv128, FnvHasher};
 use redis::AsyncCommands;
 
 use crate::{
-    adapter::gateway::search_query_embedding_cache::SearchQueryEmbeddingCache,
+    adapter::port::search_query_embedding_cache::SearchQueryEmbeddingCache,
     domain::error::search_error::SearchError,
 };
 

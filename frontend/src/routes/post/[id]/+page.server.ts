@@ -1,5 +1,7 @@
 import { error } from '@sveltejs/kit';
 
+import { Strings } from '$lib/strings';
+
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -10,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	const state = await loadPost(params.id);
 	if (!state.data) {
-		error(404, { message: 'Post not found' });
+		error(404, { message: Strings.POST_NOT_FOUND });
 	}
 
 	return {

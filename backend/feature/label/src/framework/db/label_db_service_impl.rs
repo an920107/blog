@@ -1,9 +1,9 @@
 use async_trait::async_trait;
-use common::framework::error::DatabaseError;
+use shared::framework::error::DatabaseError;
 use sqlx::{Pool, Postgres};
 
 use crate::{
-    adapter::gateway::{label_db_mapper::LabelMapper, label_db_service::LabelDbService},
+    adapter::{gateway::dto::label_db_model::LabelDbModel, port::label_db_service::LabelDbService},
     domain::error::label_error::LabelError,
     framework::db::label_record::LabelRecord,
 };
@@ -20,10 +20,10 @@ impl LabelDbServiceImpl {
 
 #[async_trait]
 impl LabelDbService for LabelDbServiceImpl {
-    async fn create_label(&self, label: LabelMapper) -> Result<i32, LabelError> {
+    async fn create_label(&self, label: LabelDbModel) -> Result<i32, LabelError> {
         let id = sqlx::query_scalar!(
             r#"
-            INSERT INTO label (name, color)
+            INSERT INTO labels (name, color)
             VALUES ($1, $2)
             RETURNING id
             "#,
@@ -34,19 +34,20 @@ impl LabelDbService for LabelDbServiceImpl {
         .await
         .map_err(|e| {
             if let sqlx::Error::Database(db_err) = &e
-                && db_err.constraint() == Some("idx_label_name") {
-                    return LabelError::DuplicatedLabelName;
-                }
+                && db_err.constraint() == Some("idx_labels_name")
+            {
+                return LabelError::DuplicatedLabelName;
+            }
             LabelError::Unexpected(DatabaseError(e).into())
         })?;
 
         Ok(id)
     }
 
-    async fn update_label(&self, label: LabelMapper) -> Result<(), LabelError> {
+    async fn update_label(&self, label: LabelDbModel) -> Result<(), LabelError> {
         let affected_rows = sqlx::query!(
             r#"
-            UPDATE label
+            UPDATE labels
             SET name = $1, color = $2
             WHERE id = $3 AND deleted_time IS NULL
             "#,
@@ -58,9 +59,10 @@ impl LabelDbService for LabelDbServiceImpl {
         .await
         .map_err(|e| {
             if let sqlx::Error::Database(db_err) = &e
-                && db_err.constraint() == Some("idx_label_name") {
-                    return LabelError::DuplicatedLabelName;
-                }
+                && db_err.constraint() == Some("idx_labels_name")
+            {
+                return LabelError::DuplicatedLabelName;
+            }
             LabelError::Unexpected(DatabaseError(e).into())
         })?
         .rows_affected();
@@ -72,12 +74,12 @@ impl LabelDbService for LabelDbServiceImpl {
         Ok(())
     }
 
-    async fn get_label_by_id(&self, id: i32) -> Result<LabelMapper, LabelError> {
+    async fn get_label_by_id(&self, id: i32) -> Result<LabelDbModel, LabelError> {
         let record = sqlx::query_as!(
             LabelRecord,
             r#"
             SELECT id, name, color
-            FROM label
+            FROM labels
             WHERE id = $1 AND deleted_time IS NULL
             "#,
             id
@@ -87,17 +89,17 @@ impl LabelDbService for LabelDbServiceImpl {
         .map_err(|e| LabelError::Unexpected(DatabaseError(e).into()))?;
 
         match record {
-            Some(record) => Ok(record.into_mapper()),
+            Some(record) => Ok(record.into_db_model()),
             None => Err(LabelError::NotFound),
         }
     }
 
-    async fn get_all_labels(&self) -> Result<Vec<LabelMapper>, LabelError> {
+    async fn get_all_labels(&self) -> Result<Vec<LabelDbModel>, LabelError> {
         let records = sqlx::query_as!(
             LabelRecord,
             r#"
             SELECT id, name, color
-            FROM label
+            FROM labels
             WHERE deleted_time IS NULL
             ORDER BY id
             "#
@@ -106,10 +108,10 @@ impl LabelDbService for LabelDbServiceImpl {
         .await
         .map_err(|e| LabelError::Unexpected(DatabaseError(e).into()))?;
 
-        let mappers = records
+        let db_models = records
             .into_iter()
-            .map(|record| record.into_mapper())
+            .map(|record| record.into_db_model())
             .collect();
-        Ok(mappers)
+        Ok(db_models)
     }
 }

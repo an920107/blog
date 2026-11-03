@@ -5,19 +5,21 @@
 	import { setContext } from 'svelte';
 
 	import { resolve } from '$app/paths';
-	import { DrawerConfiguredStore } from '$lib/common/adapter/presenter/drawerConfiguredStore';
-	import { Toaster } from '$lib/common/framework/components/ui/sonner';
-	import Footer from '$lib/common/framework/ui/Footer.svelte';
-	import GoogleAdsense from '$lib/common/framework/ui/GoogleAdsense.svelte';
-	import GoogleAnalytics from '$lib/common/framework/ui/GoogleAnalytics.svelte';
-	import Navbar, { type NavigationActionProps } from '$lib/common/framework/ui/Navbar.svelte';
-	import NavigationDrawer from '$lib/common/framework/ui/NavigationDrawer.svelte';
 	import { Container } from '$lib/container';
-	import { LabelsListedStore } from '$lib/label/adapter/presenter/labelsListedStore';
+	import { LabelsListedStore } from '$lib/label/adapter/presenter/store/labelsListedStore';
 	import PostSearchLauncher from '$lib/post/framework/ui/PostSearchLauncher.svelte';
+	import { DrawerConfiguredStore } from '$lib/shared/adapter/presenter/store/drawerConfiguredStore';
+	import { Toaster } from '$lib/shared/framework/components/ui/sonner';
+	import { setContainer } from '$lib/shared/framework/ui/containerContext';
+	import Footer from '$lib/shared/framework/ui/Footer.svelte';
+	import GoogleAdsense from '$lib/shared/framework/ui/GoogleAdsense.svelte';
+	import GoogleAnalytics from '$lib/shared/framework/ui/GoogleAnalytics.svelte';
+	import Navbar, { type NavigationActionProps } from '$lib/shared/framework/ui/Navbar.svelte';
+	import NavigationDrawer from '$lib/shared/framework/ui/NavigationDrawer.svelte';
+	import { Strings } from '$lib/strings';
 
 	const container = new Container(fetch);
-	setContext(Container.name, container);
+	setContainer(container);
 
 	const drawerConfiguredStore = container.createDrawerConfiguredStore();
 	setContext(DrawerConfiguredStore.name, drawerConfiguredStore);
@@ -27,8 +29,8 @@
 	setContext(LabelsListedStore.name, labelsListedStore);
 
 	const navigationActions: NavigationActionProps[] = [
-		{ href: resolve('/'), label: '首頁' },
-		{ href: resolve('/post'), label: '文章' },
+		{ href: resolve('/'), label: Strings.HOME },
+		{ href: resolve('/post'), label: Strings.POST },
 	];
 </script>
 

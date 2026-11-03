@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use image::application::gateway::image_repository::ImageRepository;
+use image::application::port::image_repository::ImageRepository;
 
 use crate::{
     application::{
-        gateway::post_repository::PostRepository,
+        port::post_repository::PostRepository,
         service::preview_image_metadata_service::PreviewImageMetadataService,
     },
     domain::{entity::post::Post, error::post_error::PostError},

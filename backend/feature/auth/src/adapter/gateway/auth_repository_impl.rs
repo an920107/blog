@@ -3,12 +3,12 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::{
-        auth_oidc_service::AuthOidcService, user_db_mapper::UserMapper,
-        user_db_service::UserDbService,
+    adapter::{
+        gateway::dto::user_db_model::UserDbModel,
+        port::{auth_oidc_service::AuthOidcService, user_db_service::UserDbService},
     },
     application::{
-        gateway::auth_repository::AuthRepository, use_case::get_auth_url_use_case::AuthUrl,
+        port::auth_repository::AuthRepository, use_case::get_auth_url_use_case::AuthUrl,
     },
     domain::{entity::user::User, error::auth_error::AuthError},
 };
@@ -67,7 +67,7 @@ impl AuthRepository for AuthRepositoryImpl {
 
     async fn save_user(&self, user: User) -> Result<i32, AuthError> {
         self.user_db_service
-            .create_user(UserMapper::from(user))
+            .create_user(UserDbModel::from(user))
             .await
     }
 }

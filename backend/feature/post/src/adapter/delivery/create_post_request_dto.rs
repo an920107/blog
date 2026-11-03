@@ -3,7 +3,7 @@ use serde::Deserialize;
 use utoipa::ToSchema;
 
 use crate::{
-    application::gateway::create_post_params::CreatePostParams,
+    application::port::create_post_params::CreatePostParams,
     application::service::image_extractor::ImageExtractor,
 };
 

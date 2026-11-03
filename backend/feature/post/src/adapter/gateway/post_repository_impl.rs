@@ -3,13 +3,19 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use image::{
-    application::gateway::image_reference_checker::ImageReferenceChecker,
+    application::port::image_reference_checker::ImageReferenceChecker,
     domain::error::image_error::ImageError,
 };
 
 use crate::{
-    adapter::gateway::{post_db_mapper::PostMapper, post_info_db_mapper::PostInfoMapper},
-    application::gateway::{
+    adapter::{
+        gateway::dto::{
+            post_info_db_model::PostInfoDbModel,
+            post_write_db_model::{CreatePostDbModel, UpdatePostDbModel},
+        },
+        port::post_db_service::PostDbService,
+    },
+    application::port::{
         create_post_params::CreatePostParams, post_repository::PostRepository,
         update_post_params::UpdatePostParams,
     },
@@ -18,8 +24,6 @@ use crate::{
         error::post_error::PostError,
     },
 };
-
-use super::post_db_service::PostDbService;
 
 pub struct PostRepositoryImpl {
     post_db_service: Arc<dyn PostDbService>,
@@ -41,8 +45,8 @@ impl PostRepository for PostRepositoryImpl {
         self.post_db_service
             .get_all_post_info(is_published_only, label_id)
             .await
-            .map(|mappers: Vec<PostInfoMapper>| {
-                mappers
+            .map(|db_models: Vec<PostInfoDbModel>| {
+                db_models
                     .into_iter()
                     .map(Into::into)
                     .collect::<Vec<PostInfo>>()
@@ -57,49 +61,33 @@ impl PostRepository for PostRepositoryImpl {
     }
 
     async fn create_post(&self, post: CreatePostParams) -> Result<i32, PostError> {
-        let info_mapper = PostInfoMapper {
-            id: -1,
+        let db_model = CreatePostDbModel {
             semantic_id: post.semantic_id,
             title: post.title,
             description: post.description,
             preview_image_url: post.preview_image_url,
-            labels: Vec::new(),
-            published_time: post.published_time.map(|dt| dt.naive_utc()),
-            updated_time: None,
-        };
-
-        let post_mapper = PostMapper {
-            id: -1,
-            info: info_mapper,
             content: post.content,
+            published_time: post.published_time.map(|dt| dt.naive_utc()),
+            label_ids: post.label_ids,
+            image_ids: post.image_ids,
         };
 
-        self.post_db_service
-            .create_post(post_mapper, &post.label_ids, &post.image_ids)
-            .await
+        self.post_db_service.create_post(db_model).await
     }
 
     async fn update_post(&self, id: i32, post: UpdatePostParams) -> Result<(), PostError> {
-        let info_mapper = PostInfoMapper {
+        let db_model = UpdatePostDbModel {
             id,
-            semantic_id: String::new(),
             title: post.title,
             description: post.description,
             preview_image_url: post.preview_image_url,
-            labels: Vec::new(),
-            published_time: post.published_time.map(|dt| dt.naive_utc()),
-            updated_time: None,
-        };
-
-        let post_mapper = PostMapper {
-            id,
-            info: info_mapper,
             content: post.content,
+            published_time: post.published_time.map(|dt| dt.naive_utc()),
+            label_ids: post.label_ids,
+            image_ids: post.image_ids,
         };
 
-        self.post_db_service
-            .update_post(post_mapper, &post.label_ids, &post.image_ids)
-            .await
+        self.post_db_service.update_post(db_model).await
     }
 
     async fn get_id_by_semantic_id(&self, semantic_id: &str) -> Result<i32, PostError> {

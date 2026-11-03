@@ -15,4 +15,4 @@ serde.workspace = true
 sqlx.workspace = true
 utoipa.workspace = true
 
-common.workspace = true
+shared.workspace = true

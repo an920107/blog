@@ -1,6 +1,6 @@
 use sqlx::FromRow;
 
-use crate::adapter::gateway::user_db_mapper::UserMapper;
+use crate::adapter::gateway::dto::user_db_model::UserDbModel;
 
 #[derive(FromRow)]
 pub struct UserRecord {
@@ -12,8 +12,8 @@ pub struct UserRecord {
 }
 
 impl UserRecord {
-    pub fn into_mapper(self) -> UserMapper {
-        UserMapper {
+    pub fn into_db_model(self) -> UserDbModel {
+        UserDbModel {
             id: self.id,
             issuer: self.issuer,
             source_id: self.source_id,

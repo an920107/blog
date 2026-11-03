@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::{
-    application::gateway::auth_repository::AuthRepository, domain::error::auth_error::AuthError,
+    application::port::auth_repository::AuthRepository, domain::error::auth_error::AuthError,
 };
 
 pub trait GetAuthUrlUseCase: Send + Sync {

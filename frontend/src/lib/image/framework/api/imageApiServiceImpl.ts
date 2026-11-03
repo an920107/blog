@@ -1,65 +1,30 @@
-import { HttpError } from '$lib/common/framework/web/httpError';
-import { Environment } from '$lib/environment';
-import type { ImageApiService } from '$lib/image/adapter/gateway/imageApiService';
-import { ImageInfoResponseDto } from '$lib/image/adapter/gateway/imageInfoResponseDto';
+import { ImageInfoResponseDto } from '$lib/image/adapter/gateway/dto/imageInfoResponseDto';
+import type { ImageApiService } from '$lib/image/adapter/port/imageApiService';
+import { ApiClient } from '$lib/shared/framework/http/apiClient';
 
 export class ImageApiServiceImpl implements ImageApiService {
-	constructor(private readonly fetchFn: typeof fetch) {}
+	constructor(private readonly apiClient: ApiClient) {}
 
-	async uploadImage(file: File): Promise<ImageInfoResponseDto> {
-		const url = new URL('image/upload', Environment.API_BASE_URL);
-
+	uploadImage(file: File): Promise<ImageInfoResponseDto> {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		const response = await this.fetchFn(url, {
-			method: 'POST',
-			body: formData,
-		});
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return ImageInfoResponseDto.fromJson(data);
+		return this.apiClient.postForm('image/upload', formData, ImageInfoResponseDto.fromJson);
 	}
 
-	async listImages(): Promise<ImageInfoResponseDto[]> {
-		const url = new URL('image', Environment.API_BASE_URL);
-
-		const response = await this.fetchFn(url);
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return data.map(ImageInfoResponseDto.fromJson);
+	listImages(): Promise<ImageInfoResponseDto[]> {
+		return this.apiClient.getJsonArray('image', ImageInfoResponseDto.fromJson);
 	}
 
-	async getImageInfo(id: number): Promise<ImageInfoResponseDto> {
-		const url = new URL(`image/${id}/info`, Environment.API_BASE_URL);
-		const response = await this.fetchFn(url);
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
-
-		const data = await response.json();
-		return ImageInfoResponseDto.fromJson(data);
+	getImageInfo(id: number): Promise<ImageInfoResponseDto> {
+		return this.apiClient.getJson(`image/${id}/info`, ImageInfoResponseDto.fromJson);
 	}
 
-	async deleteImage(id: number): Promise<void> {
-		const url = new URL(`image/${id}`, Environment.API_BASE_URL);
-		const response = await this.fetchFn(url, { method: 'DELETE' });
-
-		if (!response.ok) {
-			throw new HttpError(response.status, url);
-		}
+	deleteImage(id: number): Promise<void> {
+		return this.apiClient.delete(`image/${id}`);
 	}
 
 	getUrlFromId(id: number): URL {
-		return new URL(`image/${id}`, Environment.API_BASE_URL);
+		return this.apiClient.url(`image/${id}`);
 	}
 }

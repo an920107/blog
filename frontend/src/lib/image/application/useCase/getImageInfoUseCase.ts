@@ -1,4 +1,4 @@
-import type { ImageRepository } from '$lib/image/application/gateway/imageRepository';
+import type { ImageRepository } from '$lib/image/application/port/imageRepository';
 import type { ImageInfo } from '$lib/image/domain/entity/imageInfo';
 
 export class GetImageInfoUseCase {

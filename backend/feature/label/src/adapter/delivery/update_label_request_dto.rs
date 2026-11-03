@@ -3,7 +3,7 @@ use utoipa::ToSchema;
 
 use crate::{
     adapter::delivery::color_request_dto::ColorRequestDto,
-    application::gateway::create_or_update_label_params::CreateOrUpdateLabelParams,
+    application::port::create_or_update_label_params::CreateOrUpdateLabelParams,
 };
 
 #[derive(Deserialize, ToSchema)]

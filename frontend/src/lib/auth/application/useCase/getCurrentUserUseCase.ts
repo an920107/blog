@@ -1,4 +1,4 @@
-import type { AuthRepository } from '$lib/auth/application/gateway/authRepository';
+import type { AuthRepository } from '$lib/auth/application/port/authRepository';
 import type { User } from '$lib/auth/domain/entity/user';
 
 export class GetCurrentUserUseCase {

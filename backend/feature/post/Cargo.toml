@@ -16,6 +16,6 @@ sqlx.workspace = true
 utoipa.workspace = true
 
 auth.workspace = true
-common.workspace = true
+shared.workspace = true
 image.workspace = true
 label.workspace = true

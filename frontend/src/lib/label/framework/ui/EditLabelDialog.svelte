@@ -1,17 +1,18 @@
 <script module lang="ts">
-	import z from 'zod';
+	import type { LabelFormValues } from '$lib/label/application/validation/labelFormSchema';
 
-	const formSchema = z.object({
-		name: z.string().trim().nonempty(),
-		color: z.string().regex(/^#?[a-f\d]{6}$/i),
-	});
-
-	type FormParams = z.infer<typeof formSchema>;
-	export type EditLabelDialogFormParams = FormParams;
+	export type EditLabelDialogFormParams = LabelFormValues;
 </script>
 
 <script lang="ts">
-	import { Button, buttonVariants } from '$lib/common/framework/components/ui/button';
+	import z from 'zod';
+
+	import { ColorViewModel } from '$lib/label/adapter/presenter/viewModel/colorViewModel';
+	import { LabelViewModel } from '$lib/label/adapter/presenter/viewModel/labelViewModel';
+	import { labelFormSchema } from '$lib/label/application/validation/labelFormSchema';
+	import { Label as LabelEntity } from '$lib/label/domain/entity/label';
+	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	import { Button, buttonVariants } from '$lib/shared/framework/components/ui/button';
 	import {
 		Dialog,
 		DialogContent,
@@ -19,15 +20,14 @@
 		DialogHeader,
 		DialogTitle,
 		DialogTrigger,
-	} from '$lib/common/framework/components/ui/dialog';
-	import Input from '$lib/common/framework/components/ui/input/input.svelte';
-	import Label from '$lib/common/framework/components/ui/label/label.svelte';
-	import InputError from '$lib/common/framework/ui/InputError.svelte';
-	import RestoreButton from '$lib/common/framework/ui/RestoreButton.svelte';
-	import { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
-	import { LabelViewModel } from '$lib/label/adapter/presenter/labelViewModel';
-	import { Label as LabelEntity } from '$lib/label/domain/entity/label';
-	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
+	} from '$lib/shared/framework/components/ui/dialog';
+	import Input from '$lib/shared/framework/components/ui/input/input.svelte';
+	import Label from '$lib/shared/framework/components/ui/label/label.svelte';
+	import InputError from '$lib/shared/framework/ui/InputError.svelte';
+	import RestoreButton from '$lib/shared/framework/ui/RestoreButton.svelte';
+	import { Strings } from '$lib/strings';
+
+	type FormParams = EditLabelDialogFormParams;
 
 	const {
 		title,
@@ -55,7 +55,7 @@
 		LabelViewModel.fromEntity(
 			new LabelEntity({
 				id: -1,
-				name: formData.name || 'Preview',
+				name: formData.name || Strings.PREVIEW,
 				color: ColorViewModel.fromHex(formData.color).toEntity(),
 			})
 		)
@@ -65,7 +65,7 @@
 		event.preventDefault();
 		formErrors = {};
 
-		const parseResult = formSchema.safeParse(formData);
+		const parseResult = labelFormSchema.safeParse(formData);
 		if (parseResult.error) {
 			const errorResult = z.treeifyError(parseResult.error).properties;
 			formErrors.name = errorResult?.name?.errors[0];
@@ -105,8 +105,10 @@
 			<div class="me-auto">
 				<PostLabel label={previewLabel} />
 			</div>
-			<Button variant="outline" onclick={() => (open = false)} {disabled}>Cancel</Button>
-			<Button type="submit" form="create-label-form" {disabled}>Submit</Button>
+			<Button variant="outline" onclick={() => (open = false)} {disabled}
+				>{Strings.CANCEL_DIALOG}</Button
+			>
+			<Button type="submit" form="create-label-form" {disabled}>{Strings.SUBMIT}</Button>
 		</DialogFooter>
 	</DialogContent>
 </Dialog>
@@ -114,7 +116,7 @@
 {#snippet nameInput()}
 	{@const id = 'name-input'}
 	<div>
-		<Label for={id} class="pb-2">Name</Label>
+		<Label for={id} class="pb-2">{Strings.NAME}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Input
 				{id}
@@ -135,7 +137,7 @@
 {#snippet colorInput()}
 	{@const id = 'color-input'}
 	<div>
-		<Label for={id} class="pb-2">Color</Label>
+		<Label for={id} class="pb-2">{Strings.COLOR}</Label>
 		<div class="flex flex-row items-center gap-x-2">
 			<Input
 				{id}

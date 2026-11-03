@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    application::gateway::{
+    application::port::{
         image_info::ImageInfo, image_reference_checker::ImageReferenceChecker,
         image_repository::ImageRepository,
     },

@@ -9,11 +9,11 @@ use tokenizers::Tokenizer;
 use tokio::{sync::Mutex, task::spawn_blocking};
 
 use crate::{
-    adapter::gateway::{
+    adapter::port::{
         search_query_embedding_cache::SearchQueryEmbeddingCache,
         search_vector_db_service::SearchVectorDbService,
     },
-    application::gateway::search_repository::SearchRepository,
+    application::port::search_repository::SearchRepository,
     domain::error::search_error::SearchError,
 };
 

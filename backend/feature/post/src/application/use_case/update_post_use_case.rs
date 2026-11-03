@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use label::application::gateway::label_repository::LabelRepository;
+use label::application::port::label_repository::LabelRepository;
 
 use crate::{
     application::{
-        gateway::{
+        port::{
             post_repository::PostRepository, search_service::SearchService,
             update_post_params::UpdatePostParams,
         },

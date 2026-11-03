@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
 
-	import generateTitle from '$lib/common/framework/ui/generateTitle';
-	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
-	import OpenGraph from '$lib/common/framework/ui/OpenGraph.svelte';
-	import StructuredData from '$lib/common/framework/ui/StructuredData.svelte';
 	import { Environment } from '$lib/environment';
-	import { PostsListedStore } from '$lib/post/adapter/presenter/postsListedStore';
+	import { PostsListedStore } from '$lib/post/adapter/presenter/store/postsListedStore';
 	import PostPreview from '$lib/post/framework/ui/PostPreview.svelte';
+	import generateTitle from '$lib/shared/framework/ui/generateTitle';
+	import NotFoundPage from '$lib/shared/framework/ui/NotFoundPage.svelte';
+	import OpenGraph from '$lib/shared/framework/ui/OpenGraph.svelte';
+	import StructuredData from '$lib/shared/framework/ui/StructuredData.svelte';
 	import { Strings } from '$lib/strings';
 
 	const { keyword, labelId }: { keyword?: string; labelId?: number } = $props();
@@ -56,7 +56,7 @@
 	{/if}
 
 	<OpenGraph
-		title="文章"
+		title={Strings.POST}
 		description={Strings.POST_OVERALL_DESCRIPTION}
 		url={new URL('post', Environment.APP_BASE_URL)}
 		image={new URL('favicon.svg', Environment.APP_BASE_URL)}

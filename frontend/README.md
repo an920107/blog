@@ -46,7 +46,7 @@ To check layouts without running the backend, start the dev server with the mock
 PUBLIC_USE_MOCK_API=true bun run dev
 ```
 
-The fixtures live in `src/lib/mock/` and serve fake posts, labels, and a logged-out
+The fixtures live in `src/lib/shared/framework/mock/` and serve fake posts, labels, and a logged-out
 `/me`, so `/post`, `/post/[id]`, and the search dialog all render. The mock is only
 wired up in dev mode and stays inert unless `PUBLIC_USE_MOCK_API=true`.
 
@@ -54,7 +54,8 @@ wired up in dev mode and stays inert unless `PUBLIC_USE_MOCK_API=true`.
 
 The frontend is built with SvelteKit and Tailwind CSS following Clean Architecture principles:
 
-- `src/lib/` - Core application modules organized by feature
+- `src/lib/shared/` - Cross-feature building blocks (HTTP, presenters, shared UI)
+- `src/lib/<feature>/` - Feature modules such as `post`, `label`, `image`, and `auth`
 - `src/routes/` - SvelteKit route pages
 - `src/app.html` - Main HTML template
 - `src/app.css` - Global styles
@@ -62,9 +63,16 @@ The frontend is built with SvelteKit and Tailwind CSS following Clean Architectu
 Each feature module in `src/lib/` follows the Clean Architecture pattern:
 
 - `domain/` - Business logic and entities
-- `application/` - Use cases and application services
-- `adapter/` - Interface adapters (presenters, view models)
-- `framework/` - External frameworks (UI components, API services)
+- `application/` - Use cases and application ports (`port/`)
+- `adapter/` - Interface adapters
+  - `port/` - External service interfaces such as API clients
+  - `gateway/` - Implementations of application ports and `dto/` transfer objects
+  - `presenter/` - Stores (`store/`) and view models (`viewModel/`)
+- `framework/` - External frameworks (API implementations, UI components)
+- `composition.ts` - Wires the feature's API service, repository, use cases, and stores
+
+`src/lib/container.ts` aggregates the feature composition modules. Components access it through
+`getContainer()` from `src/lib/shared/framework/ui/containerContext.ts`.
 
 ### Technology Stack
 

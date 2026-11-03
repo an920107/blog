@@ -4,11 +4,11 @@ use std::sync::Arc;
 use async_trait::async_trait;
 
 use crate::{
-    adapter::gateway::{
-        image_db_mapper::ImageDbMapper, image_db_service::ImageDbService,
-        image_storage::ImageStorage,
+    adapter::{
+        gateway::dto::image_db_model::ImageDbModel,
+        port::{image_db_service::ImageDbService, image_storage::ImageStorage},
     },
-    application::gateway::{
+    application::port::{
         create_image_params::CreateImageParams, image_repository::ImageRepository,
     },
     domain::{
@@ -37,11 +37,11 @@ impl ImageRepositoryImpl {
     /// optional: a record whose data file is missing or unreadable still yields usable
     /// metadata, so a single broken image cannot fail the list, info, sitemap or feed
     /// requests that read it.
-    fn to_image_meta_data(&self, image_db_mapper: ImageDbMapper) -> ImageMetaData {
+    fn to_image_meta_data(&self, image_db_model: ImageDbModel) -> ImageMetaData {
         ImageMetaData {
-            id: image_db_mapper.id,
-            mime_type: image_db_mapper.mime_type,
-            size: self.image_storage.size(image_db_mapper.id).ok(),
+            id: image_db_model.id,
+            mime_type: image_db_model.mime_type,
+            size: self.image_storage.size(image_db_model.id).ok(),
         }
     }
 }
@@ -52,7 +52,7 @@ impl ImageRepository for ImageRepositoryImpl {
         let data = image.data.clone();
         let image_id = self
             .image_db_service
-            .create_image_info(ImageDbMapper {
+            .create_image_info(ImageDbModel {
                 id: -1,
                 mime_type: image.mime_type,
             })
@@ -62,12 +62,12 @@ impl ImageRepository for ImageRepositoryImpl {
     }
 
     async fn get_image_by_id(&self, id: i32) -> Result<Image, ImageError> {
-        let image_db_mapper = self.image_db_service.get_image_meta_data_by_id(id).await?;
+        let image_db_model = self.image_db_service.get_image_meta_data_by_id(id).await?;
         let data = self.image_storage.read_data(id)?;
         Ok(Image {
             info: ImageMetaData {
-                id: image_db_mapper.id,
-                mime_type: image_db_mapper.mime_type,
+                id: image_db_model.id,
+                mime_type: image_db_model.mime_type,
                 size: Some(data.len() as i64),
             },
             data,
@@ -75,22 +75,22 @@ impl ImageRepository for ImageRepositoryImpl {
     }
 
     async fn get_image_meta_data_by_id(&self, id: i32) -> Result<ImageMetaData, ImageError> {
-        let image_db_mapper = self.image_db_service.get_image_meta_data_by_id(id).await?;
-        Ok(self.to_image_meta_data(image_db_mapper))
+        let image_db_model = self.image_db_service.get_image_meta_data_by_id(id).await?;
+        Ok(self.to_image_meta_data(image_db_model))
     }
 
     async fn get_image_meta_data_by_ids(
         &self,
         ids: &[i32],
     ) -> Result<HashMap<i32, ImageMetaData>, ImageError> {
-        let image_db_mappers = self
+        let image_db_models = self
             .image_db_service
             .get_image_meta_data_by_ids(ids)
             .await?;
 
         let mut image_meta_data = HashMap::new();
-        for image_db_mapper in image_db_mappers {
-            let meta_data = self.to_image_meta_data(image_db_mapper);
+        for image_db_model in image_db_models {
+            let meta_data = self.to_image_meta_data(image_db_model);
             image_meta_data.insert(meta_data.id, meta_data);
         }
 
@@ -98,11 +98,11 @@ impl ImageRepository for ImageRepositoryImpl {
     }
 
     async fn list_image_meta_data(&self) -> Result<Vec<ImageMetaData>, ImageError> {
-        let image_db_mappers = self.image_db_service.list_image_meta_data().await?;
+        let image_db_models = self.image_db_service.list_image_meta_data().await?;
 
-        Ok(image_db_mappers
+        Ok(image_db_models
             .into_iter()
-            .map(|image_db_mapper| self.to_image_meta_data(image_db_mapper))
+            .map(|image_db_model| self.to_image_meta_data(image_db_model))
             .collect())
     }
 

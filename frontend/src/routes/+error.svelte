@@ -1,5 +1,5 @@
 <script lang="ts">
-	import NotFoundPage from '$lib/common/framework/ui/NotFoundPage.svelte';
+	import NotFoundPage from '$lib/shared/framework/ui/NotFoundPage.svelte';
 	import { Strings } from '$lib/strings';
 </script>
 

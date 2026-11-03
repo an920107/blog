@@ -2,21 +2,22 @@
 	import { getContext, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
-	import { HoverCard } from '$lib/common/framework/components/ui/hover-card';
-	import HoverCardContent from '$lib/common/framework/components/ui/hover-card/hover-card-content.svelte';
-	import HoverCardTrigger from '$lib/common/framework/components/ui/hover-card/hover-card-trigger.svelte';
-	import Table from '$lib/common/framework/components/ui/table/table.svelte';
-	import TableBody from '$lib/common/framework/components/ui/table/table-body.svelte';
-	import TableCell from '$lib/common/framework/components/ui/table/table-cell.svelte';
-	import TableHead from '$lib/common/framework/components/ui/table/table-head.svelte';
-	import TableRow from '$lib/common/framework/components/ui/table/table-row.svelte';
 	import PostLabel from '$lib/label/framework/ui/PostLabel.svelte';
-	import { PostLoadedStore } from '$lib/post/adapter/presenter/postLoadedStore';
-	import { PostUpdatedStore } from '$lib/post/adapter/presenter/postUpdatedStore';
+	import { PostLoadedStore } from '$lib/post/adapter/presenter/store/postLoadedStore';
+	import { PostUpdatedStore } from '$lib/post/adapter/presenter/store/postUpdatedStore';
 	import EditPostDialog, {
 		type EditPostDialogFormParams,
 	} from '$lib/post/framework/ui/EditPostDialog.svelte';
 	import MarkdownRenderer from '$lib/post/framework/ui/MarkdownRenderer.svelte';
+	import { HoverCard } from '$lib/shared/framework/components/ui/hover-card';
+	import HoverCardContent from '$lib/shared/framework/components/ui/hover-card/hover-card-content.svelte';
+	import HoverCardTrigger from '$lib/shared/framework/components/ui/hover-card/hover-card-trigger.svelte';
+	import Table from '$lib/shared/framework/components/ui/table/table.svelte';
+	import TableBody from '$lib/shared/framework/components/ui/table/table-body.svelte';
+	import TableCell from '$lib/shared/framework/components/ui/table/table-cell.svelte';
+	import TableHead from '$lib/shared/framework/components/ui/table/table-head.svelte';
+	import TableRow from '$lib/shared/framework/components/ui/table/table-row.svelte';
+	import { Strings } from '$lib/strings';
 
 	const { id }: { id: number } = $props();
 
@@ -40,13 +41,13 @@
 			content: postLoadedState.data.content,
 			labelIds: postLoadedState.data.info.labels.map((label) => label.id),
 			previewImageUrl: postLoadedState.data.info.previewImageUrl,
-			publishedTime: postLoadedState.data.info.publishedTime,
+			publishedTime: postLoadedState.data.info.publishedTime?.nativeDate ?? null,
 		};
 	});
 
 	async function onSubmit(params: EditPostDialogFormParams): Promise<boolean> {
 		if (!post) {
-			toast.error('Post not found');
+			toast.error(Strings.POST_NOT_FOUND);
 			return false;
 		}
 
@@ -54,15 +55,15 @@
 			id: post.id,
 			params: {
 				...params,
-				publishedTime: params.publishedTime?.nativeDate ?? null,
+				publishedTime: params.publishedTime,
 			},
 		});
 
 		if (state.isSuccess()) {
 			loadPost(post.id);
-			toast.success('Post updated successfully');
+			toast.success(Strings.POST_UPDATED);
 		} else if (state.isError()) {
-			toast.error('Failed to update post', {
+			toast.error(Strings.FAILED_TO_UPDATE_POST, {
 				description: state.error.message,
 			});
 			return false;
@@ -78,11 +79,11 @@
 
 <div class="dashboard-container mb-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="py-16 text-5xl font-bold text-gray-800">Post Details</h1>
+		<h1 class="py-16 text-5xl font-bold text-gray-800">{Strings.POST_DETAILS}</h1>
 		{#key formDefaultValues}
 			<EditPostDialog
 				mode="update"
-				triggerButtonText="Edit"
+				triggerButtonText={Strings.EDIT}
 				disabled={!postLoadedState.isSuccess() || postUpdatedState.isLoading()}
 				defaultValues={formDefaultValues ?? undefined}
 				{onSubmit}
@@ -92,23 +93,23 @@
 	<Table>
 		<TableBody>
 			<TableRow>
-				<TableHead>ID</TableHead>
+				<TableHead>{Strings.ID}</TableHead>
 				<TableCell>{post?.id}</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Semantic ID</TableHead>
+				<TableHead>{Strings.SEMANTIC_ID}</TableHead>
 				<TableCell>
 					<span class="text-wrap">{post?.info.semanticId}</span>
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Title</TableHead>
+				<TableHead>{Strings.TITLE}</TableHead>
 				<TableCell>
 					<span class="text-wrap">{post?.info.title}</span>
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Labels</TableHead>
+				<TableHead>{Strings.LABELS}</TableHead>
 				<TableCell>
 					<div class="flex flex-wrap gap-2">
 						{#each post?.info.labels ?? [] as label (label.id)}
@@ -118,35 +119,37 @@
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Description</TableHead>
+				<TableHead>{Strings.DESCRIPTION}</TableHead>
 				<TableCell>
 					<span class="text-wrap">{post?.info.description}</span>
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Preview Image URL</TableHead>
+				<TableHead>{Strings.PREVIEW_IMAGE_URL}</TableHead>
 				<TableCell>
 					{#if post?.info.previewImageUrl}
 						{@const url = post.info.previewImageUrl}
 						<HoverCard>
 							<HoverCardTrigger href={url} target="_blank" class="text-wrap underline">
-								{post?.info.previewImageUrl ?? 'None'}
+								{post?.info.previewImageUrl ?? Strings.NONE}
 							</HoverCardTrigger>
 							<HoverCardContent class="aspect-video w-96">
-								<img src={url} alt="Preview" class="h-full w-full object-cover" />
+								<img src={url} alt={Strings.PREVIEW} class="h-full w-full object-cover" />
 							</HoverCardContent>
 						</HoverCard>
 					{:else}
-						<span>None</span>
+						<span>{Strings.NONE}</span>
 					{/if}
 				</TableCell>
 			</TableRow>
 			<TableRow>
-				<TableHead>Published Time</TableHead>
-				<TableCell>{post?.info.publishedTime?.toLocalISOString() ?? 'Not Published'}</TableCell>
+				<TableHead>{Strings.PUBLISHED_TIME}</TableHead>
+				<TableCell
+					>{post?.info.publishedTime?.toLocalISOString() ?? Strings.NOT_PUBLISHED}</TableCell
+				>
 			</TableRow>
 			<TableRow>
-				<TableHead>Content Length</TableHead>
+				<TableHead>{Strings.CONTENT_LENGTH}</TableHead>
 				<TableCell>{post?.content.length ?? 0}</TableCell>
 			</TableRow>
 		</TableBody>

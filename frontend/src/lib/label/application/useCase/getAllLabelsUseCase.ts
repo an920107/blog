@@ -1,4 +1,4 @@
-import type { LabelRepository } from '$lib/label/application/gateway/labelRepository';
+import type { LabelRepository } from '$lib/label/application/port/labelRepository';
 import type { Label } from '$lib/label/domain/entity/label';
 
 export class GetAllLabelsUseCase {

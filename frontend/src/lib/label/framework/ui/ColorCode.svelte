@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ColorViewModel } from '$lib/label/adapter/presenter/colorViewModel';
+	import type { ColorViewModel } from '$lib/label/adapter/presenter/viewModel/colorViewModel';
 
 	const { color }: { color: ColorViewModel } = $props();
 </script>

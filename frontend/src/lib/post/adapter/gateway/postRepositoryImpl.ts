@@ -1,12 +1,12 @@
-import { CreatePostRequestDto } from '$lib/post/adapter/gateway/creatPostRequestDto';
-import type { PostApiService } from '$lib/post/adapter/gateway/postApiService';
-import { PostListQueryDto } from '$lib/post/adapter/gateway/postListQueryDto';
-import { UpdatePostRequestDto } from '$lib/post/adapter/gateway/updatePostRequestDto';
+import { CreatePostRequestDto } from '$lib/post/adapter/gateway/dto/createPostRequestDto';
+import { PostListQueryDto } from '$lib/post/adapter/gateway/dto/postListQueryDto';
+import { UpdatePostRequestDto } from '$lib/post/adapter/gateway/dto/updatePostRequestDto';
+import type { PostApiService } from '$lib/post/adapter/port/postApiService';
 import type {
-	CreatePostParams,
+	CreatePostDraftParams,
 	PostRepository,
 	UpdatePostParams,
-} from '$lib/post/application/gateway/postRepository';
+} from '$lib/post/application/port/postRepository';
 import type { Post } from '$lib/post/domain/entity/post';
 import type { PostInfo } from '$lib/post/domain/entity/postInfo';
 
@@ -28,7 +28,7 @@ export class PostRepositoryImpl implements PostRepository {
 		return dto?.toEntity() ?? null;
 	}
 
-	async createPost(params: CreatePostParams): Promise<Post> {
+	async createPostDraft(params: CreatePostDraftParams): Promise<Post> {
 		const requestDto = CreatePostRequestDto.fromParams(params);
 		const responseDto = await this.postApiService.createPost(requestDto);
 		return responseDto.toEntity();

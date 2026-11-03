@@ -2,6 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	import TerminalCursor from '$lib/home/framework/ui/TerminalCursor.svelte';
+	import { Strings } from '$lib/strings';
 
 	let { text, onComplete: onCompleted }: { text: string; onComplete: () => void } = $props();
 
@@ -53,9 +54,9 @@
 <div class="flex w-full flex-col pt-1.5 leading-5 md:pt-2.5 md:leading-7">
 	<div class="flex w-full flex-row flex-nowrap items-center gap-x-1.5 text-nowrap md:gap-x-2">
 		<span>
-			<span>╭─  squid </span>
+			<span>╭─ {Strings.TERMINAL_USER} </span>
 			<span class="text-blue-500">
-				~<span class="max-md:hidden">/Documents/blog</span>
+				~<span class="max-md:hidden">{Strings.TERMINAL_PATH}</span>
 			</span>
 		</span>
 		<div class="h-0.5 w-full bg-gray-50"></div>

@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT id, issuer, source_id, displayed_name, email\n            FROM \"users\"\n            WHERE id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "issuer",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "source_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "displayed_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "email",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "85356256aceff0654ba6a2dc4d0977b9c015aa813c22e45806dad0d3e11987e1"
+}

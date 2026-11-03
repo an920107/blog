@@ -1,4 +1,4 @@
-use crate::application::gateway::create_image_params::CreateImageParams;
+use crate::application::port::create_image_params::CreateImageParams;
 
 pub struct ImageRequestDto {
     pub mime_type: String,

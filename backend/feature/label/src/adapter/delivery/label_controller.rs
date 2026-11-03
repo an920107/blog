@@ -79,10 +79,7 @@ impl LabelController for LabelControllerImpl {
     async fn get_all_labels(&self) -> Result<Vec<LabelResponseDto>, LabelError> {
         let result = self.get_all_labels_use_case.execute().await?;
 
-        Ok(result
-            .into_iter()
-            .map(LabelResponseDto::from)
-            .collect())
+        Ok(result.into_iter().map(LabelResponseDto::from).collect())
     }
 
     async fn get_label_by_id(&self, id: i32) -> Result<LabelResponseDto, LabelError> {
