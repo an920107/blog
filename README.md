@@ -11,7 +11,7 @@ As for the more detailed development approach, I plan to use Clean Architecture 
 
 These will allow me to become more proficient in these modern development practices and leave a lot of flexibility and room for adjustments in the future.
 
-For more information about the development process, you can check out the [project board](https://git.squidspirit.com/squid/blog/projects). As for the details of the architecture and convention, you can find them in the [wiki](https://git.squidspirit.com/squid/blog/wiki).
+For more information about the development process, you can check out the [project board](https://git.squidspirit.com/squid/blog/projects). As for the details of the architecture and convention, you can find them in the [`docs/`](./docs) directory — start with [Project Structure & Architecture](./docs/architecture.md), and see the [Git Convention](./docs/git-convention.md) for commit and pull request rules.
 
 ## Build & Development Setup
 
@@ -73,26 +73,6 @@ To set up the entire project:
 3. Set up backend (see [backend/README.md](./backend/README.md))
 4. Set up frontend (see [frontend/README.md](./frontend/README.md))
 5. Start both servers for full-stack development
-
-### MCP Server Setup
-
-To configure and run the MCP (Model Context Protocol) servers for AI-assisted development:
-
-1. **Install Go**: Ensure Go is installed on your system to run Go-based MCP servers (such as the Gitea MCP server).
-
-2. **Install Bun**: Ensure Bun is installed on your system to run Svelte-based MCP servers (such as the Svelte MCP server via `bunx`).
-
-3. **Install crates.io MCP**: Install `cratesio-mcp` using Cargo:
-
-   ```bash
-   cargo install cratesio-mcp
-   ```
-
-4. **Configure Environment Variables**: Export your Gitea access token:
-
-   ```bash
-   export GITEA_ACCESS_TOKEN="your_gitea_access_token_here"
-   ```
 
 ## Deployment
 

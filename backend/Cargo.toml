@@ -17,13 +17,7 @@ license = "Apache-2.0"
 
 [workspace.dependencies]
 actix-multipart = "0.8.4"
-actix-session = {
-  version = "0.11.0",
-  features = [
-    "redis-pool",
-    "redis-session",
-  ]
-}
+actix-session = { version = "0.11.0", features = ["redis-pool", "redis-session"] }
 actix-web = "4.15.0"
 anyhow = "1.0.104"
 async-trait = "0.1.92"
@@ -36,47 +30,19 @@ fnv_rs = "0.4.4"
 futures = "0.3.34"
 hex = "0.4.3"
 log = "0.4.34"
-openidconnect = {
-  version = "4.0.1",
-  features = [
-    "reqwest",
-    "reqwest-blocking",
-  ]
-}
+openidconnect = { version = "4.0.1", features = ["reqwest", "reqwest-blocking"] }
 percent-encoding = "2.3.2"
 qdrant-client = { version = "1.19.0", features = ["serde"] }
-redis = {
-  version = "0.32.7",
-  features = [
-    "aio",
-    "connection-manager",
-    "tokio-comp",
-  ]
-}
+redis = { version = "0.32.7", features = ["aio", "connection-manager", "tokio-comp"] }
 regex = "1.13.1"
 sentry = { version = "0.49.3", features = ["actix", "anyhow"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
-sqlx = {
-  version = "0.8.6",
-  features = [
-    "chrono",
-    "macros",
-    "postgres",
-    "runtime-tokio-rustls",
-  ]
-}
+sqlx = { version = "0.8.6", features = ["chrono", "macros", "postgres", "runtime-tokio-rustls"] }
 text-splitter = { version = "0.32.0", features = ["markdown", "tokenizers"] }
 tokenizers = { version = "0.23.2", features = ["http"] }
 tokio = { version = "1.51.1", features = ["full"] }
-utoipa = {
-  version = "6.0.0",
-  features = [
-    "actix_extras",
-    "non_strict_integers",
-    "url",
-  ]
-}
+utoipa = { version = "6.0.0", features = ["actix_extras", "non_strict_integers", "url"] }
 utoipa-redoc = { version = "7.0.0", features = ["actix-web"] }
 
 auth.path = "feature/auth"

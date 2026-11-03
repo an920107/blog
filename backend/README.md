@@ -73,7 +73,8 @@ Each feature module follows the Clean Architecture pattern:
 - **Framework**: Actix-web
 - **Database**: PostgreSQL with SQLx
 - **AI / Search**: RAG-based semantic search with embeddings and Qdrant
-- **Authentication**: JWT-based
+- **Authentication**: OIDC login, with server-side sessions stored in Redis
+  (`actix-session` + `RedisSessionStore`)
 - **Serialization**: Serde
 - **Migration**: SQLx migrations
 - **Logging**: env_logger with RUST_LOG
